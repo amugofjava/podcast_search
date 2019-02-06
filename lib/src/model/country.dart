@@ -1,5 +1,5 @@
-/// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
-/// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
+// MIT license that can be found in the LICENSE file.
 
 /// A class that provides a list of the countries supported by the iTunes API.
 class Country {
@@ -210,7 +210,8 @@ class Country {
   static const Country SOLOMON_ISLANDS = Country("SB");
   static const Country SOMALIA = Country("SO");
   static const Country SOUTH_AFRICA = Country("ZA");
-  static const Country SOUTH_GEORGIA_AND_THE_SOUTH_SANDWICH_ISLANDS = Country("GS");
+  static const Country SOUTH_GEORGIA_AND_THE_SOUTH_SANDWICH_ISLANDS =
+      Country("GS");
   static const Country SOUTH_KOREA = Country("KR");
   static const Country SOUTH_SUDAN = Country("SS");
   static const Country SPAIN = Country("ES");

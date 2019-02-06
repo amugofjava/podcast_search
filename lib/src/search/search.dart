@@ -1,5 +1,5 @@
-/// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
-/// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
+// MIT license that can be found in the LICENSE file.
 
 import 'dart:convert';
 
@@ -31,7 +31,12 @@ class Search {
 
   /// Perform the actual iTunes search.
   Future<SearchResult> search(String term,
-      {country, attribute, limit, language, version = 0, explicit = false}) async {
+      {country,
+      attribute,
+      limit,
+      language,
+      version = 0,
+      explicit = false}) async {
     this._term = term;
     this._country = country;
     this._attribute = attribute;
