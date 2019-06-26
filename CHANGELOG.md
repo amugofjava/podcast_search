@@ -1,3 +1,11 @@
+## 0.2.2
+
+- Dropped version of Meta to prevent clash with current SDK.
+
+## 0.2.1
+
+- Corrected issue with dependencies.
+
 ## 0.2.0
 
 - Breaking change: Renamed Podcast to Item in search results.
