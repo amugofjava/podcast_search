@@ -12,10 +12,10 @@ void main() {
       search = Search();
     });
 
-    test('Max two results test', () async {
-      SearchResult result = await search.search('The Archers');
+    test('Max one result test', () async {
+      SearchResult result = await search.search('Forest 404');
 
-      expect(result.resultCount, 2);
+      expect(result.resultCount, 1);
     });
   });
 }

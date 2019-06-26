@@ -1,104 +1,54 @@
 // Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
-import 'package:podcast_search/src/model/genre.dart';
+import 'dart:async';
+import 'dart:convert';
 
-/// A class that represents an individual podcast.
+import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
+import 'package:podcast_search/src/model/episode.dart';
+import 'package:podcast_search/src/utils/utils.dart';
+import 'package:webfeed/webfeed.dart';
+
+/// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
+/// then parsed and the episode list generated.
 class Podcast {
-  final int artistId;
-  final int collectionId;
-  final int trackId;
-  final String artistName;
-  final String collectionName;
-  final String trackName;
-  final String collectionCensoredName;
-  final String trackCensoredName;
-  final String artistViewUrl;
-  final String collectionViewUrl;
-  final String feedUrl;
-  final String trackViewUrl;
-  final String artworkUrl30;
-  final String artworkUrl60;
-  final String artworkUrl100;
-  final String artworkUrl600;
-  final DateTime releaseDate;
-  final String collectionExplicitness;
-  final String trackExplicitness;
-  final int trackCount;
-  final String country;
-  final String primaryGenreName;
-  final String contentAdvisoryRating;
-  final List<Genre> genre;
+  final String url;
+  final String link;
+  final String title;
+  final String description;
+  final String image;
+  final String copyright;
+  final List<Episode> episodes;
 
-  Podcast({
-    this.artistId,
-    this.collectionId,
-    this.trackId,
-    this.artistName,
-    this.collectionName,
-    this.trackName,
-    this.trackCount,
-    this.collectionCensoredName,
-    this.trackCensoredName,
-    this.artistViewUrl,
-    this.collectionViewUrl,
-    this.feedUrl,
-    this.trackViewUrl,
-    this.collectionExplicitness,
-    this.trackExplicitness,
-    this.artworkUrl30,
-    this.artworkUrl60,
-    this.artworkUrl100,
-    this.artworkUrl600,
-    this.releaseDate,
-    this.country,
-    this.primaryGenreName,
-    this.contentAdvisoryRating,
-    this.genre,
-  });
+  Podcast._(this.url, this.link, this.title, this.description, this.image, this.copyright, this.episodes);
 
-  /// Takes our json map and builds a Podcast instance from it.
-  factory Podcast.fromJson(Map<String, dynamic> json) {
-    return Podcast(
-      artistId: json['artistId'] as int,
-      collectionId: json['collectionId'] as int,
-      trackId: json['trackId'] as int,
-      artistName: json['artistName'] as String,
-      collectionName: json['collectionName'] as String,
-      collectionExplicitness: json['collectionExplicitness'] as String,
-      trackExplicitness: json['trackExplicitness'] as String,
-      trackName: json['trackName'] as String,
-      trackCount: json['trackCount'] as int,
-      collectionCensoredName: json['collectionCensoredName'] as String,
-      trackCensoredName: json['trackCensoredName'] as String,
-      artistViewUrl: json['artistViewUrl'] as String,
-      collectionViewUrl: json['collectionViewUrl'] as String,
-      feedUrl: json['feedUrl'] as String,
-      trackViewUrl: json['trackViewUrl'] as String,
-      artworkUrl30: json['artworkUrl30'] as String,
-      artworkUrl60: json['artworkUrl60'] as String,
-      artworkUrl100: json['artworkUrl100'] as String,
-      artworkUrl600: json['artworkUrl600'] as String,
-      genre: Podcast._loadGenres(
-          json['genreIds'].cast<String>(), json['genres'].cast<String>()),
-      releaseDate: DateTime.parse(json['releaseDate']),
-      country: json['country'] as String,
-      primaryGenreName: json['primaryGenreName'] as String,
-      contentAdvisoryRating: json['contentAdvisoryRating'] as String,
-    );
+  static Future<Podcast> loadFeed({@required String url}) async {
+    final client = http.Client();
+
+    final response = await client.get(url, headers: {'User-Agent': 'podcast_search Dart/1.0'});
+
+    var rssFeed = RssFeed.parse(utf8.decode(response.bodyBytes));
+
+    // Parse the episodes
+    List<Episode> episodes = [];
+
+    _loadEpisodes(rssFeed, episodes);
+
+    return Podcast._(
+        url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, rssFeed.copyright, episodes);
   }
 
-  /// Genres appear within the json as two separate lists. This utility function
-  /// creates Genre instances for each id and name pair.
-  static List<Genre> _loadGenres(List<String> id, List<String> name) {
-    var genres = new List<Genre>();
-
-    if (id != null) {
-      for (int x = 0; x < id.length; x++) {
-        genres.add(new Genre(int.parse(id[x]), name[x]));
-      }
-    }
-
-    return genres;
+  static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
+    rssFeed.items.forEach((item) {
+      episodes.add(Episode.of(
+        item.title,
+        item.description,
+        item.link,
+        Utils.parseRFC2822Date(item.pubDate),
+        item.author,
+        item.enclosure.url,
+      ));
+    });
   }
 }

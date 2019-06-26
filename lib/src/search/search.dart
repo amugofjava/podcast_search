@@ -45,8 +45,8 @@ class Search {
     this._version = version;
     this._explicit = explicit;
 
-    final response = await client.get(_buildUrl());
-    final results = json.decode(response.body);
+    final response = await client.get(_buildUrl(), headers: {'User-Agent': 'podcast_search Dart/1.0'});
+    final results = json.decode(utf8.decode(response.bodyBytes));
 
     return SearchResult.fromJson(results);
   }

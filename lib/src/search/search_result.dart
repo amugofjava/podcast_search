@@ -1,14 +1,14 @@
 // Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
-import 'package:podcast_search/src/model/podcast.dart';
+import 'package:podcast_search/src/model/item.dart';
 
 /// This class is a container for our search results or for any error message
 /// received whilst attempting to fetch the podcast data.
 class SearchResult {
   final int resultCount;
   final bool successful;
-  final List<Podcast> items;
+  final List<Item> items;
   final String lastError;
 
   SearchResult(this.resultCount, this.items)
@@ -32,7 +32,7 @@ class SearchResult {
         : (json['results'] as List)
             .cast<Map<String, Object>>()
             .map((Map<String, Object> item) {
-            return Podcast.fromJson(item);
+            return Item.fromJson(item);
           }).toList();
 
     return SearchResult(json['resultCount'], items);
