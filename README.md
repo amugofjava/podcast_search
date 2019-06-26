@@ -12,16 +12,25 @@ in the UK. Limit to at most 10 results:
 import 'package:podcast_search/podcast_search.dart';
 
 main() async {
-  var search = new Search();
+  var search = Search();
 
-  SearchResult result = await search.search("widgets",
+  /// Search for the "It's a Widget" podcast.
+  SearchResult results = await search.search("it's a widget",
       country: Country.UNITED_KINGDOM,
       limit: 10);
 
-  result.items?.forEach((podcast) {
-    print("Found podcast ${podcast.trackName}");
+  /// List the name of each podcast found.
+  results.items?.forEach((result) {
+    print("Found podcast: ${result.trackName}");
+  });
+
+  /// Parse the first podcast.
+  Podcast podcast = await Podcast.loadFeed(url: results.items[0].feedUrl);
+
+  /// Display episode titles.
+  podcast.episodes?.forEach((episode) {
+    print("Episode title: ${episode.title}");
   });
 }
-
 ```
 
