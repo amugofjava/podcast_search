@@ -18,5 +18,9 @@ dependencies:
   # Enhanced linting.
   pedantic: ^1.7.0
 
+  # Meta.
+  meta: ^1.1.7
+
 dev_dependencies:
-  test: ^1.0.0
+  # Testing
+  test: ^1.6.4

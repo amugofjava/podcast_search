@@ -2,7 +2,7 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/src/utils/utils.dart';
-import 'package:test_core/test_core.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Date parser test', () {
