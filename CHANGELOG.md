@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Added missing format from list of possible pubdate formats.
+
 ## 0.2.2
 
 - Dropped version of Meta to prevent clash with current SDK.
