@@ -2,6 +2,7 @@
 // MIT license that can be found in the LICENSE file.
 
 class Episode {
+  final String guid;
   final String title;
   final String description;
   String link;
@@ -14,12 +15,6 @@ class Episode {
   String author;
   int duration;
 
-  Episode.of(
-      this.title,
-      this.description,
-      this.link,
-      this.publicationDate,
-      this.author,
-      this.contentUrl
-    );
+  Episode.of(this.guid, this.title, this.description, this.link,
+      this.publicationDate, this.author, this.contentUrl);
 }

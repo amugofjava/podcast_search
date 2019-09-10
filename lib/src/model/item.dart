@@ -8,6 +8,7 @@ class Item {
   final int artistId;
   final int collectionId;
   final int trackId;
+  final String guid;
   final String artistName;
   final String collectionName;
   final String trackName;
@@ -34,6 +35,7 @@ class Item {
     this.artistId,
     this.collectionId,
     this.trackId,
+    this.guid,
     this.artistName,
     this.collectionName,
     this.trackName,
@@ -63,6 +65,7 @@ class Item {
       artistId: json['artistId'] as int,
       collectionId: json['collectionId'] as int,
       trackId: json['trackId'] as int,
+      guid: json['guid'] as String,
       artistName: json['artistName'] as String,
       collectionName: json['collectionName'] as String,
       collectionExplicitness: json['collectionExplicitness'] as String,

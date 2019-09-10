@@ -30,13 +30,7 @@ class Search {
   Search({client}) : this.client = client ?? http.Client();
 
   /// Perform the actual iTunes search.
-  Future<SearchResult> search(String term,
-      {country,
-      attribute,
-      limit,
-      language,
-      version = 0,
-      explicit = false}) async {
+  Future<SearchResult> search(String term, {country, attribute, limit, language, version = 0, explicit = false}) async {
     this._term = term;
     this._country = country;
     this._attribute = attribute;
@@ -69,9 +63,7 @@ class Search {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty
-        ? "?term=" + Uri.encodeComponent(term)
-        : "";
+    return term != null && term.isNotEmpty ? "?term=" + Uri.encodeComponent(term) : "";
   }
 
   String _countryParam() {
@@ -79,9 +71,7 @@ class Search {
   }
 
   String _attributeParam() {
-    return _attribute != null
-        ? "&attribute=" + Uri.encodeComponent(_attribute.attribute)
-        : "";
+    return _attribute != null ? "&attribute=" + Uri.encodeComponent(_attribute.attribute) : "";
   }
 
   String _limitParam() {

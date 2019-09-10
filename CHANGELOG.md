@@ -1,3 +1,7 @@
+## 0.2.4
+
+- Added guid to Episode entity.
+
 ## 0.2.3
 
 - Added missing format from list of possible pubdate formats.
