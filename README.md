@@ -1,7 +1,5 @@
-A simple library providing programmatic access to the iTunes search API for podcasts. 
+A package combining both searching for podcasts via iTunes and the processing of podcast feeds providing object access to the feed, podcast and episode details. 
 
-Created from templates made available by Stagehand under a MIT license
-[license](https://opensource.org/licenses/MIT).
 
 ## Usage
 
@@ -14,8 +12,8 @@ import 'package:podcast_search/podcast_search.dart';
 main() async {
   var search = Search();
 
-  /// Search for the "It's a Widget" podcast.
-  SearchResult results = await search.search("it's a widget",
+  /// Search for podcasts with 'widgets' in the title.
+  SearchResult results = await search.search("widgets",
       country: Country.UNITED_KINGDOM,
       limit: 10);
 

@@ -1,3 +1,7 @@
+## 0.2.5
+
+- Updated to latest test package to support Dart 2.6+.
+
 ## 0.2.4
 
 - Added guid to Episode entity.

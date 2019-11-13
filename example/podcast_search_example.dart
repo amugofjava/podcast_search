@@ -4,7 +4,7 @@ main() async {
   var search = Search();
 
   /// Search for the "It's a Widget" podcast.
-  SearchResult results = await search.search("it's a widget",
+  SearchResult results = await search.search("widgets",
       country: Country.UNITED_KINGDOM,
       limit: 10);
 
