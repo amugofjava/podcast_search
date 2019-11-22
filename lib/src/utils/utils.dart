@@ -236,7 +236,7 @@ class Utils {
     var result;
 
     _allowablePatterns.forEach((k, v) {
-      RegExp exp = new RegExp(k);
+      RegExp exp = RegExp(k);
 
       if (exp.hasMatch(date)) {
         Match match = exp.firstMatch(date);

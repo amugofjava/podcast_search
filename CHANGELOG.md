@@ -1,3 +1,7 @@
+## 0.2.6
+
+- Remove redundant new and const keywords.
+
 ## 0.2.5
 
 - Updated to latest test package to support Dart 2.6+.

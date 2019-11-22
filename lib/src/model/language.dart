@@ -5,8 +5,8 @@
 class Language {
   final String _language;
 
-  static const ENGLISH = const Language('en_us');
-  static const JAPANESE = const Language('ja_jp');
+  static const ENGLISH = Language('en_us');
+  static const JAPANESE = Language('ja_jp');
 
   const Language(String language) : this._language = language;
 

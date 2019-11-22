@@ -94,11 +94,11 @@ class Item {
   /// Genres appear within the json as two separate lists. This utility function
   /// creates Genre instances for each id and name pair.
   static List<Genre> _loadGenres(List<String> id, List<String> name) {
-    var genres = new List<Genre>();
+    var genres = List<Genre>();
 
     if (id != null) {
       for (int x = 0; x < id.length; x++) {
-        genres.add(new Genre(int.parse(id[x]), name[x]));
+        genres.add(Genre(int.parse(id[x]), name[x]));
       }
     }
 

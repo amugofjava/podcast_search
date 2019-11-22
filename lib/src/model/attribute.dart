@@ -5,14 +5,14 @@
 class Attribute {
   final String _attribute;
 
-  static const Attribute TITLE_TERM = const Attribute('titleTerm');
-  static const Attribute LANGUAGE_TERM = const Attribute('languageTerm');
-  static const Attribute AUTHOR_TERM = const Attribute('authorTerm');
-  static const Attribute GENRE_TERM = const Attribute('genreIndex');
-  static const Attribute ARTIST_TERM = const Attribute('artistTerm');
-  static const Attribute RATING_TERM = const Attribute('ratingIndex');
-  static const Attribute KEYWORDS_TERM = const Attribute('keywordsTerm');
-  static const Attribute DESCRIPTION_TERM = const Attribute('descriptionTerm');
+  static const Attribute TITLE_TERM = Attribute('titleTerm');
+  static const Attribute LANGUAGE_TERM = Attribute('languageTerm');
+  static const Attribute AUTHOR_TERM = Attribute('authorTerm');
+  static const Attribute GENRE_TERM = Attribute('genreIndex');
+  static const Attribute ARTIST_TERM = Attribute('artistTerm');
+  static const Attribute RATING_TERM = Attribute('ratingIndex');
+  static const Attribute KEYWORDS_TERM = Attribute('keywordsTerm');
+  static const Attribute DESCRIPTION_TERM = Attribute('descriptionTerm');
 
   const Attribute(String attribute) : this._attribute = attribute;
 
