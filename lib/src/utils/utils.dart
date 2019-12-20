@@ -250,6 +250,11 @@ class Utils {
       }
     });
 
+    // If we have not found a match maybe it's an ISO 8601 date
+    if (result == null) {
+      result = DateTime.tryParse(date);
+    }
+
     return result;
   }
 }

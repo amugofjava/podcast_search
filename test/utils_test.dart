@@ -11,6 +11,7 @@ void main() {
     var d3 = 'Mon, 03 Jun 2019 10:00:00 -02:00';
     var d4 = 'Mon, 03 Jun 2019 10:00:00 +0000';
     var d5 = 'Mon, 03 Jun 2019 10:00:00 -0000';
+    var d6 = '2019-12-01T08:30:45+00:00'; // ISO 8601 format
 
     test('Date format zone abbr', () async {
       var result = Utils.parseRFC2822Date(d1).toIso8601String();
@@ -40,6 +41,12 @@ void main() {
       var result = Utils.parseRFC2822Date(d5).toIso8601String();
 
       expect(result, '2019-06-03T10:00:00.000Z');
+    });
+
+    test('Date format ISO 8601', () async {
+      var result = Utils.parseRFC2822Date(d6).toIso8601String();
+
+      expect(result, '2019-12-01T08:30:45.000Z');
     });
   });
 }

@@ -1,3 +1,7 @@
+## 0.2.7
+
+- Add support for standard ISO 8601 publication dates.
+
 ## 0.2.6
 
 - Remove redundant new and const keywords.
