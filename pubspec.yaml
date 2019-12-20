@@ -3,7 +3,6 @@ description: A simple library for searching for podcasts (via iTunes), parsing p
 
 version: 0.2.7
 homepage: https://github.com/amugofjava/podcast_search
-author: Ben Hills <ben.hills@amugofjava.me.uk>
 
 environment:
   sdk: '>=2.2.0 <3.0.0'
