@@ -1,3 +1,7 @@
+## 0.2.8
+
+- Handle null item enclosure.
+
 ## 0.2.7
 
 - Add support for standard ISO 8601 publication dates.
