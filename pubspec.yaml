@@ -1,7 +1,7 @@
 name: podcast_search
 description: A simple library for searching for podcasts (via iTunes), parsing podcast RSS feeds and obtaining episodes details.
 
-version: 0.2.8
+version: 0.3.0
 homepage: https://github.com/amugofjava/podcast_search
 
 environment:
@@ -18,5 +18,5 @@ dependencies:
   meta: ^1.1.6
 
 dev_dependencies:
-  # Testing
+  pedantic: ^1.9.0
   test: ^1.9.4

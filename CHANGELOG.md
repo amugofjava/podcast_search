@@ -1,3 +1,11 @@
+## 0.3.0
+
+- Fix formatting. 
+
+## 0.2.9
+
+- Fix lints for newer version of Pedantic. 
+
 ## 0.2.8
 
 - Handle null item enclosure.

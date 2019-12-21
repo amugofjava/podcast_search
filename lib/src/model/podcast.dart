@@ -21,21 +21,24 @@ class Podcast {
   final String copyright;
   final List<Episode> episodes;
 
-  Podcast._(this.url, this.link, this.title, this.description, this.image, this.copyright, this.episodes);
+  Podcast._(this.url, this.link, this.title, this.description, this.image,
+      this.copyright, this.episodes);
 
   static Future<Podcast> loadFeed({@required String url}) async {
     final client = http.Client();
 
-    final response = await client.get(url, headers: {'User-Agent': 'podcast_search Dart/1.0'});
+    final response = await client
+        .get(url, headers: {'User-Agent': 'podcast_search Dart/1.0'});
 
     var rssFeed = RssFeed.parse(utf8.decode(response.bodyBytes));
 
     // Parse the episodes
-    List<Episode> episodes = [];
+    var episodes = <Episode>[];
 
     _loadEpisodes(rssFeed, episodes);
 
-    return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, rssFeed.copyright, episodes);
+    return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description,
+        rssFeed.image?.url, rssFeed.copyright, episodes);
   }
 
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {

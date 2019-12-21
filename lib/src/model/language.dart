@@ -8,7 +8,7 @@ class Language {
   static const ENGLISH = Language('en_us');
   static const JAPANESE = Language('ja_jp');
 
-  const Language(String language) : this._language = language;
+  const Language(String language) : _language = language;
 
-  get language => _language;
+  String get language => _language;
 }

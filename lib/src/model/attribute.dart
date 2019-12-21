@@ -14,7 +14,7 @@ class Attribute {
   static const Attribute KEYWORDS_TERM = Attribute('keywordsTerm');
   static const Attribute DESCRIPTION_TERM = Attribute('descriptionTerm');
 
-  const Attribute(String attribute) : this._attribute = attribute;
+  const Attribute(String attribute) : _attribute = attribute;
 
-  get attribute => _attribute;
+  String get attribute => _attribute;
 }

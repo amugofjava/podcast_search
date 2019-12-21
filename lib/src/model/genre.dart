@@ -10,6 +10,6 @@ class Genre {
 
   @override
   String toString() {
-    return "${id}: ${name}";
+    return '${id}: ${name}';
   }
 }

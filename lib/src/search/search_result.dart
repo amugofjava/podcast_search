@@ -12,13 +12,13 @@ class SearchResult {
   final String lastError;
 
   SearchResult(this.resultCount, this.items)
-      : this.successful = true,
-        this.lastError = "";
+      : successful = true,
+        lastError = '';
 
   SearchResult.fromError(this.lastError)
-      : this.successful = false,
-        this.resultCount = 0,
-        this.items = [];
+      : successful = false,
+        resultCount = 0,
+        items = [];
 
   factory SearchResult.fromJson(dynamic json) {
     /// Did we get an error message?

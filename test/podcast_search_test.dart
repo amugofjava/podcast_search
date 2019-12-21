@@ -13,7 +13,7 @@ void main() {
     });
 
     test('Max one result test', () async {
-      SearchResult result = await search.search('Forest 404');
+      final result = await search.search('Forest 404');
 
       expect(result.resultCount, 1);
     });
