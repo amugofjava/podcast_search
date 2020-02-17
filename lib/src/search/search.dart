@@ -9,11 +9,14 @@ import 'package:podcast_search/src/model/country.dart';
 import 'package:podcast_search/src/model/language.dart';
 import 'package:podcast_search/src/search/search_result.dart';
 
+import '../../podcast_search.dart';
+
 /// This class handles the searching. Taking the base URL we build any parameters
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
 class Search {
-  static String API_ENDPOINT = 'https://itunes.apple.com/search';
+  static String FEED_API_ENDPOINT = 'https://itunes.apple.com';
+  static String SEARCH_API_ENDPOINT = 'https://itunes.apple.com/search';
 
   final http.Client client;
 
@@ -27,9 +30,11 @@ class Search {
 
   /// By default we use our own http client instance, but the user can pass
   /// in a difference instance if required.
-  Search({client}) : client = client ?? http.Client();
+  Search({
+    client,
+  }) : client = client ?? http.Client();
 
-  /// Perform the actual iTunes search.
+  /// Search iTunes using the term [term].
   Future<SearchResult> search(
     String term, {
     country,
@@ -47,17 +52,69 @@ class Search {
     _version = version;
     _explicit = explicit;
 
-    final response = await client
-        .get(_buildUrl(), headers: {'User-Agent': 'podcast_search Dart/1.0'});
+    final response = await client.get(_buildSearchUrl(),
+        headers: {'User-Agent': 'podcast_search Dart/1.0'});
+
     final results = json.decode(utf8.decode(response.bodyBytes));
 
     return SearchResult.fromJson(results);
   }
 
+  /// Fetches the list of top podcasts
+  ///
+  /// Optionally takes a [limit] and [Country] filter. Defaults to
+  /// limit of 20 and the UK.
+  ///
+  /// The charts is returned as a 'feed'. In order to be compatible with
+  /// [SearchResult] we need to parse this feed and fetch the underlying
+  /// result for each item resulting in a HTTP call for each result. Given
+  /// the infrequent update of the chart feed it is recommended that clients
+  /// cache the results.
+  Future<SearchResult> charts(
+      {Country country = Country.UNITED_KINGDOM,
+      limit = 20,
+      explicit = false}) async {
+    _country = country;
+    _limit = limit;
+    _explicit = explicit;
+
+    final response = await client.get(_buildChartsUrl(),
+        headers: {'User-Agent': 'podcast_search Dart/1.0'});
+
+    final results = json.decode(utf8.decode(response.bodyBytes));
+
+    return await _chartsToResults(results);
+  }
+
+  Future<SearchResult> _chartsToResults(dynamic jsonInput) async {
+    var entries = jsonInput['feed']['entry'];
+
+    var items = <Item>[];
+
+    if (entries != null) {
+      for (var entry in entries) {
+        var id = entry['id']['attributes']['im:id'];
+
+        final response = await client.get(FEED_API_ENDPOINT + '/lookup?id=$id',
+            headers: {'User-Agent': 'podcast_search Dart/1.0'});
+
+        final results = json.decode(utf8.decode(response.bodyBytes));
+
+        if (results['results'] != null) {
+          var item = Item.fromJson(results['results'][0]);
+
+          items.add(item);
+        }
+      }
+    }
+
+    return SearchResult(items.length, items);
+  }
+
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildUrl() {
-    final buf = StringBuffer(API_ENDPOINT);
+  String _buildSearchUrl() {
+    final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());
     buf.write(_countryParam());
@@ -67,6 +124,20 @@ class Search {
     buf.write(_versionParam());
     buf.write(_explicitParam());
     buf.write(_standardParam());
+
+    return buf.toString();
+  }
+
+  String _buildChartsUrl() {
+    final buf = StringBuffer(FEED_API_ENDPOINT);
+
+    buf.write('/');
+    buf.write(_country.countryCode.toLowerCase());
+    buf.write('/rss/toppodcasts/limit=');
+    buf.write(_limit);
+    buf.write('/explicit=');
+    buf.write(_explicit);
+    buf.write('/json');
 
     return buf.toString();
   }
@@ -107,5 +178,6 @@ class Search {
     return '&media=podcast&entity=podcast';
   }
 
+  /// Returns the search term.
   String get term => _term;
 }

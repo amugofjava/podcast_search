@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Add support for returning podcast chart. 
+
 ## 0.3.0
 
 - Fix formatting. 

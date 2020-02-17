@@ -1,10 +1,9 @@
-A package combining both searching for podcasts via iTunes and the processing of podcast feeds providing object access to the feed, podcast and episode details. 
-
+A library for searching for podcasts (via iTunes), parsing podcast RSS feeds and obtaining episodes details. 
 
 ## Usage
 
-A simple usage example. Search for podcasts with widgets in the title and is available
-in the UK. Limit to at most 10 results:
+Search for podcasts with 'widgets' in the title and find the top podcasts. Both
+examples limit to 10 results and are set for the United Kingdom:
 
 ```dart
 import 'package:podcast_search/podcast_search.dart';
@@ -28,6 +27,14 @@ main() async {
   /// Display episode titles.
   podcast.episodes?.forEach((episode) {
     print("Episode title: ${episode.title}");
+  });
+
+  /// Find the top 10 podcasts in the UK.
+  var charts = await search.charts(limit: 10, country: Country.UNITED_KINGDOM);
+
+  /// List the name of each podcast found.
+  charts.items?.forEach((result) {
+    print('Episode title: ${result.trackName}');
   });
 }
 ```

@@ -104,4 +104,9 @@ class Item {
 
     return genres;
   }
+
+  @override
+  String toString() {
+    return 'Item{artistId: $artistId, collectionId: $collectionId, trackId: $trackId, guid: $guid, artistName: $artistName, collectionName: $collectionName, trackName: $trackName, collectionCensoredName: $collectionCensoredName, trackCensoredName: $trackCensoredName, artistViewUrl: $artistViewUrl, collectionViewUrl: $collectionViewUrl, feedUrl: $feedUrl, trackViewUrl: $trackViewUrl, artworkUrl30: $artworkUrl30, artworkUrl60: $artworkUrl60, artworkUrl100: $artworkUrl100, artworkUrl600: $artworkUrl600, releaseDate: $releaseDate, collectionExplicitness: $collectionExplicitness, trackExplicitness: $trackExplicitness, trackCount: $trackCount, country: $country, primaryGenreName: $primaryGenreName, contentAdvisoryRating: $contentAdvisoryRating, genre: $genre}';
+  }
 }
