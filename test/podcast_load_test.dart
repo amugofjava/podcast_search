@@ -7,10 +7,14 @@ import 'package:test/test.dart';
 void main() {
   group('Podcast load test', () {
     test('Load podcast', () async {
-      var podcast = await Podcast.loadFeed(
-          url: 'https://podcasts.files.bbci.co.uk/p06tqsg3.rss');
+      var podcast = await Podcast.loadFeed(url: 'https://podcasts.files.bbci.co.uk/p06tqsg3.rss');
 
       expect(podcast.title, 'Forest 404');
+    });
+
+    test('Load invalid podcast - timeout', () async {
+      await expectLater(() => Podcast.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
+          throwsA(const TypeMatcher<PodcastTimeoutException>()));
     });
   });
 }

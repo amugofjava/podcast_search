@@ -1,3 +1,9 @@
+## 0.3.2
+
+- Now populates error values in the result set if the connection fails or timesout.
+- Added missing duration attribute.
+- Episode author will use iTunes version if item author is null.
+
 ## 0.3.1
 
 - Add support for returning podcast chart. 

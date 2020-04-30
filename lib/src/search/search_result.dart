@@ -3,6 +3,8 @@
 
 import 'package:podcast_search/src/model/item.dart';
 
+enum ErrorType { none, cancelled, failed, connection, timeout }
+
 /// This class is a container for our search results or for any error message
 /// received whilst attempting to fetch the podcast data.
 class SearchResult {
@@ -10,12 +12,14 @@ class SearchResult {
   final bool successful;
   final List<Item> items;
   final String lastError;
+  final ErrorType lastErrorType;
 
   SearchResult(this.resultCount, this.items)
       : successful = true,
-        lastError = '';
+        lastError = '',
+        lastErrorType = ErrorType.none;
 
-  SearchResult.fromError(this.lastError)
+  SearchResult.fromError(this.lastError, this.lastErrorType)
       : successful = false,
         resultCount = 0,
         items = [];
@@ -23,7 +27,7 @@ class SearchResult {
   factory SearchResult.fromJson(dynamic json) {
     /// Did we get an error message?
     if (json['errorMessage'] != null) {
-      return SearchResult.fromError(json['errorMessage']);
+      return SearchResult.fromError(json['errorMessage'], ErrorType.failed);
     }
 
     /// Fetch the results from the JSON data.

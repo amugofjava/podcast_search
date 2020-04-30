@@ -14,8 +14,8 @@ class Episode {
 
   // iTunes specific fields
   String author;
-  int duration;
+  final Duration duration;
 
   Episode.of(this.guid, this.title, this.description, this.link,
-      this.publicationDate, this.author, this.contentUrl);
+      this.publicationDate, this.author, this.duration, this.contentUrl);
 }

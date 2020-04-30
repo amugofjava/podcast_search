@@ -2,6 +2,7 @@
 // MIT license that can be found in the LICENSE file.
 library podcast_search;
 
+export 'src/exceptions/search_exceptions.dart';
 export 'src/model/attribute.dart';
 export 'src/model/country.dart';
 export 'src/model/language.dart';

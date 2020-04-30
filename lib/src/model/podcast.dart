@@ -2,13 +2,14 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:dart_rss/dart_rss.dart';
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/episode.dart';
 import 'package:podcast_search/src/utils/utils.dart';
-import 'package:webfeed/webfeed.dart';
 
 /// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
 /// then parsed and the episode list generated.
@@ -21,24 +22,56 @@ class Podcast {
   final String copyright;
   final List<Episode> episodes;
 
-  Podcast._(this.url, this.link, this.title, this.description, this.image,
-      this.copyright, this.episodes);
+  Podcast._(
+    this.url, [
+    this.link,
+    this.title,
+    this.description,
+    this.image,
+    this.copyright,
+    this.episodes,
+  ]);
 
-  static Future<Podcast> loadFeed({@required String url}) async {
-    final client = http.Client();
+  static Future<Podcast> loadFeed({@required String url, int timeout = 20000}) async {
+    final client = Dio(
+      BaseOptions(
+        connectTimeout: timeout,
+        receiveTimeout: timeout,
+        headers: {
+          HttpHeaders.userAgentHeader: 'podcast_search Dart/1.0',
+        },
+      ),
+    );
 
-    final response = await client
-        .get(url, headers: {'User-Agent': 'podcast_search Dart/1.0'});
+    try {
+      final response = await client.get(url);
 
-    var rssFeed = RssFeed.parse(utf8.decode(response.bodyBytes));
+      var rssFeed = RssFeed.parse(response.data);
 
-    // Parse the episodes
-    var episodes = <Episode>[];
+      // Parse the episodes
+      var episodes = <Episode>[];
 
-    _loadEpisodes(rssFeed, episodes);
+      _loadEpisodes(rssFeed, episodes);
 
-    return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description,
-        rssFeed.image?.url, rssFeed.copyright, episodes);
+      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, rssFeed.copyright, episodes);
+    } on DioError catch (e) {
+      switch (e.type) {
+        case DioErrorType.CONNECT_TIMEOUT:
+        case DioErrorType.SEND_TIMEOUT:
+        case DioErrorType.RECEIVE_TIMEOUT:
+        case DioErrorType.DEFAULT:
+          throw PodcastTimeoutException(e.message);
+          break;
+        case DioErrorType.RESPONSE:
+          throw PodcastFailedException(e.message);
+          break;
+        case DioErrorType.CANCEL:
+          throw PodcastCancelledException(e.message);
+          break;
+      }
+    }
+
+    return Podcast._(url);
   }
 
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
@@ -49,7 +82,8 @@ class Podcast {
         item.description,
         item.link,
         Utils.parseRFC2822Date(item.pubDate),
-        item.author,
+        item.author ?? item.itunes.author,
+        item.itunes?.duration,
         item.enclosure?.url,
       ));
     });

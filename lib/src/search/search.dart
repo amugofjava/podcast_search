@@ -2,14 +2,14 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/attribute.dart';
 import 'package:podcast_search/src/model/country.dart';
 import 'package:podcast_search/src/model/language.dart';
 import 'package:podcast_search/src/search/search_result.dart';
-
-import '../../podcast_search.dart';
 
 /// This class handles the searching. Taking the base URL we build any parameters
 /// that have been added before making a call to iTunes. The results are unpacked
@@ -18,7 +18,7 @@ class Search {
   static String FEED_API_ENDPOINT = 'https://itunes.apple.com';
   static String SEARCH_API_ENDPOINT = 'https://itunes.apple.com/search';
 
-  final http.Client client;
+  final Dio _client;
 
   String _term;
   Country _country;
@@ -27,12 +27,20 @@ class Search {
   Language _language;
   int _version;
   bool _explicit;
+  int timeout;
+  ErrorType _lastErrorType = ErrorType.none;
+  String _lastError;
 
-  /// By default we use our own http client instance, but the user can pass
-  /// in a difference instance if required.
-  Search({
-    client,
-  }) : client = client ?? http.Client();
+  Search({this.timeout = 20000})
+      : _client = Dio(
+          BaseOptions(
+            connectTimeout: timeout,
+            receiveTimeout: timeout,
+            headers: {
+              HttpHeaders.userAgentHeader: 'podcast_search Dart/1.0',
+            },
+          ),
+        );
 
   /// Search iTunes using the term [term].
   Future<SearchResult> search(
@@ -52,12 +60,17 @@ class Search {
     _version = version;
     _explicit = explicit;
 
-    final response = await client.get(_buildSearchUrl(),
-        headers: {'User-Agent': 'podcast_search Dart/1.0'});
+    try {
+      final response = await _client.get(_buildSearchUrl());
 
-    final results = json.decode(utf8.decode(response.bodyBytes));
+      final results = json.decode(response.data);
 
-    return SearchResult.fromJson(results);
+      return SearchResult.fromJson(results);
+    } on DioError catch (e) {
+      _setLastError(e);
+    }
+
+    return SearchResult.fromError(_lastError, _lastErrorType);
   }
 
   /// Fetches the list of top podcasts
@@ -78,12 +91,19 @@ class Search {
     _limit = limit;
     _explicit = explicit;
 
-    final response = await client.get(_buildChartsUrl(),
-        headers: {'User-Agent': 'podcast_search Dart/1.0'});
+    try {
+      final response = await _client.get(
+        _buildChartsUrl(),
+      );
 
-    final results = json.decode(utf8.decode(response.bodyBytes));
+      final results = json.decode(response.data);
 
-    return await _chartsToResults(results);
+      return await _chartsToResults(results);
+    } on DioError catch (e) {
+      _setLastError(e);
+    }
+
+    return SearchResult.fromError(_lastError, _lastErrorType);
   }
 
   Future<SearchResult> _chartsToResults(dynamic jsonInput) async {
@@ -91,24 +111,54 @@ class Search {
 
     var items = <Item>[];
 
-    if (entries != null) {
-      for (var entry in entries) {
-        var id = entry['id']['attributes']['im:id'];
+    try {
+      if (entries != null) {
+        for (var entry in entries) {
+          var id = entry['id']['attributes']['im:id'];
 
-        final response = await client.get(FEED_API_ENDPOINT + '/lookup?id=$id',
-            headers: {'User-Agent': 'podcast_search Dart/1.0'});
+          final response =
+              await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
 
-        final results = json.decode(utf8.decode(response.bodyBytes));
+          final results = json.decode(response.data);
 
-        if (results['results'] != null) {
-          var item = Item.fromJson(results['results'][0]);
+          if (results['results'] != null) {
+            var item = Item.fromJson(results['results'][0]);
 
-          items.add(item);
+            items.add(item);
+          }
         }
       }
+
+      return SearchResult(items.length, items);
+    } on DioError catch (e) {
+      _setLastError(e);
     }
 
-    return SearchResult(items.length, items);
+    return SearchResult.fromError(_lastError, _lastErrorType);
+  }
+
+  /// If an error occurs during an HTTP GET request this method is called to
+  /// determine the error and set two variables which can then be included
+  /// in the results. The client can then use these variables to determine
+  /// if there was an issue or not.
+  void _setLastError(DioError e) {
+    switch (e.type) {
+      case DioErrorType.DEFAULT:
+      case DioErrorType.CONNECT_TIMEOUT:
+      case DioErrorType.SEND_TIMEOUT:
+      case DioErrorType.RECEIVE_TIMEOUT:
+        _lastErrorType = ErrorType.connection;
+        _lastError = 'Connection timeout';
+        break;
+      case DioErrorType.RESPONSE:
+        _lastErrorType = ErrorType.failed;
+        _lastError = 'Server returned response error ${e.response?.statusCode}';
+        break;
+      case DioErrorType.CANCEL:
+        _lastErrorType = ErrorType.cancelled;
+        _lastError = 'Request was cancelled';
+        break;
+    }
   }
 
   /// This internal method constructs a correctly encoded URL which is then
