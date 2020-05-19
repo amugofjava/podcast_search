@@ -1,3 +1,9 @@
+## 0.3.3
+
+- If author attribute is not available use the iTunes one instead.
+- Replace any dynamic variables with typed equivalent.
+- Improve documentation.
+
 ## 0.3.2
 
 - Now populates error values in the result set if the connection fails or timesout.

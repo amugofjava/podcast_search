@@ -42,15 +42,18 @@ class Search {
           ),
         );
 
-  /// Search iTunes using the term [term].
+  /// Search iTunes using the term [term]. You can limit the results to
+  /// podcasts available in a specific country by supplying a [Country] option.
+  /// By default, searches will be based on keywords. Supply an [Attribute]
+  /// value to search by a different attribute such as Author, genre etc.
   Future<SearchResult> search(
     String term, {
-    country,
-    attribute,
-    limit,
-    language,
-    version = 0,
-    explicit = false,
+    Country country,
+    Attribute attribute,
+    int limit,
+    Language language,
+    int version = 0,
+    bool explicit = false,
   }) async {
     _term = term;
     _country = country;
@@ -83,10 +86,11 @@ class Search {
   /// result for each item resulting in a HTTP call for each result. Given
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
-  Future<SearchResult> charts(
-      {Country country = Country.UNITED_KINGDOM,
-      limit = 20,
-      explicit = false}) async {
+  Future<SearchResult> charts({
+    Country country = Country.UNITED_KINGDOM,
+    int limit = 20,
+    bool explicit = false,
+  }) async {
     _country = country;
     _limit = limit;
     _explicit = explicit;

@@ -32,7 +32,10 @@ class Podcast {
     this.episodes,
   ]);
 
-  static Future<Podcast> loadFeed({@required String url, int timeout = 20000}) async {
+  static Future<Podcast> loadFeed({
+    @required String url,
+    int timeout = 20000,
+  }) async {
     final client = Dio(
       BaseOptions(
         connectTimeout: timeout,
@@ -50,10 +53,12 @@ class Podcast {
 
       // Parse the episodes
       var episodes = <Episode>[];
+      var author = rssFeed.author ?? rssFeed.itunes.author;
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, rssFeed.copyright, episodes);
+      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description,
+          rssFeed.image?.url, author, episodes);
     } on DioError catch (e) {
       switch (e.type) {
         case DioErrorType.CONNECT_TIMEOUT:

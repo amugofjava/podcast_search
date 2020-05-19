@@ -25,6 +25,6 @@ void main() async {
 
   /// List the name of each podcast found.
   charts.items?.forEach((result) {
-    print('Episode title: ${result.trackName}');
+    print('Found podcast: ${result.trackName}');
   });
 }

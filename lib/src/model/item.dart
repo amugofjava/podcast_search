@@ -3,32 +3,81 @@
 
 import 'package:podcast_search/src/model/genre.dart';
 
-/// A class that represents an individual item within the result set.
+/// A class that represents an individual Podcast within the
+/// search results.
 class Item {
+  /// The iTunes ID of the artist.
   final int artistId;
+
+  /// The iTunes ID of the collection.
   final int collectionId;
+
+  /// The iTunes ID of the track.
   final int trackId;
+
+  /// The item unique identifier.
   final String guid;
+
+  /// The name of the artist.
   final String artistName;
+
+  /// The name of the iTunes collection the Podcast is part of.
   final String collectionName;
+
+  /// The track name.
   final String trackName;
+
+  /// The censored version of the collection name.
   final String collectionCensoredName;
+
+  /// The censored version of the track name,
   final String trackCensoredName;
+
+  /// The URL of the iTunes page for the artist.
   final String artistViewUrl;
+
+  /// The URL of the iTunes page for the podcast.
   final String collectionViewUrl;
+
+  /// The URL of the RSS feed for the podcast.
   final String feedUrl;
+
+  /// The URL of the iTunes page for the track.
   final String trackViewUrl;
+
+  /// Podcast artwork URL 30x30.
   final String artworkUrl30;
+
+  /// Podcast artwork URL 60x60.
   final String artworkUrl60;
+
+  /// Podcast artwork URL 100x100.
   final String artworkUrl100;
+
+  /// Podcast artwork URL 600x600.
   final String artworkUrl600;
+
+  /// Podcast release date
   final DateTime releaseDate;
+
+  /// Explicitness of the collection. For example notExplicit.
   final String collectionExplicitness;
+
+  /// Explicitness of the track. For example notExplicit.
   final String trackExplicitness;
+
+  /// Number of tracks in the results.
   final int trackCount;
+
+  /// Country of origin.
   final String country;
+
+  /// Primary genre for the podcast.
   final String primaryGenreName;
+
   final String contentAdvisoryRating;
+
+  /// Full list of genres for the podcast.
   final List<Genre> genre;
 
   Item({

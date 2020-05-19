@@ -3,7 +3,10 @@
 
 /// A class that represents the genre(s) the podcast is related to.
 class Genre {
+  /// Genre ID.
   int id;
+
+  /// Genre name.
   String name;
 
   Genre(this.id, this.name);

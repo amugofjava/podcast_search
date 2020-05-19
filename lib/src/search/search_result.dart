@@ -8,10 +8,19 @@ enum ErrorType { none, cancelled, failed, connection, timeout }
 /// This class is a container for our search results or for any error message
 /// received whilst attempting to fetch the podcast data.
 class SearchResult {
+  /// The number of podcasts found.
   final int resultCount;
+
+  /// True if the search was successful; false otherwise.
   final bool successful;
+
+  /// The list of search results.
   final List<Item> items;
+
+  /// The last error.
   final String lastError;
+
+  /// The type of error.
   final ErrorType lastErrorType;
 
   SearchResult(this.resultCount, this.items)
