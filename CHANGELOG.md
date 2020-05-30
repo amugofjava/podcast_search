@@ -1,3 +1,7 @@
+## 0.3.4
+
+- Update dependencies.
+
 ## 0.3.3
 
 - If author attribute is not available use the iTunes one instead.
