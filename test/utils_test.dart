@@ -11,7 +11,10 @@ void main() {
     var d3 = 'Mon, 03 Jun 2019 10:00:00 -02:00';
     var d4 = 'Mon, 03 Jun 2019 10:00:00 +0000';
     var d5 = 'Mon, 03 Jun 2019 10:00:00 -0000';
-    var d6 = '2019-12-01T08:30:45+00:00'; // ISO 8601 format
+    var d6 = 'Mon, 03 June 2019 10:00:00 GMT';
+    var d7 = 'Tue, 01 January 2019 10:00:00 GMT';
+    var d8 = 'Tue, 1 January 2019 10:00:00 GMT';
+    var i1 = '2019-12-01T08:30:45+00:00'; // ISO 8601 format
 
     test('Date format zone abbr', () async {
       var result = Utils.parseRFC2822Date(d1).toIso8601String();
@@ -43,8 +46,26 @@ void main() {
       expect(result, '2019-06-03T10:00:00.000Z');
     });
 
-    test('Date format ISO 8601', () async {
+    test('Date format zone -offset 2c', () async {
       var result = Utils.parseRFC2822Date(d6).toIso8601String();
+
+      expect(result, '2019-06-03T10:00:00.000Z');
+    });
+
+    test('Date format zone -offset 2d', () async {
+      var result = Utils.parseRFC2822Date(d7).toIso8601String();
+
+      expect(result, '2019-01-01T10:00:00.000Z');
+    });
+
+    test('Date format zone -offset 2e', () async {
+      var result = Utils.parseRFC2822Date(d8).toIso8601String();
+
+      expect(result, '2019-01-01T10:00:00.000Z');
+    });
+
+    test('Date format ISO 8601', () async {
+      var result = Utils.parseRFC2822Date(i1).toIso8601String();
 
       expect(result, '2019-12-01T08:30:45.000Z');
     });
