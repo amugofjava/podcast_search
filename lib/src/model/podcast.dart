@@ -57,8 +57,7 @@ class Podcast {
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description,
-          rssFeed.image?.url, author, episodes);
+      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, author, episodes);
     } on DioError catch (e) {
       switch (e.type) {
         case DioErrorType.CONNECT_TIMEOUT:
@@ -82,15 +81,16 @@ class Podcast {
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
     rssFeed.items.forEach((item) {
       episodes.add(Episode.of(
-        item.guid,
-        item.title,
-        item.description,
-        item.link,
-        Utils.parseRFC2822Date(item.pubDate),
-        item.author ?? item.itunes.author,
-        item.itunes?.duration,
-        item.enclosure?.url,
-      ));
+          item.guid,
+          item.title,
+          item.description,
+          item.link,
+          Utils.parseRFC2822Date(item.pubDate),
+          item.author ?? item.itunes.author,
+          item.itunes?.duration,
+          item.enclosure?.url,
+          item.itunes?.season,
+          item.itunes?.episode));
     });
   }
 }
