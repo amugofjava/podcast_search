@@ -12,12 +12,7 @@ dependencies:
   dio: ^3.0.9
 
   # RSS parsing library.
-  # I dislike pulling in directly from Git, but until the parent package is
-  # updated I need this commit as it contains a necessary dependency update.
-  dart_rss:
-    git:
-      url: https://github.com/amugofjava/dart-rss.git
-      ref: 2ad380dd84f5d2b32acabac226999086945273ab
+  dart_rss: ^1.1.0
 
   # Meta.
   meta: ^1.1.8
