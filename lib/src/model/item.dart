@@ -131,7 +131,8 @@ class Item {
       artworkUrl60: json['artworkUrl60'] as String,
       artworkUrl100: json['artworkUrl100'] as String,
       artworkUrl600: json['artworkUrl600'] as String,
-      genre: Item._loadGenres(json['genreIds'].cast<String>(), json['genres'].cast<String>()),
+      genre: Item._loadGenres(
+          json['genreIds'].cast<String>(), json['genres'].cast<String>()),
       releaseDate: DateTime.parse(json['releaseDate']),
       country: json['country'] as String,
       primaryGenreName: json['primaryGenreName'] as String,

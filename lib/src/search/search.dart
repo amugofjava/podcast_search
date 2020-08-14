@@ -120,7 +120,8 @@ class Search {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response = await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
+          final response =
+              await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
 
           final results = json.decode(response.data);
 
@@ -196,7 +197,9 @@ class Search {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty ? '?term=' + Uri.encodeComponent(term) : '';
+    return term != null && term.isNotEmpty
+        ? '?term=' + Uri.encodeComponent(term)
+        : '';
   }
 
   String _countryParam() {
@@ -204,7 +207,9 @@ class Search {
   }
 
   String _attributeParam() {
-    return _attribute != null ? '&attribute=' + Uri.encodeComponent(_attribute.attribute) : '';
+    return _attribute != null
+        ? '&attribute=' + Uri.encodeComponent(_attribute.attribute)
+        : '';
   }
 
   String _limitParam() {

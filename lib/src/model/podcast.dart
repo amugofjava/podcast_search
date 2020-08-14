@@ -57,7 +57,8 @@ class Podcast {
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, author, episodes);
+      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description,
+          rssFeed.image?.url, author, episodes);
     } on DioError catch (e) {
       switch (e.type) {
         case DioErrorType.CONNECT_TIMEOUT:

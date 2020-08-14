@@ -32,6 +32,15 @@ class Episode {
   /// Length of the episode as a [Duration].
   final Duration duration;
 
-  Episode.of(this.guid, this.title, this.description, this.link, this.publicationDate, this.author, this.duration, this.contentUrl,
-      this.season, this.episode);
+  Episode.of(
+      this.guid,
+      this.title,
+      this.description,
+      this.link,
+      this.publicationDate,
+      this.author,
+      this.duration,
+      this.contentUrl,
+      this.season,
+      this.episode);
 }
