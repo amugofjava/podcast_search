@@ -25,9 +25,22 @@ class Episode {
   /// Episode author.
   String author;
 
+  int season;
+
+  int episode;
+
   /// Length of the episode as a [Duration].
   final Duration duration;
 
-  Episode.of(this.guid, this.title, this.description, this.link,
-      this.publicationDate, this.author, this.duration, this.contentUrl);
+  Episode.of(
+      this.guid,
+      this.title,
+      this.description,
+      this.link,
+      this.publicationDate,
+      this.author,
+      this.duration,
+      this.contentUrl,
+      this.season,
+      this.episode);
 }

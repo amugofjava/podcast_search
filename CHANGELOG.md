@@ -1,3 +1,11 @@
+## 0.3.6
+
+- Update dependencies.
+
+## 0.3.5
+
+- Add support for iTunes season and episode tags.
+
 ## 0.3.4
 
 - Update dependencies.

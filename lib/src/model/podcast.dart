@@ -82,15 +82,16 @@ class Podcast {
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
     rssFeed.items.forEach((item) {
       episodes.add(Episode.of(
-        item.guid,
-        item.title,
-        item.description,
-        item.link,
-        Utils.parseRFC2822Date(item.pubDate),
-        item.author ?? item.itunes.author,
-        item.itunes?.duration,
-        item.enclosure?.url,
-      ));
+          item.guid,
+          item.title,
+          item.description,
+          item.link,
+          Utils.parseRFC2822Date(item.pubDate),
+          item.author ?? item.itunes.author,
+          item.itunes?.duration,
+          item.enclosure?.url,
+          item.itunes?.season,
+          item.itunes?.episode));
     });
   }
 }
