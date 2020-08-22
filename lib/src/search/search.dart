@@ -22,6 +22,7 @@ class Search {
 
   String _term;
   Country _country;
+  Genre _genre;
   Attribute _attribute;
   int _limit;
   Language _language;
@@ -90,15 +91,16 @@ class Search {
     Country country = Country.UNITED_KINGDOM,
     int limit = 20,
     bool explicit = false,
-    int genreId,
+    Genre genre,
   }) async {
     _country = country;
     _limit = limit;
     _explicit = explicit;
+    _genre = genre;
 
     try {
       final response = await _client.get(
-        _buildChartsUrl(genreId: genreId),
+        _buildChartsUrl(genre: _genre),
       );
 
       final results = json.decode(response.data);
@@ -183,15 +185,16 @@ class Search {
     return buf.toString();
   }
 
-  String _buildChartsUrl({int genreId}) {
+  String _buildChartsUrl({Genre genre}) {
     final buf = StringBuffer(FEED_API_ENDPOINT);
 
     buf.write('/');
     buf.write(_country.countryCode.toLowerCase());
     buf.write('/rss/toppodcasts/limit=');
     buf.write(_limit);
-    if(genreId != null)
-      buf.write('/genre=$genreId');
+    if(genre != null && genre.id != null) {
+      buf.write('/genre=${genre.id}');
+    }
     buf.write('/explicit=');
     buf.write(_explicit);
     buf.write('/json');
