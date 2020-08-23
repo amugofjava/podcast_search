@@ -5,6 +5,7 @@ library podcast_search;
 export 'src/exceptions/search_exceptions.dart';
 export 'src/model/attribute.dart';
 export 'src/model/country.dart';
+export 'src/model/genre.dart';
 export 'src/model/language.dart';
 export 'src/model/item.dart';
 export 'src/model/podcast.dart';
