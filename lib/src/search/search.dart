@@ -100,7 +100,7 @@ class Search {
 
     try {
       final response = await _client.get(
-        _buildChartsUrl(genre: _genre),
+        _buildChartsUrl(),
       );
 
       final results = json.decode(response.data);
@@ -123,8 +123,7 @@ class Search {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response =
-              await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
+          final response = await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
 
           final results = json.decode(response.data);
 
@@ -185,16 +184,19 @@ class Search {
     return buf.toString();
   }
 
-  String _buildChartsUrl({Genre genre}) {
+  String _buildChartsUrl() {
     final buf = StringBuffer(FEED_API_ENDPOINT);
 
     buf.write('/');
     buf.write(_country.countryCode.toLowerCase());
+
     buf.write('/rss/toppodcasts/limit=');
     buf.write(_limit);
-    if(genre != null && genre.id != null) {
-      buf.write('/genre=${genre.id}');
+
+    if (_genre != null && _genre.id != null) {
+      buf.write('/genre=${_genre.id}');
     }
+
     buf.write('/explicit=');
     buf.write(_explicit);
     buf.write('/json');
@@ -203,9 +205,7 @@ class Search {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty
-        ? '?term=' + Uri.encodeComponent(term)
-        : '';
+    return term != null && term.isNotEmpty ? '?term=' + Uri.encodeComponent(term) : '';
   }
 
   String _countryParam() {
@@ -213,9 +213,7 @@ class Search {
   }
 
   String _attributeParam() {
-    return _attribute != null
-        ? '&attribute=' + Uri.encodeComponent(_attribute.attribute)
-        : '';
+    return _attribute != null ? '&attribute=' + Uri.encodeComponent(_attribute.attribute) : '';
   }
 
   String _limitParam() {

@@ -19,8 +19,8 @@ void main() async {
     print('Episode title: ${episode.title}');
   });
 
-  /// Find the top 10 podcasts in the UK.
-  var charts = await search.charts(limit: 10, country: Country.UNITED_KINGDOM);
+  /// Find the top 10 comedy podcasts in the UK.
+  var charts = await search.charts(genre: Genre.COMEDY, limit: 10, country: Country.UNITED_KINGDOM);
 
   /// List the name of each podcast found.
   charts.items?.forEach((result) {

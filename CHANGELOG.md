@@ -1,3 +1,7 @@
+## 0.3.7
+
+- Charts can be optionally filtered by genre.
+
 ## 0.3.6
 
 - Update dependencies.
