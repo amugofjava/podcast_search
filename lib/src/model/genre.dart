@@ -31,7 +31,9 @@ class Genre {
   static const Genre TECHNOLOGY = Genre._(1318, 'Technology');
   static const Genre TRUE_CRIME = Genre._(1488, 'True Crime');
 
-  const Genre._(int id, String name) : _id = id, _name = name;
+  const Genre._(int id, String name)
+      : _id = id,
+        _name = name;
 
   @override
   String toString() {

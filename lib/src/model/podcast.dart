@@ -35,13 +35,14 @@ class Podcast {
   static Future<Podcast> loadFeed({
     @required String url,
     int timeout = 20000,
+    String userAgent,
   }) async {
     final client = Dio(
       BaseOptions(
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          HttpHeaders.userAgentHeader: 'podcast_search Dart/1.0',
+          HttpHeaders.userAgentHeader: userAgent == null ? 'podcast_search/0.3.8' : '${userAgent} (podcast_search/0.3.8)',
         },
       ),
     );
@@ -57,8 +58,7 @@ class Podcast {
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description,
-          rssFeed.image?.url, author, episodes);
+      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, author, episodes);
     } on DioError catch (e) {
       switch (e.type) {
         case DioErrorType.CONNECT_TIMEOUT:

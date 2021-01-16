@@ -31,14 +31,17 @@ class Search {
   int timeout;
   ErrorType _lastErrorType = ErrorType.none;
   String _lastError;
+  String userAgent;
 
-  Search({this.timeout = 20000})
-      : _client = Dio(
+  Search({
+    this.timeout = 20000,
+    this.userAgent,
+  }) : _client = Dio(
           BaseOptions(
             connectTimeout: timeout,
             receiveTimeout: timeout,
             headers: {
-              HttpHeaders.userAgentHeader: 'podcast_search Dart/1.0',
+              HttpHeaders.userAgentHeader: userAgent == null ? 'podcast_search/0.3.8' : '${userAgent} (podcast_search/0.3.8)',
             },
           ),
         );

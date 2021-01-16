@@ -1,3 +1,7 @@
+## 0.3.8
+
+- Add optional user defined UserAgent prefix.
+
 ## 0.3.7
 
 - Charts can be optionally filtered by genre.

@@ -42,9 +42,7 @@ class SearchResult {
     /// Fetch the results from the JSON data.
     final items = json['results'] == null
         ? null
-        : (json['results'] as List)
-            .cast<Map<String, Object>>()
-            .map((Map<String, Object> item) {
+        : (json['results'] as List).cast<Map<String, Object>>().map((Map<String, Object> item) {
             return Item.fromJson(item);
           }).toList();
 
