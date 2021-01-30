@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   archive: ^2.0.13
+  convert: ^2.1.1
   crypto: ^2.1.5
   dio: ^3.0.10
   dart_rss: ^1.1.1+1
