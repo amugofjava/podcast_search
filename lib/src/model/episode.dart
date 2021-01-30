@@ -1,4 +1,4 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
+// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
 /// A class representing an individual episode.
@@ -18,20 +18,32 @@ class Episode {
   /// Publication date of the episode.
   final DateTime publicationDate;
 
-  // Media fields
+  /// Media fields
   String contentUrl;
 
   // iTunes specific fields
   /// Episode author.
   String author;
 
+  /// Season
   int season;
 
+  /// Episode number
   int episode;
 
   /// Length of the episode as a [Duration].
   final Duration duration;
 
-  Episode.of(this.guid, this.title, this.description, this.link, this.publicationDate, this.author, this.duration, this.contentUrl,
-      this.season, this.episode);
+  Episode.of(
+    this.guid,
+    this.title,
+    this.description,
+    this.link,
+    this.publicationDate,
+    this.author,
+    this.duration,
+    this.contentUrl,
+    this.season,
+    this.episode,
+  );
 }

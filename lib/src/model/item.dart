@@ -1,10 +1,12 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
+// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
+import 'package:meta/meta.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/genre.dart';
 
-/// A class that represents an individual Podcast within the
-/// search results.
+/// A class that represents an individual Podcast within the search results. Not all
+/// properties may contain values for all search providers.
 class Item {
   /// The iTunes ID of the artist.
   final int artistId;
@@ -57,6 +59,9 @@ class Item {
   /// Podcast artwork URL 600x600.
   final String artworkUrl600;
 
+  /// Original artwork at intended resolution.
+  final String artworkUrl;
+
   /// Podcast release date
   final DateTime releaseDate;
 
@@ -101,6 +106,7 @@ class Item {
     this.artworkUrl60,
     this.artworkUrl100,
     this.artworkUrl600,
+    this.artworkUrl,
     this.releaseDate,
     this.country,
     this.primaryGenreName,
@@ -109,7 +115,11 @@ class Item {
   });
 
   /// Takes our json map and builds a Podcast instance from it.
-  factory Item.fromJson(Map<String, dynamic> json) {
+  factory Item.fromJson({@required Map<String, dynamic> json, ResultType type = ResultType.itunes}) {
+    return type == ResultType.itunes ? _fromItunes(json) : _fromPodcastIndex(json);
+  }
+
+  static Item _fromItunes(Map<String, dynamic> json) {
     return Item(
       artistId: json['artistId'] as int,
       collectionId: json['collectionId'] as int,
@@ -139,6 +149,28 @@ class Item {
     );
   }
 
+  static Item _fromPodcastIndex(Map<String, dynamic> json) {
+    int pubDateSeconds = json['lastUpdateTime'] ?? DateTime.now();
+
+    var pubDate = Duration(seconds: pubDateSeconds);
+    var categories = json['categories'];
+    var genres = <Genre>[];
+
+    if (categories != null) {
+      categories.forEach((key, value) => genres.add(Genre(int.parse(key), value)));
+    }
+
+    return Item(
+      artistName: json['ownerName'] as String,
+      trackName: json['title'] as String,
+      feedUrl: json['url'] as String,
+      trackViewUrl: json['link'] as String,
+      artworkUrl: json['image'] as String,
+      genre: genres,
+      releaseDate: DateTime.fromMillisecondsSinceEpoch(pubDate.inMilliseconds),
+    );
+  }
+
   /// Genres appear within the json as two separate lists. This utility function
   /// creates Genre instances for each id and name pair.
   static List<Genre> _loadGenres(List<String> id, List<String> name) {
@@ -153,8 +185,38 @@ class Item {
     return genres;
   }
 
-  @override
-  String toString() {
-    return 'Item{artistId: $artistId, collectionId: $collectionId, trackId: $trackId, guid: $guid, artistName: $artistName, collectionName: $collectionName, trackName: $trackName, collectionCensoredName: $collectionCensoredName, trackCensoredName: $trackCensoredName, artistViewUrl: $artistViewUrl, collectionViewUrl: $collectionViewUrl, feedUrl: $feedUrl, trackViewUrl: $trackViewUrl, artworkUrl30: $artworkUrl30, artworkUrl60: $artworkUrl60, artworkUrl100: $artworkUrl100, artworkUrl600: $artworkUrl600, releaseDate: $releaseDate, collectionExplicitness: $collectionExplicitness, trackExplicitness: $trackExplicitness, trackCount: $trackCount, country: $country, primaryGenreName: $primaryGenreName, contentAdvisoryRating: $contentAdvisoryRating, genre: $genre}';
+  /// Contains a URL for the highest resolution artwork available. If no artwork is available
+  /// this will return an empty [String].
+  String get bestArtworkUrl {
+    if (artworkUrl != null) {
+      return artworkUrl;
+    } else if (artworkUrl600 != null) {
+      return artworkUrl600;
+    } else if (artworkUrl100 != null) {
+      return artworkUrl100;
+    } else if (artworkUrl60 != null) {
+      return artworkUrl60;
+    } else if (artworkUrl30 != null) {
+      return artworkUrl30;
+    }
+
+    return '';
+  }
+
+  /// Contains a URL for the thumbnail resolution artwork. If no thumbnail size artwork
+  /// is available this could return a URL for the full size image. If no artwork is available
+  /// this will return an empty [String].
+  String get thumbnailArtworkUrl {
+    if (artworkUrl60 != null) {
+      return artworkUrl60;
+    } else if (artworkUrl100 != null) {
+      return artworkUrl100;
+    } else if (artworkUrl600 != null) {
+      return artworkUrl600;
+    } else if (artworkUrl != null) {
+      return artworkUrl;
+    }
+
+    return '';
   }
 }

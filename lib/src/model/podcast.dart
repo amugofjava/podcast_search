@@ -1,4 +1,4 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
+// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/episode.dart';
+import 'package:podcast_search/src/search/base_search.dart';
 import 'package:podcast_search/src/utils/utils.dart';
 
 /// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
@@ -42,7 +43,7 @@ class Podcast {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          HttpHeaders.userAgentHeader: userAgent == null ? 'podcast_search/0.3.8' : '${userAgent} (podcast_search/0.3.8)',
+          HttpHeaders.userAgentHeader: userAgent == null ? '$podcastSearchAgent' : '${userAgent} ($podcastSearchAgent)',
         },
       ),
     );

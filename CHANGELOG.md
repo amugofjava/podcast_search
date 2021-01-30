@@ -1,3 +1,8 @@
+## 0.3.9
+
+- Update dependencies
+- Add support for searching with PodcastIndex (Preview).
+
 ## 0.3.8
 
 - Add optional user defined UserAgent prefix.

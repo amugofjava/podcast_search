@@ -1,9 +1,29 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
+// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
+import 'package:meta/meta.dart';
 import 'package:podcast_search/src/model/item.dart';
 
-enum ErrorType { none, cancelled, failed, connection, timeout }
+enum ErrorType {
+  none,
+  cancelled,
+  failed,
+  connection,
+  timeout,
+}
+enum ResultType {
+  itunes,
+  podcastIndex,
+}
+
+const startTagMap = {
+  ResultType.itunes: 'results',
+  ResultType.podcastIndex: 'feeds',
+};
+const countTagMap = {
+  ResultType.itunes: 'resultCount',
+  ResultType.podcastIndex: 'count',
+};
 
 /// This class is a container for our search results or for any error message
 /// received whilst attempting to fetch the podcast data.
@@ -33,19 +53,22 @@ class SearchResult {
         resultCount = 0,
         items = [];
 
-  factory SearchResult.fromJson(dynamic json) {
+  factory SearchResult.fromJson({@required dynamic json, ResultType type = ResultType.itunes}) {
     /// Did we get an error message?
     if (json['errorMessage'] != null) {
       return SearchResult.fromError(json['errorMessage'], ErrorType.failed);
     }
 
+    var dataStart = startTagMap[type];
+    var dataCount = countTagMap[type];
+
     /// Fetch the results from the JSON data.
-    final items = json['results'] == null
+    final items = json[dataStart] == null
         ? null
-        : (json['results'] as List).cast<Map<String, Object>>().map((Map<String, Object> item) {
-            return Item.fromJson(item);
+        : (json[dataStart] as List).cast<Map<String, Object>>().map((Map<String, Object> item) {
+            return Item.fromJson(json: item, type: type);
           }).toList();
 
-    return SearchResult(json['resultCount'], items);
+    return SearchResult(json[dataCount], items);
   }
 }
