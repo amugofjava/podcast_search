@@ -1,6 +1,8 @@
 // Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
+import 'package:podcast_search/src/model/chapters.dart';
+
 /// A class representing an individual episode.
 class Episode {
   /// The episode unique identifier.
@@ -34,7 +36,10 @@ class Episode {
   /// Length of the episode as a [Duration].
   final Duration duration;
 
-  Episode.of(
+  /// Episode chapters for feeds that support PodcastIndex
+  final Chapters chapters;
+
+  Episode({
     this.guid,
     this.title,
     this.description,
@@ -45,5 +50,6 @@ class Episode {
     this.contentUrl,
     this.season,
     this.episode,
-  );
+    this.chapters,
+  });
 }

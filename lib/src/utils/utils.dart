@@ -196,7 +196,8 @@ class Utils {
 
   static const _allowablePatterns = {
     // Mon, 03 Jun 2019 10:00:00 PDT (type 1)
-    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([A-Za-z]{3})': 1,
+    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([A-Za-z]{3})':
+        1,
 
     // Mon, 03 Jun 2019 10:00:00 +02:30 (type 2)
     '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([\+|\-][0-9][0-9]:[0-9][0-9])':
@@ -246,7 +247,8 @@ class Utils {
         var offset = v == 1 ? _timezones[match.group(6)] : match.group(6);
         var day = match.group(2).padLeft(2, '0');
 
-        var iso = '${match.group(4)}-${month}-${day}T${match.group(5)}${offset}';
+        var iso =
+            '${match.group(4)}-${month}-${day}T${match.group(5)}${offset}';
 
         result = DateTime.parse(iso);
       }

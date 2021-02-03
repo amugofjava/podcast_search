@@ -1,4 +1,4 @@
-A library for searching for podcasts (via iTunes), parsing podcast RSS feeds and obtaining episodes details. 
+A library for searching for podcasts, parsing podcast RSS feeds and obtaining episodes details. Supports searching via iTunes and PodcastIndex (preview).
 
 ## Usage
 

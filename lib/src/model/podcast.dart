@@ -2,37 +2,67 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dart_rss/dart_rss.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/model/chapter.dart';
+import 'package:podcast_search/src/model/chapter_headers.dart';
+import 'package:podcast_search/src/model/chapters.dart';
 import 'package:podcast_search/src/model/episode.dart';
+import 'package:podcast_search/src/model/funding.dart';
+import 'package:podcast_search/src/model/locked.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 import 'package:podcast_search/src/utils/utils.dart';
 
 /// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
 /// then parsed and the episode list generated.
 class Podcast {
+  /// The URL of the podcast. Contained within the enclosure RSS tag.
   final String url;
+
+  /// Podcast link.
   final String link;
+
+  /// Name of the podcast.
   final String title;
+
+  /// Optional description.
   final String description;
+
+  /// Url of artwork image
   final String image;
+
+  /// Copyright
   final String copyright;
+
+  /// Indicates to podcast platforms whether this feed can be imported or not. If [true] the
+  /// feed is locked and should not be imported elsewhere.
+  final Locked locked;
+
+  /// If the podcast supports funding this will contain an instance of [Funding] that
+  /// contains the Url and optional description.
+  final Funding funding;
+
+  /// A list of current episodes.
   final List<Episode> episodes;
 
-  Podcast._(
-    this.url, [
+  Podcast._({
+    this.url,
     this.link,
     this.title,
     this.description,
     this.image,
     this.copyright,
+    this.locked,
+    this.funding,
     this.episodes,
-  ]);
+  });
 
+  /// This method takes a Url pointing to an RSS feed containing the Podcast details and episodes. You
+  /// can optionally specify a timeout value in milliseconds and a custom user-agent string that will
+  /// be used in HTTP/HTTPS communications with the feed source.
   static Future<Podcast> loadFeed({
     @required String url,
     int timeout = 20000,
@@ -43,7 +73,9 @@ class Podcast {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          HttpHeaders.userAgentHeader: userAgent == null ? '$podcastSearchAgent' : '${userAgent} ($podcastSearchAgent)',
+          'user-agent': userAgent == null
+              ? '$podcastSearchAgent'
+              : '${userAgent} ($podcastSearchAgent)',
         },
       ),
     );
@@ -56,10 +88,29 @@ class Podcast {
       // Parse the episodes
       var episodes = <Episode>[];
       var author = rssFeed.author ?? rssFeed.itunes.author;
+      var locked = Locked(
+        locked: rssFeed.podcastIndex.locked?.locked ?? false,
+        owner: rssFeed.podcastIndex.locked?.owner ?? '',
+      );
+
+      var funding = Funding(
+        url: rssFeed.podcastIndex.funding?.url ?? '',
+        value: rssFeed.podcastIndex.funding?.value ?? '',
+      );
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, author, episodes);
+      return Podcast._(
+        url: url,
+        link: rssFeed.link,
+        title: rssFeed.title,
+        description: rssFeed.description,
+        image: rssFeed.image?.url,
+        copyright: author,
+        locked: locked,
+        funding: funding,
+        episodes: episodes,
+      );
     } on DioError catch (e) {
       switch (e.type) {
         case DioErrorType.CONNECT_TIMEOUT:
@@ -77,22 +128,98 @@ class Podcast {
       }
     }
 
-    return Podcast._(url);
+    return Podcast._(url: url);
+  }
+
+  /// Podcasts that support the newer podcast namespace can include chapter markers. Typically this
+  /// is in the form of a Url in the RSS feed pointing to a JSON file. This method takes the Url
+  /// and loads the chapters, storing the results in the [Episode] itself. Repeatedily calling this
+  /// method for the same episode will, by default, not reload the chapters data and will simply
+  /// return the [Episode] back. If you need to reload the chapters set the [forceReload] parameter
+  /// to [true].
+  static Future<Episode> loadEpisodeChapters({
+    @required Episode episode,
+    bool forceReload = false,
+    int timeout = 20000,
+  }) async {
+    final client = Dio(
+      BaseOptions(
+        connectTimeout: timeout,
+        receiveTimeout: timeout,
+      ),
+    );
+
+    if (episode.chapters.chapters.isNotEmpty &&
+        !episode.chapters.loaded &&
+        !forceReload) {
+      try {
+        final response = await client.get(episode.chapters.url);
+        final data = Map<String, dynamic>.from(response.data);
+        final chapters = data['chapters'] ?? [];
+
+        episode.chapters.headers = ChapterHeaders(
+          version: data['version'] ?? '',
+          title: data['title'] ?? '',
+          author: data['author'] ?? '',
+          podcastName: data['podcastName'] ?? '',
+          description: data['description'] ?? '',
+          fileName: data['fileName'] ?? '',
+        );
+
+        episode.chapters.loaded = true;
+
+        for (var chapter in chapters) {
+          episode.chapters.chapters.add(
+            Chapter(
+                url: chapter['url'] ?? '',
+                imageUrl: chapter['img'] ?? '',
+                title: chapter['title'] ?? '',
+                startTime: chapter['startTime'] ?? 0.0,
+                endTime: chapter['endTime'] ?? 0.0,
+                toc: chapter['toc'] ?? false),
+          );
+        }
+      } on DioError catch (e) {
+        switch (e.type) {
+          case DioErrorType.CONNECT_TIMEOUT:
+          case DioErrorType.SEND_TIMEOUT:
+          case DioErrorType.RECEIVE_TIMEOUT:
+          case DioErrorType.DEFAULT:
+            throw PodcastTimeoutException(e.message);
+            break;
+          case DioErrorType.RESPONSE:
+            throw PodcastFailedException(e.message);
+            break;
+          case DioErrorType.CANCEL:
+            throw PodcastCancelledException(e.message);
+            break;
+        }
+      }
+    }
+
+    return episode;
   }
 
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
     rssFeed.items.forEach((item) {
-      episodes.add(Episode.of(
-          item.guid,
-          item.title,
-          item.description,
-          item.link,
-          Utils.parseRFC2822Date(item.pubDate),
-          item.author ?? item.itunes.author,
-          item.itunes?.duration,
-          item.enclosure?.url,
-          item.itunes?.season,
-          item.itunes?.episode));
+      var chapters = Chapters(
+        url: item.podcastIndex.chapters?.url ?? '',
+        type: item.podcastIndex.chapters?.type ?? '',
+      );
+
+      episodes.add(Episode(
+        guid: item.guid,
+        title: item.title,
+        description: item.description,
+        link: item.link,
+        publicationDate: Utils.parseRFC2822Date(item.pubDate),
+        author: item.author ?? item.itunes.author,
+        duration: item.itunes?.duration,
+        contentUrl: item.enclosure?.url,
+        season: item.itunes?.season,
+        episode: item.itunes?.episode,
+        chapters: chapters,
+      ));
     });
   }
 }

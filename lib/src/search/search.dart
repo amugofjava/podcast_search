@@ -110,7 +110,8 @@ class Search {
     _explicit = explicit;
     _genre = genre;
 
-    return ITunesSearch().charts(country: _country, limit: _limit, explicit: _explicit, genre: _genre);
+    return ITunesSearch().charts(
+        country: _country, limit: _limit, explicit: _explicit, genre: _genre);
   }
 
   /// Returns the search term.
