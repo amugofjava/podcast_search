@@ -13,3 +13,4 @@ export 'src/model/podcast.dart';
 export 'src/model/search_result.dart';
 export 'src/search/providers/providers.dart';
 export 'src/search/search.dart';
+export 'src/model/value.dart';

@@ -4,6 +4,7 @@
 import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/genre.dart';
+import 'package:podcast_search/src/model/value.dart';
 
 /// A class that represents an individual Podcast within the search results. Not all
 /// properties may contain values for all search providers.
@@ -85,6 +86,9 @@ class Item {
   /// Full list of genres for the podcast.
   final List<Genre> genre;
 
+  // the value tag of the podcast.
+  final Value value;
+
   Item({
     this.artistId,
     this.collectionId,
@@ -112,6 +116,7 @@ class Item {
     this.primaryGenreName,
     this.contentAdvisoryRating,
     this.genre,
+    this.value,
   });
 
   /// Takes our json map and builds a Podcast instance from it.
@@ -156,8 +161,14 @@ class Item {
     var categories = json['categories'];
     var genres = <Genre>[];
 
-    if (categories != null) {
+    if (categories != null && categories is Map<String, dynamic>) {
       categories.forEach((key, value) => genres.add(Genre(int.parse(key), value)));
+    }
+
+    var valueJson = json['value'];
+    Value value;
+    if (valueJson != null) {
+      value = Value.fromJson(valueJson);
     }
 
     return Item(
@@ -168,6 +179,7 @@ class Item {
       artworkUrl: json['image'] as String,
       genre: genres,
       releaseDate: DateTime.fromMillisecondsSinceEpoch(pubDate.inMilliseconds),
+      value: value,
     );
   }
 
