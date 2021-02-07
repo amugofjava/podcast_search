@@ -99,7 +99,7 @@ class PodcastIndexSearch extends BaseSearch {
     _explicit = explicit;
 
     try {
-      var response = await _client.get(_buildSearchUrl());
+      var response = await _client.get(buildSearchUrl());
 
       return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
@@ -131,7 +131,7 @@ class PodcastIndexSearch extends BaseSearch {
 
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildSearchUrl() {
+  String buildSearchUrl() {
     final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());

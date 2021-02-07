@@ -17,6 +17,10 @@ class Value {
     }
     return Value(model, destinations);
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'model': model.toJson(), 'destinations': destinations.map((d) => d.toJson()).toList()};
+  }
 }
 
 class ValueModel {
@@ -29,13 +33,17 @@ class ValueModel {
   static ValueModel fromJson(Map<String, dynamic> json) {
     return ValueModel(type: json['type'] as String, method: json['method'] as String, suggested: json['suggested'] as String);
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'type': type, 'method': method, 'suggested': suggested};
+  }
 }
 
 class ValueDestination {
   final String name;
   final String address;
   final String type;
-  final num split;
+  final double split;
 
   ValueDestination({this.name, this.address, this.type, this.split});
 
@@ -48,7 +56,11 @@ class ValueDestination {
       name: json['name'] as String,
       address: json['address'] as String,
       type: json['type'] as String,
-      split: split as num,
+      split: (split as num).toDouble(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'name': name, 'address': address, 'type': type, 'split': split};
   }
 }

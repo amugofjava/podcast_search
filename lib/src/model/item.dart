@@ -167,7 +167,7 @@ class Item {
 
     var valueJson = json['value'];
     Value value;
-    if (valueJson != null) {
+    if (valueJson != null && valueJson is Map) {
       value = Value.fromJson(valueJson);
     }
 
