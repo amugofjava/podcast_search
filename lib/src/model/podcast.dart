@@ -133,7 +133,7 @@ class Podcast {
 
   /// Podcasts that support the newer podcast namespace can include chapter markers. Typically this
   /// is in the form of a Url in the RSS feed pointing to a JSON file. This method takes the Url
-  /// and loads the chapters, storing the results in the [Episode] itself. Repeatedily calling this
+  /// and loads the chapters, storing the results in the [Episode] itself. Repeatedly calling this
   /// method for the same episode will, by default, not reload the chapters data and will simply
   /// return the [Episode] back. If you need to reload the chapters set the [forceReload] parameter
   /// to [true].
@@ -154,30 +154,10 @@ class Podcast {
         !forceReload) {
       try {
         final response = await client.get(episode.chapters.url);
-        final data = Map<String, dynamic>.from(response.data);
-        final chapters = data['chapters'] ?? [];
 
-        episode.chapters.headers = ChapterHeaders(
-          version: data['version'] ?? '',
-          title: data['title'] ?? '',
-          author: data['author'] ?? '',
-          podcastName: data['podcastName'] ?? '',
-          description: data['description'] ?? '',
-          fileName: data['fileName'] ?? '',
-        );
-
-        episode.chapters.loaded = true;
-
-        for (var chapter in chapters) {
-          episode.chapters.chapters.add(
-            Chapter(
-                url: chapter['url'] ?? '',
-                imageUrl: chapter['img'] ?? '',
-                title: chapter['title'] ?? '',
-                startTime: chapter['startTime'] ?? 0.0,
-                endTime: chapter['endTime'] ?? 0.0,
-                toc: chapter['toc'] ?? false),
-          );
+        if (response.statusCode == 200 &&
+            response.data is Map<String, dynamic>) {
+          _loadChapters(response, episode.chapters);
         }
       } on DioError catch (e) {
         switch (e.type) {
@@ -198,6 +178,75 @@ class Podcast {
     }
 
     return episode;
+  }
+
+  /// Podcasts that support the newer podcast namespace can include chapter markers. Typically this
+  /// is in the form of a Url in the RSS feed pointing to a JSON file. This method takes the Url
+  /// and loads the chapters, return a populated Chapters object.
+  static Future<Chapters> loadChaptersByUrl({
+    @required String url,
+    int timeout = 20000,
+  }) async {
+    final client = Dio(
+      BaseOptions(
+        connectTimeout: timeout,
+        receiveTimeout: timeout,
+      ),
+    );
+
+    var chapters = Chapters();
+
+    try {
+      final response = await client.get(url);
+      if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
+        _loadChapters(response, chapters);
+      }
+    } on DioError catch (e) {
+      switch (e.type) {
+        case DioErrorType.CONNECT_TIMEOUT:
+        case DioErrorType.SEND_TIMEOUT:
+        case DioErrorType.RECEIVE_TIMEOUT:
+        case DioErrorType.DEFAULT:
+          throw PodcastTimeoutException(e.message);
+          break;
+        case DioErrorType.RESPONSE:
+          throw PodcastFailedException(e.message);
+          break;
+        case DioErrorType.CANCEL:
+          throw PodcastCancelledException(e.message);
+          break;
+      }
+    }
+
+    return chapters;
+  }
+
+  static void _loadChapters(Response response, Chapters c) {
+    final data = Map<String, dynamic>.from(response.data);
+    final chapters = data['chapters'] ?? [];
+
+    c.headers = ChapterHeaders(
+      version: data['version'] ?? '',
+      title: data['title'] ?? '',
+      author: data['author'] ?? '',
+      podcastName: data['podcastName'] ?? '',
+      description: data['description'] ?? '',
+      fileName: data['fileName'] ?? '',
+    );
+
+    c.loaded = true;
+
+    for (var chapter in chapters) {
+      c.chapters.add(
+        Chapter(
+            url: chapter['url'] ?? '',
+            imageUrl: chapter['img'] ?? '',
+            title: chapter['title'] ?? '',
+            startTime: chapter['startTime'] ?? 0,
+            endTime: chapter['endTime'] ?? 0,
+            toc: chapter['toc'] ?? false),
+      );
+    }
   }
 
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {

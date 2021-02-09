@@ -1,3 +1,9 @@
+## 0.4.0
+
+- Add support for the podcast namespace (phase 1 tags).
+- Add support for loading chapters JSON via url.
+- Improve documentation.
+
 ## 0.3.9
 
 - Update dependencies

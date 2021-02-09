@@ -4,6 +4,7 @@ library podcast_search;
 
 export 'src/exceptions/search_exceptions.dart';
 export 'src/model/attribute.dart';
+export 'src/model/chapters.dart';
 export 'src/model/country.dart';
 export 'src/model/episode.dart';
 export 'src/model/genre.dart';
