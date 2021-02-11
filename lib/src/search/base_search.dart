@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
 
-const podcastSearchAgent = 'podcast_search/0.3.9';
+const podcastSearchAgent = 'podcast_search/0.4.0 https://github.com/amugofjava/anytime_podcast_player';
 
 abstract class BaseSearch {
   /// Contains the type of error returning from the search. If no error occurred it

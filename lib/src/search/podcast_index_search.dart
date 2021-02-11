@@ -17,8 +17,7 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
 class PodcastIndexSearch extends BaseSearch {
-  static String SEARCH_API_ENDPOINT =
-      'https://api.podcastindex.org/api/1.0/search';
+  static String SEARCH_API_ENDPOINT = 'https://api.podcastindex.org/api/1.0/search';
 
   PodcastIndexProvider podcastIndexProvider;
 
@@ -74,9 +73,7 @@ class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Date': newUnixTime,
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
-          'user-agent': userAgent == null
-              ? '$podcastSearchAgent'
-              : '${userAgent} ($podcastSearchAgent)',
+          'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '${userAgent}',
         },
       ),
     );
@@ -103,8 +100,7 @@ class PodcastIndexSearch extends BaseSearch {
     try {
       var response = await _client.get(_buildSearchUrl());
 
-      return SearchResult.fromJson(
-          json: response.data, type: ResultType.podcastIndex);
+      return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
       setLastError(e);
     }
@@ -145,9 +141,7 @@ class PodcastIndexSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty
-        ? '/byterm?q=' + Uri.encodeComponent(term)
-        : '';
+    return term != null && term.isNotEmpty ? '/byterm?q=' + Uri.encodeComponent(term) : '';
   }
 
   String _limitParam() {

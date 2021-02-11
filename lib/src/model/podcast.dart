@@ -73,9 +73,7 @@ class Podcast {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          'user-agent': userAgent == null
-              ? '$podcastSearchAgent'
-              : '${userAgent} ($podcastSearchAgent)',
+          'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '${userAgent}',
         },
       ),
     );
@@ -149,14 +147,11 @@ class Podcast {
       ),
     );
 
-    if (episode.chapters.chapters.isNotEmpty &&
-        !episode.chapters.loaded &&
-        !forceReload) {
+    if (episode.chapters.chapters.isNotEmpty && !episode.chapters.loaded && !forceReload) {
       try {
         final response = await client.get(episode.chapters.url);
 
-        if (response.statusCode == 200 &&
-            response.data is Map<String, dynamic>) {
+        if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
           _loadChapters(response, episode.chapters);
         }
       } on DioError catch (e) {
