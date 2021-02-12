@@ -232,13 +232,35 @@ class Podcast {
     c.loaded = true;
 
     for (var chapter in chapters) {
+      var startTime = 0.0;
+      var endTime = 0.0;
+
+      // The spec says that the start and end times are a float; however,
+      // some chapters come in as whole seconds whilst others include the
+      // fraction. We test the type here to prevent conversion/casting errors.
+      if (chapter['startTime'] != null) {
+        if (chapter['startTime'] is double) {
+          startTime = chapter['startTime'];
+        } else if (chapter['startTime'] is int) {
+          startTime = (chapter['startTime'] as int).toDouble();
+        }
+      }
+
+      if (chapter['endTime'] != null) {
+        if (chapter['endTime'] is double) {
+          endTime = chapter['endTime'];
+        } else if (chapter['endTime'] is int) {
+          endTime = (chapter['endTime'] as int).toDouble();
+        }
+      }
+
       c.chapters.add(
         Chapter(
             url: chapter['url'] ?? '',
             imageUrl: chapter['img'] ?? '',
             title: chapter['title'] ?? '',
-            startTime: chapter['startTime'] ?? 0,
-            endTime: chapter['endTime'] ?? 0,
+            startTime: startTime,
+            endTime: endTime,
             toc: chapter['toc'] ?? false),
       );
     }

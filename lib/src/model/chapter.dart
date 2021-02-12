@@ -3,8 +3,8 @@ class Chapter {
   final String imageUrl;
   final String url;
   final bool toc;
-  final int startTime;
-  final int endTime;
+  final double startTime;
+  final double endTime;
 
   Chapter({
     this.title,
