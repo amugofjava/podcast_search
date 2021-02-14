@@ -43,7 +43,7 @@ class Podcast {
 
   /// If the podcast supports funding this will contain an instance of [Funding] that
   /// contains the Url and optional description.
-  final Funding funding;
+  final List<Funding> funding;
 
   /// A list of current episodes.
   final List<Episode> episodes;
@@ -91,10 +91,13 @@ class Podcast {
         owner: rssFeed.podcastIndex.locked?.owner ?? '',
       );
 
-      var funding = Funding(
-        url: rssFeed.podcastIndex.funding?.url ?? '',
-        value: rssFeed.podcastIndex.funding?.value ?? '',
-      );
+      var funding = <Funding>[];
+
+      if (rssFeed.podcastIndex.funding != null) {
+        for (var f in rssFeed.podcastIndex.funding) {
+          funding.add(Funding(url: f.url, value: f.value));
+        }
+      }
 
       _loadEpisodes(rssFeed, episodes);
 
