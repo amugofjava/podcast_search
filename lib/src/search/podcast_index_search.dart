@@ -19,6 +19,8 @@ import 'package:podcast_search/src/search/base_search.dart';
 class PodcastIndexSearch extends BaseSearch {
   static String SEARCH_API_ENDPOINT =
       'https://api.podcastindex.org/api/1.0/search';
+  static String TRENDING_API_ENDPOINT =
+      'https://api.podcastindex.org/api/1.0/podcasts/trending';
 
   PodcastIndexProvider podcastIndexProvider;
 
@@ -122,14 +124,25 @@ class PodcastIndexSearch extends BaseSearch {
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
   @override
-  Future<SearchResult> charts({
-    Country country = Country.UNITED_KINGDOM,
-    int limit = 20,
-    bool explicit = false,
-    Genre genre,
-  }) async {
-    /// This should never be thrown as charts is only handled by iTunes for now.
-    throw UnimplementedError();
+  Future<SearchResult> charts(
+      {Country country = Country.UNITED_KINGDOM,
+      int limit = 20,
+      bool explicit = false,
+      Genre genre,
+      Map<String, dynamic> queryParams}) async {
+    try {
+      var response = await _client.get(TRENDING_API_ENDPOINT,
+          queryParameters: {
+            'since': -1 * 3600 * 24 * 7,
+          }..addAll(queryParams));
+
+      return SearchResult.fromJson(
+          json: response.data, type: ResultType.podcastIndex);
+    } on DioError catch (e) {
+      setLastError(e);
+    }
+
+    return SearchResult.fromError(_lastError, _lastErrorType);
   }
 
   /// This internal method constructs a correctly encoded URL which is then

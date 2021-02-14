@@ -99,18 +99,34 @@ class Search {
   /// result for each item resulting in a HTTP call for each result. Given
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
-  Future<SearchResult> charts({
-    Country country = Country.UNITED_KINGDOM,
-    int limit = 20,
-    bool explicit = false,
-    Genre genre,
-  }) async {
+  Future<SearchResult> charts(
+      {SearchProvider searchProvider = const ITunesProvider(),
+      Country country = Country.UNITED_KINGDOM,
+      int limit = 20,
+      bool explicit = false,
+      Genre genre,
+      Map<String, dynamic> queryParams}) async {
     _country = country;
     _limit = limit;
     _explicit = explicit;
     _genre = genre;
 
-    return ITunesSearch().charts(
+    if (searchProvider is PodcastIndexProvider) {
+      return PodcastIndexSearch(
+        userAgent: userAgent,
+        timeout: timeout,
+        podcastIndexProvider: searchProvider,
+      ).charts(
+          country: _country,
+          limit: _limit,
+          explicit: _explicit,
+          genre: _genre,
+          queryParams: queryParams);
+    }
+    return ITunesSearch(
+      userAgent: userAgent,
+      timeout: timeout,
+    ).charts(
         country: _country, limit: _limit, explicit: _explicit, genre: _genre);
   }
 
