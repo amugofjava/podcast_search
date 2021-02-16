@@ -19,7 +19,7 @@ void main() {
               secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
           queryParams: {'val': 'lightning'});
 
-      expect(result.resultCount, 1);
+      expect(result.resultCount > 0, true);
     });
 
     test('Max one result test', () async {
