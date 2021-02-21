@@ -50,16 +50,15 @@ class Search {
   /// podcasts available in a specific country by supplying a [Country] option.
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
-  Future<SearchResult> search(
-    String term, {
-    SearchProvider searchProvider = const ITunesProvider(),
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  }) async {
+  Future<SearchResult> search(String term,
+      {SearchProvider searchProvider = const ITunesProvider(),
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams = const {}}) async {
     _term = term;
     _country = country;
     _attribute = attribute;
@@ -76,18 +75,17 @@ class Search {
         : PodcastIndexSearch(
             userAgent: userAgent,
             timeout: timeout,
-            podcastIndexProvider: searchProvider,
-          );
+            podcastIndexProvider: searchProvider);
 
     return s.search(
-      term: term,
-      country: _country,
-      attribute: _attribute,
-      language: _language,
-      limit: _limit,
-      version: _version,
-      explicit: _explicit,
-    );
+        term: term,
+        country: _country,
+        attribute: _attribute,
+        language: _language,
+        limit: _limit,
+        version: _version,
+        explicit: _explicit,
+        queryParams: queryParams);
   }
 
   /// Fetches the list of top podcasts
