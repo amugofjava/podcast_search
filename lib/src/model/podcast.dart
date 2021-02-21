@@ -264,7 +264,7 @@ class Podcast {
             title: chapter['title'] ?? '',
             startTime: startTime,
             endTime: endTime,
-            toc: chapter['toc'] ?? false),
+            toc: (chapter['toc'] != null && (chapter['toc'] as bool) == false) ? false : true),
       );
     }
   }
