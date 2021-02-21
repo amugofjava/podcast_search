@@ -89,21 +89,21 @@ class PodcastIndexSearch extends BaseSearch {
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
   @override
-  Future<SearchResult> search({
-    String term,
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  }) async {
+  Future<SearchResult> search(
+      {String term,
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams = const {}}) async {
     _term = term;
     _limit = limit;
     _explicit = explicit;
 
     try {
-      var response = await _client.get(_buildSearchUrl());
+      var response = await _client.get(_buildSearchUrl(queryParams));
 
       return SearchResult.fromJson(
           json: response.data, type: ResultType.podcastIndex);
@@ -129,7 +129,7 @@ class PodcastIndexSearch extends BaseSearch {
       int limit = 20,
       bool explicit = false,
       Genre genre,
-      Map<String, dynamic> queryParams}) async {
+      Map<String, dynamic> queryParams = const {}}) async {
     try {
       var response = await _client.get(TRENDING_API_ENDPOINT,
           queryParameters: {
@@ -147,12 +147,15 @@ class PodcastIndexSearch extends BaseSearch {
 
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildSearchUrl() {
+  String _buildSearchUrl(Map<String, dynamic> queryParams) {
     final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());
     buf.write(_limitParam());
     buf.write(_explicitParam());
+    queryParams.forEach((key, value) {
+      buf.write('&$key=${Uri.encodeComponent(value)}');
+    });
 
     return buf.toString();
   }
