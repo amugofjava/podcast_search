@@ -167,7 +167,7 @@ class Item {
     }
 
     return Item(
-      artistName: json['ownerName'] as String,
+      artistName: json['author'] as String,
       trackName: json['title'] as String,
       feedUrl: json['url'] as String,
       trackViewUrl: json['link'] as String,
