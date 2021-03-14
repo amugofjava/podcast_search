@@ -282,7 +282,7 @@ class Podcast {
         description: item.description,
         link: item.link,
         publicationDate: Utils.parseRFC2822Date(item.pubDate),
-        author: item.author ?? item.itunes.author,
+        author: item.author ?? item.itunes.author ?? item.dc?.creator,
         duration: item.itunes?.duration,
         contentUrl: item.enclosure?.url,
         season: item.itunes?.season,
