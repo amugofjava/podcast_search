@@ -106,7 +106,7 @@ class Podcast {
         link: rssFeed.link,
         title: rssFeed.title,
         description: rssFeed.description,
-        image: rssFeed.image?.url,
+        image: rssFeed.image?.url ?? rssFeed?.itunes?.image?.href,
         copyright: author,
         locked: locked,
         funding: funding,
