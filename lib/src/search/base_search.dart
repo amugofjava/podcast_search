@@ -30,18 +30,18 @@ abstract class BaseSearch {
   /// if there was an issue or not.
   void setLastError(DioError e) {
     switch (e.type) {
-      case DioErrorType.DEFAULT:
-      case DioErrorType.CONNECT_TIMEOUT:
-      case DioErrorType.SEND_TIMEOUT:
-      case DioErrorType.RECEIVE_TIMEOUT:
+      case DioErrorType.connectTimeout:
+      case DioErrorType.sendTimeout:
+      case DioErrorType.receiveTimeout:
+      case DioErrorType.other:
         lastErrorType = ErrorType.connection;
         lastError = 'Connection timeout';
         break;
-      case DioErrorType.RESPONSE:
+      case DioErrorType.response:
         lastErrorType = ErrorType.failed;
         lastError = 'Server returned response error ${e.response?.statusCode}';
         break;
-      case DioErrorType.CANCEL:
+      case DioErrorType.cancel:
         lastErrorType = ErrorType.cancelled;
         lastError = 'Request was cancelled';
         break;

@@ -114,16 +114,16 @@ class Podcast {
       );
     } on DioError catch (e) {
       switch (e.type) {
-        case DioErrorType.CONNECT_TIMEOUT:
-        case DioErrorType.SEND_TIMEOUT:
-        case DioErrorType.RECEIVE_TIMEOUT:
-        case DioErrorType.DEFAULT:
+        case DioErrorType.connectTimeout:
+        case DioErrorType.sendTimeout:
+        case DioErrorType.receiveTimeout:
+        case DioErrorType.other:
           throw PodcastTimeoutException(e.message);
           break;
-        case DioErrorType.RESPONSE:
+        case DioErrorType.response:
           throw PodcastFailedException(e.message);
           break;
-        case DioErrorType.CANCEL:
+        case DioErrorType.cancel:
           throw PodcastCancelledException(e.message);
           break;
       }
@@ -159,16 +159,16 @@ class Podcast {
         }
       } on DioError catch (e) {
         switch (e.type) {
-          case DioErrorType.CONNECT_TIMEOUT:
-          case DioErrorType.SEND_TIMEOUT:
-          case DioErrorType.RECEIVE_TIMEOUT:
-          case DioErrorType.DEFAULT:
+          case DioErrorType.connectTimeout:
+          case DioErrorType.sendTimeout:
+          case DioErrorType.receiveTimeout:
+          case DioErrorType.other:
             throw PodcastTimeoutException(e.message);
             break;
-          case DioErrorType.RESPONSE:
+          case DioErrorType.response:
             throw PodcastFailedException(e.message);
             break;
-          case DioErrorType.CANCEL:
+          case DioErrorType.cancel:
             throw PodcastCancelledException(e.message);
             break;
         }
@@ -201,16 +201,16 @@ class Podcast {
       }
     } on DioError catch (e) {
       switch (e.type) {
-        case DioErrorType.CONNECT_TIMEOUT:
-        case DioErrorType.SEND_TIMEOUT:
-        case DioErrorType.RECEIVE_TIMEOUT:
-        case DioErrorType.DEFAULT:
+        case DioErrorType.connectTimeout:
+        case DioErrorType.sendTimeout:
+        case DioErrorType.receiveTimeout:
+        case DioErrorType.other:
           throw PodcastTimeoutException(e.message);
           break;
-        case DioErrorType.RESPONSE:
+        case DioErrorType.response:
           throw PodcastFailedException(e.message);
           break;
-        case DioErrorType.CANCEL:
+        case DioErrorType.cancel:
           throw PodcastCancelledException(e.message);
           break;
       }

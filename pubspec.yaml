@@ -8,16 +8,16 @@ environment:
   sdk: '>=2.10.0 <3.0.0'
 
 dependencies:
-  archive: ^2.0.13
-  convert: ^2.1.1
-  crypto: ^2.1.5
-  dio: ^3.0.10
+  archive: ^3.1.2
+  convert: ^3.0.0
+  crypto: ^3.0.0
+  dio: ^4.0.0-prev3
   # dart_rss: ^1.1.1+1
   # Temporarily use custom fork required for podcast namespace.
   dart_rss:
     git:
       url: https://github.com/amugofjava/dart-rss
-      ref: d8bbf3092005ff6b3d43147f7926529980d2ca6b
+#      ref: d8bbf3092005ff6b3d43147f7926529980d2ca6b
   meta: ^1.2.4
 
 dev_dependencies:
