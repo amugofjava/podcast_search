@@ -15,9 +15,7 @@ dependencies:
   # dart_rss: ^1.1.1+1
   # Temporarily use custom fork required for podcast namespace.
   dart_rss:
-    git:
-      url: https://github.com/amugofjava/dart-rss
-#      ref: d8bbf3092005ff6b3d43147f7926529980d2ca6b
+    git: https://github.com/amugofjava/dart-rss
   meta: ^1.2.4
 
 dev_dependencies:
