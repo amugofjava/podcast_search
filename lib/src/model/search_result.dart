@@ -58,7 +58,8 @@ class SearchResult {
         processedTime = DateTime.now(),
         items = [];
 
-  factory SearchResult.fromJson({@required dynamic json, ResultType type = ResultType.itunes}) {
+  factory SearchResult.fromJson(
+      {@required dynamic json, ResultType type = ResultType.itunes}) {
     /// Did we get an error message?
     if (json['errorMessage'] != null) {
       return SearchResult.fromError(json['errorMessage'], ErrorType.failed);
@@ -70,7 +71,9 @@ class SearchResult {
     /// Fetch the results from the JSON data.
     final items = json[dataStart] == null
         ? null
-        : (json[dataStart] as List).cast<Map<String, Object>>().map((Map<String, Object> item) {
+        : (json[dataStart] as List)
+            .cast<Map<String, Object>>()
+            .map((Map<String, Object> item) {
             return Item.fromJson(json: item, type: type);
           }).toList();
 
