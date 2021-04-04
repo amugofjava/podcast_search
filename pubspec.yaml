@@ -10,12 +10,9 @@ environment:
 dependencies:
   archive: ^3.1.2
   convert: ^3.0.0
-  crypto: ^3.0.0
-  dio: ^4.0.0-prev3
-  # dart_rss: ^1.1.1+1
-  # Temporarily use custom fork required for podcast namespace.
-  dart_rss:
-    git: https://github.com/amugofjava/dart-rss
+  crypto: ^3.0.1
+  dio: ^4.0.0
+  dart_rss: ^2.0.1
   meta: ^1.2.4
 
 dev_dependencies:
