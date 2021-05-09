@@ -71,15 +71,15 @@ class ITunesSearch extends BaseSearch {
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
   @override
-  Future<SearchResult> search({
-    String term,
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  }) async {
+  Future<SearchResult> search(
+      {String term,
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams = const {}}) async {
     _term = term;
     _country = country;
     _attribute = attribute;
@@ -89,7 +89,7 @@ class ITunesSearch extends BaseSearch {
     _explicit = explicit;
 
     try {
-      final response = await _client.get(_buildSearchUrl());
+      final response = await _client.get(_buildSearchUrl(queryParams));
 
       final results = json.decode(response.data);
 
@@ -169,7 +169,7 @@ class ITunesSearch extends BaseSearch {
 
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildSearchUrl() {
+  String _buildSearchUrl(Map<String, dynamic> queryParams) {
     final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());
@@ -180,6 +180,9 @@ class ITunesSearch extends BaseSearch {
     buf.write(_versionParam());
     buf.write(_explicitParam());
     buf.write(_standardParam());
+    queryParams.forEach((key, value) {
+      buf.write('&$key=${Uri.encodeComponent(value)}');
+    });
 
     return buf.toString();
   }

@@ -50,16 +50,15 @@ class Search {
   /// podcasts available in a specific country by supplying a [Country] option.
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
-  Future<SearchResult> search(
-    String term, {
-    SearchProvider searchProvider = const ITunesProvider(),
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  }) async {
+  Future<SearchResult> search(String term,
+      {SearchProvider searchProvider = const ITunesProvider(),
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams = const {}}) async {
     _term = term;
     _country = country;
     _attribute = attribute;
@@ -80,14 +79,14 @@ class Search {
           );
 
     return s.search(
-      term: term,
-      country: _country,
-      attribute: _attribute,
-      language: _language,
-      limit: _limit,
-      version: _version,
-      explicit: _explicit,
-    );
+        term: term,
+        country: _country,
+        attribute: _attribute,
+        language: _language,
+        limit: _limit,
+        version: _version,
+        explicit: _explicit,
+        queryParams: queryParams);
   }
 
   /// Fetches the list of top podcasts
@@ -100,18 +99,40 @@ class Search {
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
   Future<SearchResult> charts({
+    SearchProvider searchProvider = const ITunesProvider(),
     Country country = Country.UNITED_KINGDOM,
     int limit = 20,
     bool explicit = false,
     Genre genre,
+    Map<String, dynamic> queryParams = const {},
   }) async {
     _country = country;
     _limit = limit;
     _explicit = explicit;
     _genre = genre;
 
-    return ITunesSearch().charts(
-        country: _country, limit: _limit, explicit: _explicit, genre: _genre);
+    if (searchProvider is PodcastIndexProvider) {
+      return PodcastIndexSearch(
+        userAgent: userAgent,
+        timeout: timeout,
+        podcastIndexProvider: searchProvider,
+      ).charts(
+        country: _country,
+        limit: _limit,
+        explicit: _explicit,
+        genre: _genre,
+        queryParams: queryParams,
+      );
+    }
+    return ITunesSearch(
+      userAgent: userAgent,
+      timeout: timeout,
+    ).charts(
+      country: _country,
+      limit: _limit,
+      explicit: _explicit,
+      genre: _genre,
+    );
   }
 
   /// Returns the search term.

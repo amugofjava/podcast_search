@@ -13,15 +13,15 @@ abstract class BaseSearch {
   /// If an error occurs, this will contain a user-readable error message.
   String lastError;
 
-  Future<SearchResult> search({
-    @required String term,
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  });
+  Future<SearchResult> search(
+      {@required String term,
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams});
 
   Future<SearchResult> charts();
 

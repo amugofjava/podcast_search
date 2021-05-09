@@ -155,7 +155,8 @@ class Item {
   }
 
   static Item _fromPodcastIndex(Map<String, dynamic> json) {
-    int pubDateSeconds = json['lastUpdateTime'] ?? DateTime.now();
+    int pubDateSeconds =
+        json['lastUpdateTime'] ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var pubDate = Duration(seconds: pubDateSeconds);
     var categories = json['categories'];

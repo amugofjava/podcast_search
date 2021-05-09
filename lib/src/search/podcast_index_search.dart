@@ -19,6 +19,8 @@ import 'package:podcast_search/src/search/base_search.dart';
 class PodcastIndexSearch extends BaseSearch {
   static String SEARCH_API_ENDPOINT =
       'https://api.podcastindex.org/api/1.0/search';
+  static String TRENDING_API_ENDPOINT =
+      'https://api.podcastindex.org/api/1.0/podcasts/trending';
 
   PodcastIndexProvider podcastIndexProvider;
 
@@ -87,21 +89,21 @@ class PodcastIndexSearch extends BaseSearch {
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
   @override
-  Future<SearchResult> search({
-    String term,
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  }) async {
+  Future<SearchResult> search(
+      {String term,
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams = const {}}) async {
     _term = term;
     _limit = limit;
     _explicit = explicit;
 
     try {
-      var response = await _client.get(_buildSearchUrl());
+      var response = await _client.get(_buildSearchUrl(queryParams));
 
       return SearchResult.fromJson(
           json: response.data, type: ResultType.podcastIndex);
@@ -122,24 +124,38 @@ class PodcastIndexSearch extends BaseSearch {
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
   @override
-  Future<SearchResult> charts({
-    Country country = Country.UNITED_KINGDOM,
-    int limit = 20,
-    bool explicit = false,
-    Genre genre,
-  }) async {
-    /// This should never be thrown as charts is only handled by iTunes for now.
-    throw UnimplementedError();
+  Future<SearchResult> charts(
+      {Country country = Country.UNITED_KINGDOM,
+      int limit = 20,
+      bool explicit = false,
+      Genre genre,
+      Map<String, dynamic> queryParams = const {}}) async {
+    try {
+      var response = await _client.get(TRENDING_API_ENDPOINT,
+          queryParameters: {
+            'since': -1 * 3600 * 24 * 7,
+          }..addAll(queryParams));
+
+      return SearchResult.fromJson(
+          json: response.data, type: ResultType.podcastIndex);
+    } on DioError catch (e) {
+      setLastError(e);
+    }
+
+    return SearchResult.fromError(_lastError, _lastErrorType);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildSearchUrl() {
+  String _buildSearchUrl(Map<String, dynamic> queryParams) {
     final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());
     buf.write(_limitParam());
     buf.write(_explicitParam());
+    queryParams.forEach((key, value) {
+      buf.write('&$key=${Uri.encodeComponent(value)}');
+    });
 
     return buf.toString();
   }
