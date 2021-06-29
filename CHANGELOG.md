@@ -1,3 +1,7 @@
+## 0.4.1
+
+- Add support for loading local RSS files.
+
 ## 0.4.0
 
 - Add support for the podcast namespace (phase 1 tags).
