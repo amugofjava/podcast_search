@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/attribute.dart';
 import 'package:podcast_search/src/model/country.dart';
@@ -23,10 +22,10 @@ class PodcastIndexSearch extends BaseSearch {
 
   PodcastIndexProvider podcastIndexProvider;
 
-  Dio _client;
+  late Dio _client;
 
   /// The search term keyword(s)
-  String _term = '';
+  String? _term = '';
 
   /// Limit the number of results to [_limit]. If zero no limit will be applied
   int _limit = 0;
@@ -38,17 +37,17 @@ class PodcastIndexSearch extends BaseSearch {
   int timeout = 20000;
 
   /// If this property is non-null, it will be prepended to the User Agent header.
-  String userAgent = '';
+  String? userAgent = '';
 
   final ErrorType _lastErrorType = ErrorType.none;
 
-  String _lastError;
+  String? _lastError;
 
   /// Contains the type of error returning from the search. If no error occurred it
   /// will be set to [ErrorType.none].
   /// If an error occurs, this will contain a user-readable error message.
   PodcastIndexSearch({
-    @required this.podcastIndexProvider,
+    required this.podcastIndexProvider,
     this.timeout = 20000,
     this.userAgent,
   }) {
@@ -75,7 +74,7 @@ class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Date': newUnixTime,
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
-          'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
+          'User-Agent': userAgent == null || userAgent!.isEmpty ? '$podcastSearchAgent' : '$userAgent',
         },
       ),
     );
@@ -87,27 +86,27 @@ class PodcastIndexSearch extends BaseSearch {
   /// value to search by a different attribute such as Author, genre etc.
   @override
   Future<SearchResult> search(
-      {String term,
+      {String? term,
       Country country = Country.NONE,
       Attribute attribute = Attribute.NONE,
       Language language = Language.NONE,
       int limit = 0,
       int version = 0,
       bool explicit = false,
-      Map<String, dynamic> queryParams = const {}}) async {
+      Map<String, dynamic>? queryParams = const {}}) async {
     _term = term;
     _limit = limit;
     _explicit = explicit;
 
     try {
-      var response = await _client.get(_buildSearchUrl(queryParams));
+      var response = await _client.get(_buildSearchUrl(queryParams!));
 
       return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType ?? ErrorType.unknown);
+    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType);
   }
 
   /// Fetches the list of top podcasts
@@ -124,7 +123,7 @@ class PodcastIndexSearch extends BaseSearch {
       {Country country = Country.UNITED_KINGDOM,
       int limit = 20,
       bool explicit = false,
-      Genre genre,
+      Genre? genre,
       Map<String, dynamic> queryParams = const {}}) async {
     try {
       var response = await _client.get(TRENDING_API_ENDPOINT,
@@ -137,7 +136,7 @@ class PodcastIndexSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType ?? ErrorType.unknown);
+    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
@@ -156,7 +155,7 @@ class PodcastIndexSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term.isNotEmpty ? '/byterm?q=' + Uri.encodeComponent(term) : '';
+    return term!.isNotEmpty ? '/byterm?q=' + Uri.encodeComponent(term!) : '';
   }
 
   String _limitParam() {
@@ -168,5 +167,5 @@ class PodcastIndexSearch extends BaseSearch {
   }
 
   /// Returns the search term.
-  String get term => _term;
+  String? get term => _term;
 }

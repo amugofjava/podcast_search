@@ -1,7 +1,6 @@
 // Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
 import 'package:podcast_search/src/model/item.dart';
 
 enum ErrorType {
@@ -10,7 +9,6 @@ enum ErrorType {
   failed,
   connection,
   timeout,
-  unknown,
 }
 enum ResultType {
   itunes,
@@ -57,13 +55,13 @@ class SearchResult {
 
   SearchResult.fromError({
     this.lastError = '',
-    this.lastErrorType = ErrorType.unknown,
+    this.lastErrorType = ErrorType.none,
   })  : successful = false,
         resultCount = 0,
         processedTime = DateTime.now(),
         items = [];
 
-  factory SearchResult.fromJson({@required dynamic json, ResultType type = ResultType.itunes}) {
+  factory SearchResult.fromJson({required dynamic json, ResultType type = ResultType.itunes}) {
     /// Did we get an error message?
     if (json['errorMessage'] != null) {
       return SearchResult.fromError(lastError: json['errorMessage'] ?? '', lastErrorType: ErrorType.failed);
@@ -75,7 +73,7 @@ class SearchResult {
     /// Fetch the results from the JSON data.
     final items = json[dataStart] == null
         ? null
-        : (json[dataStart] as List).cast<Map<String, Object>>().map((Map<String, Object> item) {
+        : (json[dataStart] as List).cast<Map<String, dynamic>>().map((Map<String, dynamic> item) {
             return Item.fromJson(json: item, type: type);
           }).toList();
 

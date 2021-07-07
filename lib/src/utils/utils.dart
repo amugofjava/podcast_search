@@ -232,19 +232,19 @@ class Utils {
   /// However, there is no ideal solution when parsing a date that uses an abbreviated
   /// timezone code, so this will probably suffice for a large proportion of dates in that
   /// format. Hopefully, most pubDate values will use a UTC offset instead.
-  static DateTime parseRFC2822Date(String date) {
+  static DateTime? parseRFC2822Date(String date) {
     var result;
 
     _allowablePatterns.forEach((k, v) {
       final exp = RegExp(k);
 
       if (exp.hasMatch(date)) {
-        Match match = exp.firstMatch(date);
+        Match match = exp.firstMatch(date)!;
 
         // Now, convert date to ISO format
-        var month = _months[match.group(3).toLowerCase().substring(0, 3)];
-        var offset = v == 1 ? _timezones[match.group(6)] : match.group(6);
-        var day = match.group(2).padLeft(2, '0');
+        var month = _months[match.group(3)!.toLowerCase().substring(0, 3)];
+        var offset = v == 1 ? _timezones[match.group(6)!] : match.group(6);
+        var day = match.group(2)!.padLeft(2, '0');
 
         var iso = '${match.group(4)}-$month-${day}T${match.group(5)}$offset';
 

@@ -29,9 +29,9 @@ void main() {
       expect(podcast.title, 'Podcast Load Test 1');
       expect(podcast.description, 'Unit test podcast test 1');
       expect(podcast.link, 'https://nowhere.com/podcastsearchtest1');
-      expect(podcast.episodes.length, 1);
+      expect(podcast.episodes!.length, 1);
 
-      var episode = podcast.episodes[0];
+      var episode = podcast.episodes![0];
 
       expect(episode.title, 'Episode 001');
       expect(episode.link, 'https://nowhere.com/podcastsearchtest1/podcast1');

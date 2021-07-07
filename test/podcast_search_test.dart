@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Baseline search test', () {
-    Search search;
+    late Search search;
 
     setUp(() {
       search = Search();

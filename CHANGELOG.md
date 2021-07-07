@@ -1,3 +1,7 @@
+## 0.5.0
+
+- Migrate to null-safety version.
+
 ## 0.4.1
 
 - Add support for loading local RSS files.

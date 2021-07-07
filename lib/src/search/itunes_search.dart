@@ -21,34 +21,34 @@ class ITunesSearch extends BaseSearch {
   final Dio _client;
 
   /// The search term keyword(s)
-  String _term;
+  String? _term;
 
   /// If this property is not-null search results will be limited to this country
   Country _country = Country.NONE;
 
   /// If this property is not-null search results will be limited to this genre
-  Genre _genre;
+  Genre? _genre;
 
   /// By default, searches will be performed against keyword(s) in [_term].
   /// Set this property to search against a different attribute.
-  Attribute _attribute;
+  Attribute? _attribute;
 
   /// Limit the number of results to [_limit]. If zero no limit will be applied
-  int _limit;
+  int? _limit;
 
   /// If non-null, the results will be limited to the language specified.
-  Language _language;
+  late Language _language;
 
   /// Set to true to disable the explicit filter.
-  bool _explicit;
+  bool? _explicit;
 
-  int _version;
+  int? _version;
 
   /// Connection timeout threshold in milliseconds
   int timeout;
 
   /// If this property is non-null, it will be prepended to the User Agent header.
-  String userAgent;
+  String? userAgent;
 
   ITunesSearch({
     this.timeout = 20000,
@@ -70,14 +70,14 @@ class ITunesSearch extends BaseSearch {
   /// value to search by a different attribute such as Author, genre etc.
   @override
   Future<SearchResult> search(
-      {String term,
+      {String? term,
       Country country = Country.NONE,
       Attribute attribute = Attribute.NONE,
       Language language = Language.NONE,
       int limit = 0,
       int version = 0,
       bool explicit = false,
-      Map<String, dynamic> queryParams = const {}}) async {
+      Map<String, dynamic>? queryParams = const {}}) async {
     _term = term;
     _country = country;
     _attribute = attribute;
@@ -96,7 +96,7 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType ?? ErrorType.unknown);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   /// Fetches the list of top podcasts
@@ -113,7 +113,7 @@ class ITunesSearch extends BaseSearch {
     Country country = Country.UNITED_KINGDOM,
     int limit = 20,
     bool explicit = false,
-    Genre genre,
+    Genre? genre,
   }) async {
     _country = country;
     _limit = limit;
@@ -132,7 +132,7 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType ?? ErrorType.unknown);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   Future<SearchResult> _chartsToResults(dynamic jsonInput) async {
@@ -156,17 +156,17 @@ class ITunesSearch extends BaseSearch {
         }
       }
 
-      return SearchResult(resultCount: items.length ?? 0, items: items ?? <Item>[]);
+      return SearchResult(resultCount: items.length, items: items);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType ?? ErrorType.unknown);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildSearchUrl(Map<String, dynamic> queryParams) {
+  String _buildSearchUrl(Map<String, dynamic>? queryParams) {
     final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());
@@ -196,8 +196,8 @@ class ITunesSearch extends BaseSearch {
     buf.write('/rss/toppodcasts/limit=');
     buf.write(_limit);
 
-    if (_genre != null && _genre.id != null) {
-      buf.write('/genre=${_genre.id}');
+    if (_genre != null) {
+      buf.write('/genre=${_genre!.id}');
     }
 
     buf.write('/explicit=');
@@ -208,7 +208,7 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty ? '?term=' + Uri.encodeComponent(term) : '';
+    return term != null && term!.isNotEmpty ? '?term=' + Uri.encodeComponent(term!) : '';
   }
 
   String _countryParam() {
@@ -216,7 +216,7 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _attributeParam() {
-    return _attribute != Attribute.NONE ? '&attribute=' + Uri.encodeComponent(_attribute.attribute) : '';
+    return _attribute != Attribute.NONE ? '&attribute=' + Uri.encodeComponent(_attribute!.attribute) : '';
   }
 
   String _limitParam() {
@@ -232,7 +232,7 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _explicitParam() {
-    return _explicit ? '&explicit=Yes' : '&explicit=No';
+    return _explicit! ? '&explicit=Yes' : '&explicit=No';
   }
 
   String _standardParam() {
@@ -240,5 +240,5 @@ class ITunesSearch extends BaseSearch {
   }
 
   /// Returns the search term.
-  String get term => _term;
+  String? get term => _term;
 }

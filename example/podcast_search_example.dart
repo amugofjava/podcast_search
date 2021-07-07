@@ -7,12 +7,12 @@ void main() async {
   var results = await search.search('widgets', country: Country.UNITED_KINGDOM, limit: 10);
 
   /// List the name of each podcast found.
-  results.items?.forEach((result) {
+  results.items.forEach((result) {
     print('Found podcast: ${result.trackName}');
   });
 
   /// Parse the first podcast.
-  var podcast = await Podcast.loadFeed(url: results.items[0].feedUrl);
+  var podcast = await Podcast.loadFeed(url: results.items[0].feedUrl!);
 
   /// Display episode titles.
   podcast.episodes?.forEach((episode) {
@@ -23,7 +23,7 @@ void main() async {
   var charts = await search.charts(genre: Genre.COMEDY, limit: 10, country: Country.UNITED_KINGDOM);
 
   /// List the name of each podcast found.
-  charts.items?.forEach((result) {
+  charts.items.forEach((result) {
     print('Found podcast: ${result.trackName}');
   });
 }

@@ -65,7 +65,7 @@ class Search {
   }) async {
     _term = term;
     _country = country;
-    _attribute = attribute ?? Attribute.NONE;
+    _attribute = attribute;
     _limit = limit;
     _language = language;
     _version = version;
@@ -79,7 +79,7 @@ class Search {
         : PodcastIndexSearch(
             userAgent: userAgent,
             timeout: timeout,
-            podcastIndexProvider: searchProvider,
+            podcastIndexProvider: searchProvider as PodcastIndexProvider,
           );
 
     return s.search(

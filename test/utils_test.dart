@@ -17,55 +17,55 @@ void main() {
     var i1 = '2019-12-01T08:30:45+00:00'; // ISO 8601 format
 
     test('Date format zone abbr', () async {
-      var result = Utils.parseRFC2822Date(d1).toIso8601String();
+      var result = Utils.parseRFC2822Date(d1)!.toIso8601String();
 
       expect(result, '2019-06-03T17:00:00.000Z');
     });
 
     test('Date format zone +offset', () async {
-      var result = Utils.parseRFC2822Date(d2).toIso8601String();
+      var result = Utils.parseRFC2822Date(d2)!.toIso8601String();
 
       expect(result, '2019-06-03T08:00:00.000Z');
     });
 
     test('Date format zone -offset', () async {
-      var result = Utils.parseRFC2822Date(d3).toIso8601String();
+      var result = Utils.parseRFC2822Date(d3)!.toIso8601String();
 
       expect(result, '2019-06-03T12:00:00.000Z');
     });
 
     test('Date format zone -offset 2a', () async {
-      var result = Utils.parseRFC2822Date(d4).toIso8601String();
+      var result = Utils.parseRFC2822Date(d4)!.toIso8601String();
 
       expect(result, '2019-06-03T10:00:00.000Z');
     });
 
     test('Date format zone -offset 2b', () async {
-      var result = Utils.parseRFC2822Date(d5).toIso8601String();
+      var result = Utils.parseRFC2822Date(d5)!.toIso8601String();
 
       expect(result, '2019-06-03T10:00:00.000Z');
     });
 
     test('Date format zone -offset 2c', () async {
-      var result = Utils.parseRFC2822Date(d6).toIso8601String();
+      var result = Utils.parseRFC2822Date(d6)!.toIso8601String();
 
       expect(result, '2019-06-03T10:00:00.000Z');
     });
 
     test('Date format zone -offset 2d', () async {
-      var result = Utils.parseRFC2822Date(d7).toIso8601String();
+      var result = Utils.parseRFC2822Date(d7)!.toIso8601String();
 
       expect(result, '2019-01-01T10:00:00.000Z');
     });
 
     test('Date format zone -offset 2e', () async {
-      var result = Utils.parseRFC2822Date(d8).toIso8601String();
+      var result = Utils.parseRFC2822Date(d8)!.toIso8601String();
 
       expect(result, '2019-01-01T10:00:00.000Z');
     });
 
     test('Date format ISO 8601', () async {
-      var result = Utils.parseRFC2822Date(i1).toIso8601String();
+      var result = Utils.parseRFC2822Date(i1)!.toIso8601String();
 
       expect(result, '2019-12-01T08:30:45.000Z');
     });
