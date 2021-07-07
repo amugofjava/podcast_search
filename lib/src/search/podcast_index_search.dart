@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/attribute.dart';
 import 'package:podcast_search/src/model/country.dart';
@@ -17,41 +18,39 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
 class PodcastIndexSearch extends BaseSearch {
-  static String SEARCH_API_ENDPOINT =
-      'https://api.podcastindex.org/api/1.0/search';
-  static String TRENDING_API_ENDPOINT =
-      'https://api.podcastindex.org/api/1.0/podcasts/trending';
+  static String SEARCH_API_ENDPOINT = 'https://api.podcastindex.org/api/1.0/search';
+  static String TRENDING_API_ENDPOINT = 'https://api.podcastindex.org/api/1.0/podcasts/trending';
 
   PodcastIndexProvider podcastIndexProvider;
 
   Dio _client;
 
   /// The search term keyword(s)
-  String _term;
+  String _term = '';
 
   /// Limit the number of results to [_limit]. If zero no limit will be applied
-  int _limit;
+  int _limit = 0;
 
   /// Set to true to disable the explicit filter.
-  bool _explicit;
+  bool _explicit = false;
 
   /// Connection timeout threshold in milliseconds
-  int timeout;
+  int timeout = 20000;
 
   /// If this property is non-null, it will be prepended to the User Agent header.
-  String userAgent;
+  String userAgent = '';
+
+  final ErrorType _lastErrorType = ErrorType.none;
+
+  String _lastError;
 
   /// Contains the type of error returning from the search. If no error occurred it
   /// will be set to [ErrorType.none].
-  final ErrorType _lastErrorType = ErrorType.none;
-
   /// If an error occurs, this will contain a user-readable error message.
-  String _lastError;
-
   PodcastIndexSearch({
+    @required this.podcastIndexProvider,
     this.timeout = 20000,
     this.userAgent,
-    this.podcastIndexProvider,
   }) {
     var unixTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
     var newUnixTime = unixTime.toString();
@@ -76,9 +75,7 @@ class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Date': newUnixTime,
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
-          'User-Agent': userAgent == null || userAgent.isEmpty
-              ? '$podcastSearchAgent'
-              : '${userAgent}',
+          'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
         },
       ),
     );
@@ -91,10 +88,10 @@ class PodcastIndexSearch extends BaseSearch {
   @override
   Future<SearchResult> search(
       {String term,
-      Country country,
-      Attribute attribute,
-      Language language,
-      int limit,
+      Country country = Country.NONE,
+      Attribute attribute = Attribute.NONE,
+      Language language = Language.NONE,
+      int limit = 0,
       int version = 0,
       bool explicit = false,
       Map<String, dynamic> queryParams = const {}}) async {
@@ -105,13 +102,12 @@ class PodcastIndexSearch extends BaseSearch {
     try {
       var response = await _client.get(_buildSearchUrl(queryParams));
 
-      return SearchResult.fromJson(
-          json: response.data, type: ResultType.podcastIndex);
+      return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(_lastError, _lastErrorType);
+    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType ?? ErrorType.unknown);
   }
 
   /// Fetches the list of top podcasts
@@ -136,13 +132,12 @@ class PodcastIndexSearch extends BaseSearch {
             'since': -1 * 3600 * 24 * 7,
           }..addAll(queryParams));
 
-      return SearchResult.fromJson(
-          json: response.data, type: ResultType.podcastIndex);
+      return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(_lastError, _lastErrorType);
+    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType ?? ErrorType.unknown);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
@@ -161,9 +156,7 @@ class PodcastIndexSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty
-        ? '/byterm?q=' + Uri.encodeComponent(term)
-        : '';
+    return term.isNotEmpty ? '/byterm?q=' + Uri.encodeComponent(term) : '';
   }
 
   String _limitParam() {

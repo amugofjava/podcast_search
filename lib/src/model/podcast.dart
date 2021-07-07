@@ -67,16 +67,14 @@ class Podcast {
   static Future<Podcast> loadFeed({
     @required String url,
     int timeout = 20000,
-    String userAgent,
+    String userAgent = '',
   }) async {
     final client = Dio(
       BaseOptions(
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          'User-Agent': userAgent == null || userAgent.isEmpty
-              ? '$podcastSearchAgent'
-              : '${userAgent}',
+          'User-Agent': userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
         },
       ),
     );
@@ -134,9 +132,11 @@ class Podcast {
 
     var funding = <Funding>[];
 
-    if (rssFeed.podcastIndex.funding != null) {
+    if (rssFeed.podcastIndex != null && rssFeed.podcastIndex.funding != null) {
       for (var f in rssFeed.podcastIndex.funding) {
-        funding.add(Funding(url: f.url, value: f.value));
+        if (f != null && f.url != null && f.value != null) {
+          funding.add(Funding(url: f.url, value: f.value));
+        }
       }
     }
 
@@ -173,14 +173,11 @@ class Podcast {
       ),
     );
 
-    if (episode.chapters.chapters.isNotEmpty &&
-        !episode.chapters.loaded &&
-        !forceReload) {
+    if (episode.chapters.chapters.isNotEmpty && !episode.chapters.loaded && !forceReload) {
       try {
         final response = await client.get(episode.chapters.url);
 
-        if (response.statusCode == 200 &&
-            response.data is Map<String, dynamic>) {
+        if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
           _loadChapters(response, episode.chapters);
         }
       } on DioError catch (e) {
@@ -288,11 +285,9 @@ class Podcast {
             url: chapter['url'] ?? '',
             imageUrl: chapter['img'] ?? '',
             title: chapter['title'] ?? '',
-            startTime: startTime,
-            endTime: endTime,
-            toc: (chapter['toc'] != null && (chapter['toc'] as bool) == false)
-                ? false
-                : true),
+            startTime: startTime ?? 0.0,
+            endTime: endTime ?? 0.0,
+            toc: (chapter['toc'] != null && (chapter['toc'] as bool) == false) ? false : true),
       );
     }
   }
@@ -305,9 +300,9 @@ class Podcast {
       );
 
       episodes.add(Episode(
-        guid: item.guid,
-        title: item.title,
-        description: item.description,
+        guid: item.guid ?? '',
+        title: item.title ?? '',
+        description: item.description ?? '',
         link: item.link,
         publicationDate: Utils.parseRFC2822Date(item.pubDate),
         author: item.author ?? item.itunes.author ?? item.dc?.creator,

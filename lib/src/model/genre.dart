@@ -11,6 +11,8 @@ class Genre {
 
   Genre(this._id, this._name);
 
+  static const Genre NONE = Genre._(-1, 'None');
+
   static const Genre ARTS = Genre._(1301, 'Arts');
   static const Genre BUSINESS = Genre._(1321, 'Business');
   static const Genre COMEDY = Genre._(1303, 'Comedy');
@@ -23,8 +25,7 @@ class Genre {
   static const Genre LEISURE = Genre._(1502, 'Leisure');
   static const Genre MUSIC = Genre._(1301, 'Music');
   static const Genre NEWS = Genre._(1489, 'News');
-  static const Genre RELIGION_SPIRITUALITY =
-      Genre._(1314, 'Religion & Spirituality');
+  static const Genre RELIGION_SPIRITUALITY = Genre._(1314, 'Religion & Spirituality');
   static const Genre SCIENCE = Genre._(1533, 'Science');
   static const Genre SOCIETY_CULTURE = Genre._(1324, 'Society & Culture');
   static const Genre SPORTS = Genre._(1545, 'Sports');
@@ -38,7 +39,7 @@ class Genre {
 
   @override
   String toString() {
-    return '${_id}: ${_name}';
+    return '$_id: $_name';
   }
 
   int get id => _id;

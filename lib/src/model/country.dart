@@ -5,6 +5,8 @@
 class Country {
   final String _countryCode;
 
+  static const Country NONE = Country._('');
+
   static const Country AFGHANISTAN = Country._('AF');
   static const Country ALAND_ISLANDS = Country._('AX');
   static const Country ALBANIA = Country._('AL');
@@ -210,8 +212,7 @@ class Country {
   static const Country SOLOMON_ISLANDS = Country._('SB');
   static const Country SOMALIA = Country._('SO');
   static const Country SOUTH_AFRICA = Country._('ZA');
-  static const Country SOUTH_GEORGIA_AND_THE_SOUTH_SANDWICH_ISLANDS =
-      Country._('GS');
+  static const Country SOUTH_GEORGIA_AND_THE_SOUTH_SANDWICH_ISLANDS = Country._('GS');
   static const Country SOUTH_KOREA = Country._('KR');
   static const Country SOUTH_SUDAN = Country._('SS');
   static const Country SPAIN = Country._('ES');

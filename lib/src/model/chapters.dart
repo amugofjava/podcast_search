@@ -9,7 +9,7 @@ class Chapters {
   var chapters = <Chapter>[];
 
   Chapters({
-    this.url,
-    this.type,
+    this.url = '',
+    this.type = '',
   });
 }

@@ -24,7 +24,7 @@ class ITunesSearch extends BaseSearch {
   String _term;
 
   /// If this property is not-null search results will be limited to this country
-  Country _country;
+  Country _country = Country.NONE;
 
   /// If this property is not-null search results will be limited to this genre
   Genre _genre;
@@ -59,9 +59,7 @@ class ITunesSearch extends BaseSearch {
             connectTimeout: timeout,
             receiveTimeout: timeout,
             headers: {
-              'User-Agent': userAgent == null || userAgent.isEmpty
-                  ? '$podcastSearchAgent'
-                  : '${userAgent}',
+              'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
             },
           ),
         );
@@ -73,10 +71,10 @@ class ITunesSearch extends BaseSearch {
   @override
   Future<SearchResult> search(
       {String term,
-      Country country,
-      Attribute attribute,
-      Language language,
-      int limit,
+      Country country = Country.NONE,
+      Attribute attribute = Attribute.NONE,
+      Language language = Language.NONE,
+      int limit = 0,
       int version = 0,
       bool explicit = false,
       Map<String, dynamic> queryParams = const {}}) async {
@@ -98,7 +96,7 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError, lastErrorType);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType ?? ErrorType.unknown);
   }
 
   /// Fetches the list of top podcasts
@@ -134,7 +132,7 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError, lastErrorType);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType ?? ErrorType.unknown);
   }
 
   Future<SearchResult> _chartsToResults(dynamic jsonInput) async {
@@ -147,8 +145,7 @@ class ITunesSearch extends BaseSearch {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response =
-              await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
+          final response = await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
           final results = json.decode(response.data);
 
           if (results['results'] != null) {
@@ -159,12 +156,12 @@ class ITunesSearch extends BaseSearch {
         }
       }
 
-      return SearchResult(items.length, items);
+      return SearchResult(resultCount: items.length ?? 0, items: items ?? <Item>[]);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError, lastErrorType);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType ?? ErrorType.unknown);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
@@ -180,9 +177,12 @@ class ITunesSearch extends BaseSearch {
     buf.write(_versionParam());
     buf.write(_explicitParam());
     buf.write(_standardParam());
-    queryParams.forEach((key, value) {
-      buf.write('&$key=${Uri.encodeComponent(value)}');
-    });
+
+    if (queryParams != null) {
+      queryParams.forEach((key, value) {
+        buf.write('&$key=${Uri.encodeComponent(value)}');
+      });
+    }
 
     return buf.toString();
   }
@@ -208,19 +208,15 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty
-        ? '?term=' + Uri.encodeComponent(term)
-        : '';
+    return term != null && term.isNotEmpty ? '?term=' + Uri.encodeComponent(term) : '';
   }
 
   String _countryParam() {
-    return _country != null ? '&country=' + _country.countryCode : '';
+    return _country != Country.NONE ? '&country=' + _country.countryCode : '';
   }
 
   String _attributeParam() {
-    return _attribute != null
-        ? '&attribute=' + Uri.encodeComponent(_attribute.attribute)
-        : '';
+    return _attribute != Attribute.NONE ? '&attribute=' + Uri.encodeComponent(_attribute.attribute) : '';
   }
 
   String _limitParam() {
@@ -228,7 +224,7 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _languageParam() {
-    return _language != null ? '&language=' + _language.language : '';
+    return _language.language.isNotEmpty ? '&language=' + _language.language : '';
   }
 
   String _versionParam() {

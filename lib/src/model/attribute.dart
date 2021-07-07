@@ -5,6 +5,8 @@
 class Attribute {
   final String _attribute;
 
+  static const Attribute NONE = Attribute._('');
+
   static const Attribute TITLE_TERM = Attribute._('titleTerm');
   static const Attribute LANGUAGE_TERM = Attribute._('languageTerm');
   static const Attribute AUTHOR_TERM = Attribute._('authorTerm');

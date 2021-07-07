@@ -5,6 +5,8 @@
 class Language {
   final String _language;
 
+  static const NONE = Language('');
+
   static const ENGLISH = Language('en_us');
   static const JAPANESE = Language('ja_jp');
 

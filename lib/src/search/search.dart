@@ -15,53 +15,57 @@ import 'package:podcast_search/src/search/providers/providers.dart';
 /// and stored as Item instances and wrapped in a SearchResult.
 class Search {
   /// The search term keyword(s)
-  String _term;
+  String _term = '';
 
   /// If this property is not-null search results will be limited to this country
-  Country _country;
+  Country _country = Country.NONE;
 
   /// If this property is not-null search results will be limited to this genre
-  Genre _genre;
+  Genre _genre = Genre.NONE;
 
   /// By default, searches will be performed against keyword(s) in [_term].
   /// Set this property to search against a different attribute.
-  Attribute _attribute;
+  Attribute _attribute = Attribute.NONE;
 
   /// Limit the number of results to [_limit]. If zero no limit will be applied
-  int _limit;
+  int _limit = 0;
 
   /// If non-null, the results will be limited to the language specified.
-  Language _language;
+  Language _language = Language.NONE;
 
   /// Set to true to disable the explicit filter.
-  bool _explicit;
+  bool _explicit = false;
 
-  int _version;
+  int _version = 0;
 
   /// Connection timeout threshold in milliseconds
-  int timeout;
+  int timeout = 20000;
 
   /// If this property is non-null, it will be prepended to the User Agent header.
-  String userAgent;
+  String userAgent = '';
 
-  Search({this.userAgent});
+  Search({
+    this.userAgent = '',
+  });
 
   /// Search iTunes using the term [term]. You can limit the results to
   /// podcasts available in a specific country by supplying a [Country] option.
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
-  Future<SearchResult> search(String term,
-      {SearchProvider searchProvider = const ITunesProvider(),
-      Country country,
-      Attribute attribute,
-      Language language,
-      int limit,
-      int version = 0,
-      bool explicit = false,
-      Map<String, dynamic> queryParams = const {}}) async {
+  Future<SearchResult> search(
+    String term, {
+    SearchProvider searchProvider = const ITunesProvider(),
+    Country country = Country.NONE,
+    Attribute attribute = Attribute.NONE,
+    Language language = Language.NONE,
+    int limit = 0,
+    int version = 0,
+    bool explicit = false,
+    Map<String, dynamic> queryParams = const {},
+  }) async {
     _term = term;
     _country = country;
-    _attribute = attribute;
+    _attribute = attribute ?? Attribute.NONE;
     _limit = limit;
     _language = language;
     _version = version;
@@ -103,7 +107,7 @@ class Search {
     Country country = Country.UNITED_KINGDOM,
     int limit = 20,
     bool explicit = false,
-    Genre genre,
+    Genre genre = Genre.NONE,
     Map<String, dynamic> queryParams = const {},
   }) async {
     _country = country;

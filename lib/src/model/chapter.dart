@@ -7,11 +7,11 @@ class Chapter {
   final double endTime;
 
   Chapter({
-    this.title,
-    this.imageUrl,
-    this.url,
-    this.toc,
-    this.startTime,
-    this.endTime,
+    this.title = '',
+    this.imageUrl = '',
+    this.url = '',
+    this.toc = false,
+    this.startTime = 0.0,
+    this.endTime = 0.0,
   });
 }

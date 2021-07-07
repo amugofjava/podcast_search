@@ -1,9 +1,11 @@
+import 'package:meta/meta.dart';
+
 class Funding {
   final String url;
   final String value;
 
   Funding({
-    this.url,
-    this.value,
+    @required this.url,
+    @required this.value,
   });
 }
