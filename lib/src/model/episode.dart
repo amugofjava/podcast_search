@@ -23,6 +23,9 @@ class Episode {
   /// Media fields
   String? contentUrl;
 
+  /// Episode specific image URL if one exists
+  String? imageUrl;
+
   // iTunes specific fields
   /// Episode author.
   String? author;
@@ -48,6 +51,7 @@ class Episode {
     this.author = '',
     this.duration,
     this.contentUrl,
+    this.imageUrl,
     this.season,
     this.episode,
     this.chapters,

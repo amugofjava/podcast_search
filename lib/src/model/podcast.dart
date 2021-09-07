@@ -296,6 +296,7 @@ class Podcast {
         author: item.author ?? item.itunes!.author ?? item.dc?.creator,
         duration: item.itunes?.duration,
         contentUrl: item.enclosure?.url,
+        imageUrl: item.itunes?.image?.href,
         season: item.itunes?.season,
         episode: item.itunes?.episode,
         chapters: chapters,
