@@ -1,3 +1,7 @@
+## 0.5.0-pre.2
+
+- Add episode level image support via itunes:image tag.
+
 ## 0.5.0-pre.1
 
 - Migrate to null-safety version.
