@@ -118,7 +118,7 @@ class Podcast {
   static Podcast _loadFeed(RssFeed rssFeed, String url) {
     // Parse the episodes
     var episodes = <Episode>[];
-    var author = rssFeed.author ?? rssFeed.itunes!.author;
+    var author = rssFeed.itunes!.author;
     var locked = Locked(
       locked: rssFeed.podcastIndex!.locked?.locked ?? false,
       owner: rssFeed.podcastIndex!.locked?.owner ?? '',

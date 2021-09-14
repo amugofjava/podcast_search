@@ -1,3 +1,8 @@
+## 0.5.0
+
+- Stable null safe release
+- Corrected author tag.
+
 ## 0.5.0-pre.2
 
 - Add episode level image support via itunes:image tag.
