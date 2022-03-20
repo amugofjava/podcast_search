@@ -9,15 +9,14 @@ void main() {
     late Search search;
 
     setUp(() {
-      search = Search();
+      search = Search(
+        searchProvider:
+            PodcastIndexProvider(key: 'XXWQEGULBJABVHZUM8NF', secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
+      );
     });
 
     test('Podcast index trending', () async {
-      final result = await search.charts(
-          searchProvider: PodcastIndexProvider(
-              key: 'XXWQEGULBJABVHZUM8NF',
-              secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
-          queryParams: {'val': 'lightning'});
+      final result = await search.charts(queryParams: {'val': 'lightning'});
 
       expect(result.resultCount > 0, true);
     });

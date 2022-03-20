@@ -18,6 +18,28 @@ class ITunesSearch extends BaseSearch {
   static String FEED_API_ENDPOINT = 'https://itunes.apple.com';
   static String SEARCH_API_ENDPOINT = 'https://itunes.apple.com/search';
 
+  static const _genres = <String, int>{
+    '': -1,
+    'Arts': 1301,
+    'Business': 1321,
+    'Comedy': 1303,
+    'Education': 1304,
+    'Fiction': 1483,
+    'Government': 1511,
+    'Health & Fitness': 1512,
+    'History': 1487,
+    'Kids & Family': 1305,
+    'Leisure': 1502,
+    'Music': 1301,
+    'News': 1489,
+    'Religion & Spirituality': 1314,
+    'Science': 1533,
+    'Society & Culture': 1324,
+    'Sports': 1545,
+    'TV & Film': 1309,
+    'Technology': 1318,
+    'True Crime': 1488,
+  };
   final Dio _client;
 
   /// The search term keyword(s)
@@ -27,7 +49,7 @@ class ITunesSearch extends BaseSearch {
   Country _country = Country.NONE;
 
   /// If this property is not-null search results will be limited to this genre
-  Genre? _genre;
+  String _genre = '';
 
   /// By default, searches will be performed against keyword(s) in [_term].
   /// Set this property to search against a different attribute.
@@ -113,7 +135,7 @@ class ITunesSearch extends BaseSearch {
     Country country = Country.UNITED_KINGDOM,
     int limit = 20,
     bool explicit = false,
-    Genre? genre,
+    String genre = '',
   }) async {
     _country = country;
     _limit = limit;
@@ -134,6 +156,9 @@ class ITunesSearch extends BaseSearch {
 
     return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
+
+  @override
+  List<String> genres() => _genres.keys.toList(growable: false);
 
   Future<SearchResult> _chartsToResults(dynamic jsonInput) async {
     var entries = jsonInput['feed']['entry'];
@@ -196,8 +221,12 @@ class ITunesSearch extends BaseSearch {
     buf.write('/rss/toppodcasts/limit=');
     buf.write(_limit);
 
-    if (_genre != null) {
-      buf.write('/genre=${_genre!.id}');
+    if (_genre != '') {
+      var g = _genres[_genre];
+
+      if (g != null) {
+        buf.write('/genre=$g');
+      }
     }
 
     buf.write('/explicit=');

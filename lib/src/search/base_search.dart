@@ -22,7 +22,11 @@ abstract class BaseSearch {
     Map<String, dynamic>? queryParams,
   });
 
-  Future<SearchResult> charts();
+  Future<SearchResult> charts({
+    String genre,
+  });
+
+  List<String> genres();
 
   /// If an error occurs during an HTTP GET request this method is called to
   /// determine the error and set two variables which can then be included

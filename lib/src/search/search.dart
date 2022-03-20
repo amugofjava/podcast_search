@@ -21,7 +21,7 @@ class Search {
   Country _country = Country.NONE;
 
   /// If this property is not-null search results will be limited to this genre
-  Genre _genre = Genre.NONE;
+  String _genre = '';
 
   /// By default, searches will be performed against keyword(s) in [_term].
   /// Set this property to search against a different attribute.
@@ -44,7 +44,10 @@ class Search {
   /// If this property is non-null, it will be prepended to the User Agent header.
   String userAgent = '';
 
+  final SearchProvider searchProvider;
+
   Search({
+    this.searchProvider = const ITunesProvider(),
     this.userAgent = '',
   });
 
@@ -54,7 +57,6 @@ class Search {
   /// value to search by a different attribute such as Author, genre etc.
   Future<SearchResult> search(
     String term, {
-    SearchProvider searchProvider = const ITunesProvider(),
     Country country = Country.NONE,
     Attribute attribute = Attribute.NONE,
     Language language = Language.NONE,
@@ -103,11 +105,10 @@ class Search {
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
   Future<SearchResult> charts({
-    SearchProvider searchProvider = const ITunesProvider(),
     Country country = Country.UNITED_KINGDOM,
     int limit = 20,
     bool explicit = false,
-    Genre genre = Genre.NONE,
+    String genre = '',
     Map<String, dynamic> queryParams = const {},
   }) async {
     _country = country;
@@ -119,7 +120,7 @@ class Search {
       return PodcastIndexSearch(
         userAgent: userAgent,
         timeout: timeout,
-        podcastIndexProvider: searchProvider,
+        podcastIndexProvider: searchProvider as PodcastIndexProvider,
       ).charts(
         country: _country,
         limit: _limit,
@@ -137,6 +138,21 @@ class Search {
       explicit: _explicit,
       genre: _genre,
     );
+  }
+
+  List<String> genres() {
+    if (searchProvider is PodcastIndexProvider) {
+      return PodcastIndexSearch(
+        userAgent: userAgent,
+        timeout: timeout,
+        podcastIndexProvider: searchProvider as PodcastIndexProvider,
+      ).genres();
+    } else {
+      return ITunesSearch(
+        userAgent: userAgent,
+        timeout: timeout,
+      ).genres();
+    }
   }
 
   /// Returns the search term.

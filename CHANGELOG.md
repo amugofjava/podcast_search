@@ -1,3 +1,8 @@
+## 0.5.1
+
+- Breaking change: Search provider is now passed when instantiating a Search object, rather than passing one at search time.
+- Support for genres across iTunes & PodcastIndex.
+
 ## 0.5.0
 
 - Stable null safe release
