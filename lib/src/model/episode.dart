@@ -2,6 +2,7 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/src/model/chapters.dart';
+import 'package:podcast_search/src/model/transcript.dart';
 
 /// A class representing an individual episode.
 class Episode {
@@ -42,6 +43,8 @@ class Episode {
   /// Episode chapters for feeds that support PodcastIndex
   final Chapters? chapters;
 
+  final List<TranscriptUrl> transcripts;
+
   Episode({
     required this.guid,
     required this.title,
@@ -55,5 +58,6 @@ class Episode {
     this.season,
     this.episode,
     this.chapters,
+    this.transcripts = const <TranscriptUrl>[],
   });
 }

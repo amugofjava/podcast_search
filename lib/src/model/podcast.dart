@@ -9,11 +9,11 @@ import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
-import 'package:podcast_search/src/model/chapters.dart';
-import 'package:podcast_search/src/model/episode.dart';
 import 'package:podcast_search/src/model/funding.dart';
 import 'package:podcast_search/src/model/locked.dart';
 import 'package:podcast_search/src/search/base_search.dart';
+import 'package:podcast_search/src/utils/json_parser.dart';
+import 'package:podcast_search/src/utils/srt_parser.dart';
 import 'package:podcast_search/src/utils/utils.dart';
 
 /// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
@@ -115,6 +115,19 @@ class Podcast {
     return Podcast._(url: file);
   }
 
+  static Future<Transcript> loadTranscriptFile({
+    required String file,
+  }) async {
+    var f = File(file);
+
+    if (f.existsSync()) {
+      var input = f.readAsStringSync();
+      var t = SrtParser().parse(input);
+    }
+
+    return Future.value(Transcript());
+  }
+
   static Podcast _loadFeed(RssFeed rssFeed, String url) {
     // Parse the episodes
     var episodes = <Episode>[];
@@ -190,6 +203,56 @@ class Podcast {
     }
 
     return episode;
+  }
+
+  static Future<Transcript> loadTranscriptByUrl({
+    required TranscriptUrl transcriptUrl,
+    int timeout = 20000,
+  }) async {
+    final client = Dio(
+      BaseOptions(
+        connectTimeout: timeout,
+        receiveTimeout: timeout,
+      ),
+    );
+
+    var transcript = Transcript();
+    final srtParser = SrtParser();
+    final jsonParser = JsonParser();
+
+    try {
+      final response = await client.get(transcriptUrl.url, options: Options(responseType: ResponseType.plain));
+
+      /// What type of transcript are we loading here?
+      if (transcriptUrl.type == TranscriptFormat.SUBRIP) {
+        print('Loading SUBRIP');
+        if (response.statusCode == 200 && response.data is String) {
+          print('OK');
+          transcript = srtParser.parse(response.data);
+        }
+      } else if (transcriptUrl.type == TranscriptFormat.JSON) {
+        print('Loading JSON');
+        if (response.statusCode == 200 && response.data is String) {
+          transcript = jsonParser.parse(response.data.toString());
+        }
+      } else {
+        throw Exception('Sorry, not got around to supporting that format yet');
+      }
+    } on DioError catch (e) {
+      switch (e.type) {
+        case DioErrorType.connectTimeout:
+        case DioErrorType.sendTimeout:
+        case DioErrorType.receiveTimeout:
+        case DioErrorType.other:
+          throw PodcastTimeoutException(e.message);
+        case DioErrorType.response:
+          throw PodcastFailedException(e.message);
+        case DioErrorType.cancel:
+          throw PodcastCancelledException(e.message);
+      }
+    }
+
+    return Future.value(transcript);
   }
 
   /// Podcasts that support the newer podcast namespace can include chapter markers. Typically this
@@ -282,10 +345,45 @@ class Podcast {
 
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
     rssFeed.items.forEach((item) {
+      var transcripts = <TranscriptUrl>[];
+
       var chapters = Chapters(
         url: item.podcastIndex!.chapters?.url ?? '',
         type: item.podcastIndex!.chapters?.type ?? '',
       );
+
+      if (item.podcastIndex?.transcripts != null) {
+        for (var t in item.podcastIndex!.transcripts) {
+          /// Ensure it is a known format (when we move to Dart 2.17+ we can make
+          /// better use of the new Enums
+          var valid = false;
+          var type = TranscriptFormat.UNSUPPORTED;
+
+          switch (t?.type ?? '') {
+            case 'application/json':
+              type = TranscriptFormat.JSON;
+              valid = true;
+              break;
+            case 'application/x-subrip':
+            case 'application/srt':
+              type = TranscriptFormat.SUBRIP;
+              valid = true;
+              break;
+            default:
+              valid = false;
+              break;
+          }
+
+          if (valid) {
+            transcripts.add(TranscriptUrl(
+              url: t?.url ?? '',
+              language: t?.language ?? '',
+              rel: t?.rel ?? '',
+              type: type,
+            ));
+          }
+        }
+      }
 
       episodes.add(Episode(
         guid: item.guid ?? '',
@@ -300,6 +398,7 @@ class Podcast {
         season: item.itunes?.season,
         episode: item.itunes?.episode,
         chapters: chapters,
+        transcripts: transcripts,
       ));
     });
   }

@@ -12,5 +12,6 @@ export 'src/model/item.dart';
 export 'src/model/language.dart';
 export 'src/model/podcast.dart';
 export 'src/model/search_result.dart';
+export 'src/model/transcript.dart';
 export 'src/search/providers/providers.dart';
 export 'src/search/search.dart';
