@@ -9,8 +9,6 @@ import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
-import 'package:podcast_search/src/model/chapters.dart';
-import 'package:podcast_search/src/model/episode.dart';
 import 'package:podcast_search/src/model/funding.dart';
 import 'package:podcast_search/src/model/locked.dart';
 import 'package:podcast_search/src/search/base_search.dart';
@@ -299,6 +297,7 @@ class Podcast {
         imageUrl: item.itunes?.image?.href,
         season: item.itunes?.season,
         episode: item.itunes?.episode,
+        content: item.content?.value,
         chapters: chapters,
       ));
     });

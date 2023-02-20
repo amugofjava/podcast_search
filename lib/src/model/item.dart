@@ -2,7 +2,6 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
-import 'package:podcast_search/src/model/genre.dart';
 
 /// A class that represents an individual Podcast within the search results. Not all
 /// properties may contain values for all search providers.

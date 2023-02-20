@@ -4,21 +4,21 @@
 /// Thrown if the connection times out, or we timeout
 /// waiting to receive the data.
 class PodcastTimeoutException implements Exception {
-  final String _message;
+  final String message;
 
-  PodcastTimeoutException(this._message);
+  PodcastTimeoutException(this.message);
 }
 
 /// Thrown if the search is cancelled.
 class PodcastCancelledException implements Exception {
-  final String _message;
+  final String message;
 
-  PodcastCancelledException(this._message);
+  PodcastCancelledException(this.message);
 }
 
 /// Thrown if we get an invalid response error.
 class PodcastFailedException implements Exception {
-  final String _message;
+  final String message;
 
-  PodcastFailedException(this._message);
+  PodcastFailedException(this.message);
 }

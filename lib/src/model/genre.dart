@@ -4,23 +4,18 @@
 /// A class that represents the genre(s) the podcast is related to.
 class Genre {
   /// Genre ID.
-  final int _id;
+  final int id;
 
   /// Genre name.
-  final String _name;
+  final String name;
 
-  Genre(this._id, this._name);
-
-  const Genre._(int id, String name)
-      : _id = id,
-        _name = name;
+  const Genre(
+    this.id,
+    this.name,
+  );
 
   @override
   String toString() {
-    return '$_id: $_name';
+    return '$id: $name';
   }
-
-  int get id => _id;
-
-  String get name => _name;
 }

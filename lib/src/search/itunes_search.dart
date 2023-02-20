@@ -5,10 +5,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:podcast_search/src/model/attribute.dart';
-import 'package:podcast_search/src/model/country.dart';
-import 'package:podcast_search/src/model/language.dart';
-import 'package:podcast_search/src/model/search_result.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 
 /// This class handles the searching. Taking the base URL we build any parameters

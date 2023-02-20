@@ -2,13 +2,8 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
-import 'package:podcast_search/src/model/attribute.dart';
-import 'package:podcast_search/src/model/country.dart';
-import 'package:podcast_search/src/model/language.dart';
-import 'package:podcast_search/src/model/search_result.dart';
 import 'package:podcast_search/src/search/itunes_search.dart';
 import 'package:podcast_search/src/search/podcast_index_search.dart';
-import 'package:podcast_search/src/search/providers/providers.dart';
 
 /// This class handles the searching. Taking the base URL we build any parameters
 /// that have been added before making a call to iTunes. The results are unpacked
