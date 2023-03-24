@@ -1,2 +1,18 @@
-- name: Setup Dart SDK
-  uses: dart-lang/setup-dart@v1.5.0
+name: Dart
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+
+      - run: dart pub get
+      - run: dart analyze
+      - run: dart test
