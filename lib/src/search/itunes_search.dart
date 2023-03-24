@@ -11,8 +11,8 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
 class ITunesSearch extends BaseSearch {
-  static String FEED_API_ENDPOINT = 'https://itunes.apple.com';
-  static String SEARCH_API_ENDPOINT = 'https://itunes.apple.com/search';
+  static String feedApiEndpoint = 'https://itunes.apple.com';
+  static String searchApiEndpoint = 'https://itunes.apple.com/search';
 
   static const _genres = <String, int>{
     '': -1,
@@ -42,7 +42,7 @@ class ITunesSearch extends BaseSearch {
   String? _term;
 
   /// If this property is not-null search results will be limited to this country
-  Country _country = Country.NONE;
+  Country _country = Country.none;
 
   /// If this property is not-null search results will be limited to this genre
   String _genre = '';
@@ -89,9 +89,9 @@ class ITunesSearch extends BaseSearch {
   @override
   Future<SearchResult> search(
       {String? term,
-      Country country = Country.NONE,
-      Attribute attribute = Attribute.NONE,
-      Language language = Language.NONE,
+      Country country = Country.none,
+      Attribute attribute = Attribute.none,
+      Language language = Language.none,
       int limit = 0,
       int version = 0,
       bool explicit = false,
@@ -119,7 +119,7 @@ class ITunesSearch extends BaseSearch {
 
   /// Fetches the list of top podcasts
   /// Optionally takes a [limit] and [Country] filter. Defaults to
-  /// limit of 20 and the UK.
+  /// limit of 20 and the no specified country.
   ///
   /// The charts is returned as a 'feed'. In order to be compatible with
   /// [SearchResult] we need to parse this feed and fetch the underlying
@@ -128,7 +128,7 @@ class ITunesSearch extends BaseSearch {
   /// cache the results.
   @override
   Future<SearchResult> charts({
-    Country country = Country.UNITED_KINGDOM,
+    Country country = Country.none,
     int limit = 20,
     bool explicit = false,
     String genre = '',
@@ -166,7 +166,7 @@ class ITunesSearch extends BaseSearch {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response = await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
+          final response = await _client.get(feedApiEndpoint + '/lookup?id=$id');
           final results = json.decode(response.data);
 
           if (results['results'] != null) {
@@ -188,7 +188,7 @@ class ITunesSearch extends BaseSearch {
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
   String _buildSearchUrl(Map<String, dynamic>? queryParams) {
-    final buf = StringBuffer(SEARCH_API_ENDPOINT);
+    final buf = StringBuffer(searchApiEndpoint);
 
     buf.write(_termParam());
     buf.write(_countryParam());
@@ -209,10 +209,10 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _buildChartsUrl() {
-    final buf = StringBuffer(FEED_API_ENDPOINT);
+    final buf = StringBuffer(feedApiEndpoint);
 
     buf.write('/');
-    buf.write(_country.countryCode.toLowerCase());
+    buf.write(_country.code);
 
     buf.write('/rss/toppodcasts/limit=');
     buf.write(_limit);
@@ -237,11 +237,11 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _countryParam() {
-    return _country != Country.NONE ? '&country=' + _country.countryCode : '';
+    return _country != Country.none ? '&country=' + _country.code : '';
   }
 
   String _attributeParam() {
-    return _attribute != Attribute.NONE ? '&attribute=' + Uri.encodeComponent(_attribute!.attribute) : '';
+    return _attribute != Attribute.none ? '&attribute=' + Uri.encodeComponent(_attribute!.attribute) : '';
   }
 
   String _limitParam() {
@@ -249,7 +249,7 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _languageParam() {
-    return _language.language.isNotEmpty ? '&language=' + _language.language : '';
+    return _language != Language.none ? '&language=' + _language.code : '';
   }
 
   String _versionParam() {
