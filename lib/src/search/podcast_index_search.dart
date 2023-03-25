@@ -7,10 +7,6 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:podcast_search/src/model/attribute.dart';
-import 'package:podcast_search/src/model/country.dart';
-import 'package:podcast_search/src/model/language.dart';
-import 'package:podcast_search/src/model/search_result.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 
 /// This class handles the searching. Taking the base URL we build any parameters
@@ -203,9 +199,9 @@ class PodcastIndexSearch extends BaseSearch {
   @override
   Future<SearchResult> search(
       {String? term,
-      Country country = Country.NONE,
-      Attribute attribute = Attribute.NONE,
-      Language language = Language.NONE,
+      Country country = Country.none,
+      Attribute attribute = Attribute.none,
+      Language language = Language.none,
       int limit = 0,
       int version = 0,
       bool explicit = false,
@@ -227,7 +223,7 @@ class PodcastIndexSearch extends BaseSearch {
 
   /// Fetches the list of top podcasts
   /// Optionally takes a [limit] and [Country] filter. Defaults to
-  /// limit of 20 and the UK.
+  /// limit of 20 and no specified country.
   ///
   /// The charts is returned as a 'feed'. In order to be compatible with
   /// [SearchResult] we need to parse this feed and fetch the underlying
@@ -236,7 +232,7 @@ class PodcastIndexSearch extends BaseSearch {
   /// cache the results.
   @override
   Future<SearchResult> charts(
-      {Country country = Country.UNITED_KINGDOM,
+      {Country country = Country.none,
       int limit = 20,
       bool explicit = false,
       String genre = '',

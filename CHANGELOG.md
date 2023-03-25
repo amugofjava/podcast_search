@@ -1,3 +1,13 @@
+## 0.5.3
+
+- Breaking change: Country class has been replace by Country enum.
+- Breaking change: Language class has been replace by Language enum.
+- Breaking change: Attribute class has been replace by Attribute enum.
+
+## 0.5.2
+
+- Add support for RSS content tag.
+
 ## 0.5.1
 
 - Breaking change: Search provider is now passed when instantiating a Search object, rather than passing one at search time.

@@ -1,20 +1,18 @@
-name: Dart CI
+name: Dart
 
-on: [push]
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    container:
-      image:  google/dart:latest
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Install dependencies
-      run: pub get
-# Disable tests for now as GitHub does not allow calls out.
-# Really we should have local XML/JSON files for testing.
-#    - name: Run tests
-#      run: pub run test
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+
+      - run: dart pub get
+      - run: dart analyze
+      - run: dart test

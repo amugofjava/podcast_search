@@ -13,7 +13,7 @@ main() async {
 
   /// Search for podcasts with 'widgets' in the title.
   SearchResult results = await search.search("widgets",
-      country: Country.UNITED_KINGDOM,
+      country: Country.unitedKingdom,
       limit: 10);
 
   /// List the name of each podcast found.
@@ -30,7 +30,7 @@ main() async {
   });
 
   /// Find the top 10 podcasts in the UK.
-  var charts = await search.charts(limit: 10, country: Country.UNITED_KINGDOM);
+  var charts = await search.charts(limit: 10, country: Country.unitedKingdom);
 
   /// List the name of each podcast found.
   charts.items?.forEach((result) {

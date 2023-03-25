@@ -13,9 +13,9 @@ abstract class BaseSearch {
 
   Future<SearchResult> search({
     required String term,
-    Country country = Country.NONE,
-    Attribute attribute = Attribute.NONE,
-    Language language = Language.NONE,
+    Country country = Country.none,
+    Attribute attribute = Attribute.none,
+    Language language = Language.none,
     int limit = 0,
     int version = 0,
     bool explicit = false,

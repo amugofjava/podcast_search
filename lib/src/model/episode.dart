@@ -37,6 +37,9 @@ class Episode {
   /// Episode number
   int? episode;
 
+  /// Content
+  String? content;
+
   /// Length of the episode as a [Duration].
   final Duration? duration;
 
@@ -57,6 +60,7 @@ class Episode {
     this.imageUrl,
     this.season,
     this.episode,
+    this.content,
     this.chapters,
     this.transcripts = const <TranscriptUrl>[],
   });

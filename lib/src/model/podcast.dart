@@ -397,6 +397,7 @@ class Podcast {
         imageUrl: item.itunes?.image?.href,
         season: item.itunes?.season,
         episode: item.itunes?.episode,
+        content: item.content?.value,
         chapters: chapters,
         transcripts: transcripts,
       ));
