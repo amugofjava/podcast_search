@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
+// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
 // MIT license that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -115,17 +115,29 @@ class Podcast {
     return Podcast._(url: file);
   }
 
+  /// Load a PC2.0 [Transcript] from a file. Transcripts can be either JSON or
+  /// SRT (SubRip) format. The file extension is used to determine if either the
+  /// [JsonParser] or [SrtParser] is used.
   static Future<Transcript> loadTranscriptFile({
     required String file,
   }) async {
+    var transcript = Transcript();
+    final srtParser = SrtParser();
+    final jsonParser = JsonParser();
+
     var f = File(file);
 
     if (f.existsSync()) {
       var input = f.readAsStringSync();
-      var t = SrtParser().parse(input);
+
+      if (file.endsWith('.json')) {
+        transcript = jsonParser.parse(input);
+      } else if (file.endsWith('.srt')) {
+        transcript = srtParser.parse(input);
+      }
     }
 
-    return Future.value(Transcript());
+    return Future.value(transcript);
   }
 
   static Podcast _loadFeed(RssFeed rssFeed, String url) {
@@ -205,6 +217,9 @@ class Podcast {
     return episode;
   }
 
+  /// Load a PC2.0 [Transcript] from a file. Transcripts can be either JSON or
+  /// SRT (SubRip) format. The mime type is used to determine if either the
+  /// [JsonParser] or [SrtParser] is used.
   static Future<Transcript> loadTranscriptByUrl({
     required TranscriptUrl transcriptUrl,
     int timeout = 20000,
@@ -224,14 +239,11 @@ class Podcast {
       final response = await client.get(transcriptUrl.url, options: Options(responseType: ResponseType.plain));
 
       /// What type of transcript are we loading here?
-      if (transcriptUrl.type == TranscriptFormat.SUBRIP) {
-        print('Loading SUBRIP');
+      if (transcriptUrl.type == TranscriptFormat.subrip) {
         if (response.statusCode == 200 && response.data is String) {
-          print('OK');
           transcript = srtParser.parse(response.data);
         }
-      } else if (transcriptUrl.type == TranscriptFormat.JSON) {
-        print('Loading JSON');
+      } else if (transcriptUrl.type == TranscriptFormat.json) {
         if (response.statusCode == 200 && response.data is String) {
           transcript = jsonParser.parse(response.data.toString());
         }
@@ -354,19 +366,17 @@ class Podcast {
 
       if (item.podcastIndex?.transcripts != null) {
         for (var t in item.podcastIndex!.transcripts) {
-          /// Ensure it is a known format (when we move to Dart 2.17+ we can make
-          /// better use of the new Enums
           var valid = false;
-          var type = TranscriptFormat.UNSUPPORTED;
+          var type = TranscriptFormat.unsupported;
 
           switch (t?.type ?? '') {
             case 'application/json':
-              type = TranscriptFormat.JSON;
+              type = TranscriptFormat.json;
               valid = true;
               break;
             case 'application/x-subrip':
             case 'application/srt':
-              type = TranscriptFormat.SUBRIP;
+              type = TranscriptFormat.subrip;
               valid = true;
               break;
             default:

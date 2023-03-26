@@ -1,5 +1,9 @@
 ## 0.5.3
 
+- Add support for PC2.0 Transcripts (json/srt/subrip);
+
+## 0.5.3
+
 - Breaking change: Country class has been replace by Country enum.
 - Breaking change: Language class has been replace by Language enum.
 - Breaking change: Attribute class has been replace by Attribute enum.
@@ -69,7 +73,7 @@
 
 ## 0.3.2
 
-- Now populates error values in the result set if the connection fails or timesout.
+- Now populates error values in the result set if the connection fails or times out.
 - Added missing duration attribute.
 - Episode author will use iTunes version if item author is null.
 

@@ -13,9 +13,9 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
 class PodcastIndexSearch extends BaseSearch {
-  static String SEARCH_API_ENDPOINT = 'https://api.podcastindex.org/api/1.0/search';
-  static String TRENDING_API_ENDPOINT = 'https://api.podcastindex.org/api/1.0/podcasts/trending';
-  static String GENRE_API_ENDPOINT = 'https://api.podcastindex.org/api/1.0/categories/list';
+  static String searchApiEndpoint = 'https://api.podcastindex.org/api/1.0/search';
+  static String trendingApiEndpoint = 'https://api.podcastindex.org/api/1.0/podcasts/trending';
+  static String genreApiEndpoint = 'https://api.podcastindex.org/api/1.0/categories/list';
 
   static const _genres = <String>[
     'After-Shows',
@@ -238,7 +238,7 @@ class PodcastIndexSearch extends BaseSearch {
       String genre = '',
       Map<String, dynamic> queryParams = const {}}) async {
     try {
-      var response = await _client.get(TRENDING_API_ENDPOINT,
+      var response = await _client.get(trendingApiEndpoint,
           queryParameters: {
             'since': -1 * 3600 * 24 * 7,
             'cat': genre,
@@ -259,7 +259,7 @@ class PodcastIndexSearch extends BaseSearch {
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
   String _buildSearchUrl(Map<String, dynamic> queryParams) {
-    final buf = StringBuffer(SEARCH_API_ENDPOINT);
+    final buf = StringBuffer(searchApiEndpoint);
 
     buf.write(_termParam());
     buf.write(_limitParam());
