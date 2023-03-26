@@ -1,4 +1,4 @@
-## 0.5.3
+## 0.5.4
 
 - Add support for PC2.0 Transcripts (json/srt/subrip);
 
