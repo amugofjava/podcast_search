@@ -1,12 +1,15 @@
+// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
+// MIT license that can be found in the LICENSE file.
+
 import 'dart:convert';
 
 import 'package:podcast_search/src/model/transcript.dart';
 
-//TODO: Add Speaker
+/// This class parses PC2.0 transcripts in JSON format. The full spec can be
+/// found [here](https://github.com/Podcastindex-org/podcast-namespace/blob/main/transcripts/transcripts.md#json)
 class JsonParser {
   Transcript parse(String json) {
     var data = jsonDecode(json) as Map<String, dynamic>;
-
     var parsed = TranscriptFile.fromMap(data);
     var subtitles = <Subtitle>[];
     var index = 0;
@@ -70,9 +73,9 @@ class TranscriptSegment {
 
   static TranscriptSegment fromMap(Map<String, dynamic> segment) {
     return TranscriptSegment(
-      speaker: segment['speaker'] as String,
-      startTime: segment['startTime'] as double,
-      endTime: segment['endTime'] as double,
+      speaker: segment['speaker'] ?? '',
+      startTime: (segment['startTime'] ?? 0).toDouble(),
+      endTime: (segment['endTime'] ?? 0).toDouble(),
       body: segment['body'] as String,
     );
   }

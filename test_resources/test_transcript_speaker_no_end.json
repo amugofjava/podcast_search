@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "segments": [
+    {
+      "speaker": "Speaker 1",
+      "startTime": 0,
+      "body": "Subtitle 1, Line 1"
+    },
+    {
+      "speaker": "Speaker 2",
+      "startTime": 5.50,
+      "body": "Subtitle 2, Line 1"
+    },
+    {
+      "speaker": "Speaker 1",
+      "startTime": 10.00,
+      "body": "Subtitle 3, Line 1"
+    }
+  ]
+}

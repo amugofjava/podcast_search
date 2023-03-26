@@ -1,5 +1,10 @@
+// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
+// MIT license that can be found in the LICENSE file.
+
 import 'package:podcast_search/src/model/transcript.dart';
 
+/// This class parses PC2.0 transcripts in SRT format. The full spec can be
+/// found [here](https://github.com/Podcastindex-org/podcast-namespace/blob/main/transcripts/transcripts.md#srt)
 class SrtParser {
   final _srtMatcher = RegExp(
     r'(\d+)\s((\d{2}):(\d{2}):(\d{2})[,|.](\d{3})) +--> +((\d{2}):(\d{2}):(\d{2})[,|.](\d{3})).*[\r\n]+\s*((?:(?!\r?\n\r?).)*(\r\n|\r|\n)(?:.*))',
@@ -15,7 +20,6 @@ class SrtParser {
 
   Transcript parse(String srt) {
     final matches = _srtMatcher.allMatches(srt).toList();
-    final transcript = Transcript();
     final subtitles = <Subtitle>[];
 
     for (final regExpMatch in matches) {

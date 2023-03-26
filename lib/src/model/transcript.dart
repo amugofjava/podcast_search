@@ -54,10 +54,14 @@ class Subtitle {
   /// The text for this line.
   final String data;
 
+  /// The person speaking (optional).
+  final String speaker;
+
   Subtitle({
     required this.index,
     required this.start,
     required this.end,
     required this.data,
+    this.speaker = '',
   });
 }

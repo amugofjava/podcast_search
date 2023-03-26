@@ -1,0 +1,14 @@
+1
+00:00:00,000 --> 00:00:05,500
+Subtitle 1, Line 1
+Subtitle 1, Line 2
+
+2
+00:00:05,500 --> 00:00:10,000
+Subtitle 2, Line 1
+Subtitle 2, Line 2
+
+3
+00:00:10,000 --> 00:00:12,000
+Subtitle 3, Line 1
+Subtitle 3, Line 2
