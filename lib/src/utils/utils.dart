@@ -196,7 +196,8 @@ class Utils {
 
   static const _allowablePatterns = {
     // Mon, 03 Jun 2019 10:00:00 PDT (type 1)
-    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([A-Za-z]{3})': 1,
+    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([A-Za-z]{3})':
+        1,
 
     // Mon, 03 Jun 2019 10:00:00 +02:30 (type 2)
     '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([\+|\-][0-9][0-9]:[0-9][0-9])':
@@ -233,7 +234,7 @@ class Utils {
   /// timezone code, so this will probably suffice for a large proportion of dates in that
   /// format. Hopefully, most pubDate values will use a UTC offset instead.
   static DateTime? parseRFC2822Date(String date) {
-    var result;
+    DateTime? result;
 
     _allowablePatterns.forEach((k, v) {
       final exp = RegExp(k);

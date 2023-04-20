@@ -16,7 +16,6 @@ enum Attribute {
   const Attribute({
     required this.attribute,
   });
-  
+
   final String attribute;
 }
-

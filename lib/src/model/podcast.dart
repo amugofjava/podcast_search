@@ -2,6 +2,7 @@
 // MIT license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_rss/dart_rss.dart';
@@ -73,7 +74,8 @@ class Podcast {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          'User-Agent': userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
+          'User-Agent':
+              userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
         },
       ),
     );
@@ -192,11 +194,14 @@ class Podcast {
       ),
     );
 
-    if (episode.chapters!.chapters.isNotEmpty && !episode.chapters!.loaded && !forceReload) {
+    if (episode.chapters!.chapters.isNotEmpty &&
+        !episode.chapters!.loaded &&
+        !forceReload) {
       try {
         final response = await client.get(episode.chapters!.url);
 
-        if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
+        if (response.statusCode == 200 &&
+            response.data is Map<String, dynamic>) {
           _loadChapters(response, episode.chapters!);
         }
       } on DioError catch (e) {
@@ -236,7 +241,8 @@ class Podcast {
     final jsonParser = JsonParser();
 
     try {
-      final response = await client.get(transcriptUrl.url, options: Options(responseType: ResponseType.plain));
+      final response = await client.get(transcriptUrl.url,
+          options: Options(responseType: ResponseType.plain));
 
       /// What type of transcript are we loading here?
       if (transcriptUrl.type == TranscriptFormat.subrip) {
@@ -285,8 +291,11 @@ class Podcast {
 
     try {
       final response = await client.get(url);
-      if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
+
+      if (response.statusCode == 200) {
         _loadChapters(response, chapters);
+      } else {
+        throw PodcastFailedException('Failed to download chapters file');
       }
     } on DioError catch (e) {
       switch (e.type) {
@@ -306,7 +315,14 @@ class Podcast {
   }
 
   static void _loadChapters(Response response, Chapters c) {
-    final data = Map<String, dynamic>.from(response.data);
+    Map<String, dynamic> data;
+
+    if (response.data is String) {
+      data = jsonDecode(response.data);
+    } else {
+      data = Map.from(response.data);
+    }
+
     final chapters = data['chapters'] ?? [];
 
     c.headers = ChapterHeaders(
@@ -350,7 +366,9 @@ class Podcast {
             title: chapter['title'] ?? '',
             startTime: startTime ?? 0.0,
             endTime: endTime ?? 0.0,
-            toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false) ? false : true),
+            toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false)
+                ? false
+                : true),
       );
     }
   }

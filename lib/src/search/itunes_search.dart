@@ -77,7 +77,9 @@ class ITunesSearch extends BaseSearch {
             connectTimeout: timeout,
             receiveTimeout: timeout,
             headers: {
-              'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
+              'User-Agent': userAgent == null || userAgent.isEmpty
+                  ? '$podcastSearchAgent'
+                  : '$userAgent',
             },
           ),
         );
@@ -114,7 +116,8 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
+    return SearchResult.fromError(
+        lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   /// Fetches the list of top podcasts
@@ -150,7 +153,8 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
+    return SearchResult.fromError(
+        lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   @override
@@ -166,7 +170,8 @@ class ITunesSearch extends BaseSearch {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response = await _client.get(feedApiEndpoint + '/lookup?id=$id');
+          final response =
+              await _client.get(feedApiEndpoint + '/lookup?id=$id');
           final results = json.decode(response.data);
 
           if (results['results'] != null) {
@@ -182,7 +187,8 @@ class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
+    return SearchResult.fromError(
+        lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
@@ -233,7 +239,9 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term!.isNotEmpty ? '?term=' + Uri.encodeComponent(term!) : '';
+    return term != null && term!.isNotEmpty
+        ? '?term=' + Uri.encodeComponent(term!)
+        : '';
   }
 
   String _countryParam() {
@@ -241,7 +249,9 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _attributeParam() {
-    return _attribute != Attribute.none ? '&attribute=' + Uri.encodeComponent(_attribute!.attribute) : '';
+    return _attribute != Attribute.none
+        ? '&attribute=' + Uri.encodeComponent(_attribute!.attribute)
+        : '';
   }
 
   String _limitParam() {

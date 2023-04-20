@@ -13,9 +13,12 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
 class PodcastIndexSearch extends BaseSearch {
-  static String searchApiEndpoint = 'https://api.podcastindex.org/api/1.0/search';
-  static String trendingApiEndpoint = 'https://api.podcastindex.org/api/1.0/podcasts/trending';
-  static String genreApiEndpoint = 'https://api.podcastindex.org/api/1.0/categories/list';
+  static String searchApiEndpoint =
+      'https://api.podcastindex.org/api/1.0/search';
+  static String trendingApiEndpoint =
+      'https://api.podcastindex.org/api/1.0/podcasts/trending';
+  static String genreApiEndpoint =
+      'https://api.podcastindex.org/api/1.0/categories/list';
 
   static const _genres = <String>[
     'After-Shows',
@@ -186,7 +189,9 @@ class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Date': newUnixTime,
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
-          'User-Agent': userAgent == null || userAgent!.isEmpty ? '$podcastSearchAgent' : '$userAgent',
+          'User-Agent': userAgent == null || userAgent!.isEmpty
+              ? '$podcastSearchAgent'
+              : '$userAgent',
         },
       ),
     );
@@ -213,12 +218,14 @@ class PodcastIndexSearch extends BaseSearch {
     try {
       var response = await _client.get(_buildSearchUrl(queryParams!));
 
-      return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
+      return SearchResult.fromJson(
+          json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType);
+    return SearchResult.fromError(
+        lastError: _lastError ?? '', lastErrorType: _lastErrorType);
   }
 
   /// Fetches the list of top podcasts
@@ -245,12 +252,14 @@ class PodcastIndexSearch extends BaseSearch {
             'max': limit,
           }..addAll(queryParams));
 
-      return SearchResult.fromJson(json: response.data, type: ResultType.podcastIndex);
+      return SearchResult.fromJson(
+          json: response.data, type: ResultType.podcastIndex);
     } on DioError catch (e) {
       setLastError(e);
     }
 
-    return SearchResult.fromError(lastError: _lastError ?? '', lastErrorType: _lastErrorType);
+    return SearchResult.fromError(
+        lastError: _lastError ?? '', lastErrorType: _lastErrorType);
   }
 
   @override

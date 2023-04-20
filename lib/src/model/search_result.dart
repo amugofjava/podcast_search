@@ -10,6 +10,7 @@ enum ErrorType {
   connection,
   timeout,
 }
+
 enum ResultType {
   itunes,
   podcastIndex,
@@ -61,10 +62,13 @@ class SearchResult {
         processedTime = DateTime.now(),
         items = [];
 
-  factory SearchResult.fromJson({required dynamic json, ResultType type = ResultType.itunes}) {
+  factory SearchResult.fromJson(
+      {required dynamic json, ResultType type = ResultType.itunes}) {
     /// Did we get an error message?
     if (json['errorMessage'] != null) {
-      return SearchResult.fromError(lastError: json['errorMessage'] ?? '', lastErrorType: ErrorType.failed);
+      return SearchResult.fromError(
+          lastError: json['errorMessage'] ?? '',
+          lastErrorType: ErrorType.failed);
     }
 
     var dataStart = startTagMap[type];
@@ -73,10 +77,13 @@ class SearchResult {
     /// Fetch the results from the JSON data.
     final items = json[dataStart] == null
         ? null
-        : (json[dataStart] as List).cast<Map<String, dynamic>>().map((Map<String, dynamic> item) {
+        : (json[dataStart] as List)
+            .cast<Map<String, dynamic>>()
+            .map((Map<String, dynamic> item) {
             return Item.fromJson(json: item, type: type);
           }).toList();
 
-    return SearchResult(resultCount: json[dataCount] ?? 0, items: items ?? <Item>[]);
+    return SearchResult(
+        resultCount: json[dataCount] ?? 0, items: items ?? <Item>[]);
   }
 }

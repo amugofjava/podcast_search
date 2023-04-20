@@ -1,3 +1,7 @@
+## 0.5.5
+
+- Improve PC2.0 chapter support.
+
 ## 0.5.4
 
 - Add support for PC2.0 Transcripts (json/srt/subrip);
