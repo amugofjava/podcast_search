@@ -1,5 +1,5 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'dart:async';
 import 'dart:convert';
@@ -12,6 +12,7 @@ import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
 import 'package:podcast_search/src/model/funding.dart';
 import 'package:podcast_search/src/model/locked.dart';
+import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 import 'package:podcast_search/src/utils/json_parser.dart';
 import 'package:podcast_search/src/utils/srt_parser.dart';
@@ -44,7 +45,9 @@ class Podcast {
 
   /// If the podcast supports funding this will contain an instance of [Funding] that
   /// contains the Url and optional description.
-  final List<Funding>? funding;
+  final List<Funding> funding;
+
+  final List<Person> persons;
 
   /// A list of current episodes.
   final List<Episode>? episodes;
@@ -57,7 +60,8 @@ class Podcast {
     this.image,
     this.copyright,
     this.locked,
-    this.funding,
+    this.funding = const <Funding>[],
+    this.persons = const <Person>[],
     this.episodes,
   });
 
@@ -74,8 +78,7 @@ class Podcast {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          'User-Agent':
-              userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
+          'User-Agent': userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
         },
       ),
     );
@@ -152,11 +155,26 @@ class Podcast {
     );
 
     var funding = <Funding>[];
+    var persons = <Person>[];
 
-    if (rssFeed.podcastIndex != null && rssFeed.podcastIndex!.funding != null) {
-      for (var f in rssFeed.podcastIndex!.funding!) {
-        if (f != null && f.url != null && f.value != null) {
-          funding.add(Funding(url: f.url, value: f.value));
+    if (rssFeed.podcastIndex != null) {
+      if (rssFeed.podcastIndex!.funding != null) {
+        for (var f in rssFeed.podcastIndex!.funding!) {
+          if (f != null && f.url != null && f.value != null) {
+            funding.add(Funding(url: f.url, value: f.value));
+          }
+        }
+      }
+
+      if (rssFeed.podcastIndex!.persons != null) {
+        for (var p in rssFeed.podcastIndex!.persons!) {
+          persons.add(Person(
+            name: p?.name ?? '',
+            role: p?.role,
+            group: p?.group,
+            image: p?.image,
+            link: p?.link,
+          ));
         }
       }
     }
@@ -172,6 +190,7 @@ class Podcast {
       copyright: author,
       locked: locked,
       funding: funding,
+      persons: persons,
       episodes: episodes,
     );
   }
@@ -194,14 +213,11 @@ class Podcast {
       ),
     );
 
-    if (episode.chapters!.chapters.isNotEmpty &&
-        !episode.chapters!.loaded &&
-        !forceReload) {
+    if (episode.chapters!.chapters.isNotEmpty && !episode.chapters!.loaded && !forceReload) {
       try {
         final response = await client.get(episode.chapters!.url);
 
-        if (response.statusCode == 200 &&
-            response.data is Map<String, dynamic>) {
+        if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
           _loadChapters(response, episode.chapters!);
         }
       } on DioError catch (e) {
@@ -241,8 +257,7 @@ class Podcast {
     final jsonParser = JsonParser();
 
     try {
-      final response = await client.get(transcriptUrl.url,
-          options: Options(responseType: ResponseType.plain));
+      final response = await client.get(transcriptUrl.url, options: Options(responseType: ResponseType.plain));
 
       /// What type of transcript are we loading here?
       if (transcriptUrl.type == TranscriptFormat.subrip) {
@@ -366,9 +381,7 @@ class Podcast {
             title: chapter['title'] ?? '',
             startTime: startTime ?? 0.0,
             endTime: endTime ?? 0.0,
-            toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false)
-                ? false
-                : true),
+            toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false) ? false : true),
       );
     }
   }
@@ -376,6 +389,7 @@ class Podcast {
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
     rssFeed.items.forEach((item) {
       var transcripts = <TranscriptUrl>[];
+      var persons = <Person>[];
 
       var chapters = Chapters(
         url: item.podcastIndex!.chapters?.url ?? '',
@@ -413,6 +427,18 @@ class Podcast {
         }
       }
 
+      if (item.podcastIndex?.persons != null) {
+        for (var p in item.podcastIndex!.persons) {
+          persons.add(Person(
+            name: p?.name ?? '',
+            role: p?.role ?? '',
+            group: p?.group ?? '',
+            image: p?.image ?? '',
+            link: p?.link ?? '',
+          ));
+        }
+      }
+
       episodes.add(Episode(
         guid: item.guid ?? '',
         title: item.title ?? '',
@@ -428,6 +454,7 @@ class Podcast {
         content: item.content?.value,
         chapters: chapters,
         transcripts: transcripts,
+        persons: persons,
       ));
     });
   }

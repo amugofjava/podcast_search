@@ -1,5 +1,5 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 /// podcast_search currently supports PC2.0 Json format and standard subrip/srt format.
 enum TranscriptFormat {

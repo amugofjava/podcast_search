@@ -1,5 +1,5 @@
-// Copyright (c) 2019, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
 import 'package:test/test.dart';
@@ -7,7 +7,8 @@ import 'package:test/test.dart';
 void main() {
   group('SRT transcript test', () {
     test('Load SRT file', () async {
-      var transcript = await Podcast.loadTranscriptFile(file: 'test_resources/test_transcript.srt');
+      var transcript = await Podcast.loadTranscriptFile(
+          file: 'test_resources/test_transcript.srt');
       var secondLine = transcript.subtitles[1];
 
       expect(transcript.subtitles.length, 3);
@@ -19,7 +20,8 @@ void main() {
 
   group('JSON transcript test', () {
     test('Load Json file', () async {
-      var transcript = await Podcast.loadTranscriptFile(file: 'test_resources/test_transcript.json');
+      var transcript = await Podcast.loadTranscriptFile(
+          file: 'test_resources/test_transcript.json');
       var secondLine = transcript.subtitles[1];
 
       expect(transcript.subtitles.length, 3);
@@ -29,7 +31,8 @@ void main() {
     });
 
     test('Load Json file', () async {
-      var transcript = await Podcast.loadTranscriptFile(file: 'test_resources/test_transcript_speaker_no_end.json');
+      var transcript = await Podcast.loadTranscriptFile(
+          file: 'test_resources/test_transcript_speaker_no_end.json');
       var secondLine = transcript.subtitles[1];
 
       expect(transcript.subtitles.length, 3);

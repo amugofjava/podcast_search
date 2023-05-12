@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
 
@@ -113,12 +113,8 @@ class Item {
   });
 
   /// Takes our json map and builds a Podcast instance from it.
-  factory Item.fromJson(
-      {required Map<String, dynamic>? json,
-      ResultType type = ResultType.itunes}) {
-    return type == ResultType.itunes
-        ? _fromItunes(json!)
-        : _fromPodcastIndex(json!);
+  factory Item.fromJson({required Map<String, dynamic>? json, ResultType type = ResultType.itunes}) {
+    return type == ResultType.itunes ? _fromItunes(json!) : _fromPodcastIndex(json!);
   }
 
   static Item _fromItunes(Map<String, dynamic> json) {
@@ -143,8 +139,7 @@ class Item {
       artworkUrl60: json['artworkUrl60'] as String?,
       artworkUrl100: json['artworkUrl100'] as String?,
       artworkUrl600: json['artworkUrl600'] as String?,
-      genre: Item._loadGenres(
-          json['genreIds'].cast<String>(), json['genres'].cast<String>()),
+      genre: Item._loadGenres(json['genreIds'].cast<String>(), json['genres'].cast<String>()),
       releaseDate: DateTime.parse(json['releaseDate']),
       country: json['country'] as String?,
       primaryGenreName: json['primaryGenreName'] as String?,
@@ -153,16 +148,14 @@ class Item {
   }
 
   static Item _fromPodcastIndex(Map<String, dynamic> json) {
-    int pubDateSeconds =
-        json['lastUpdateTime'] ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    int pubDateSeconds = json['lastUpdateTime'] ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var pubDate = Duration(seconds: pubDateSeconds);
     var categories = json['categories'];
     var genres = <Genre>[];
 
     if (categories != null) {
-      categories
-          .forEach((key, value) => genres.add(Genre(int.parse(key), value)));
+      categories.forEach((key, value) => genres.add(Genre(int.parse(key), value)));
     }
 
     return Item(

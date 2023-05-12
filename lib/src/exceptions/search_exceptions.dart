@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 /// Thrown if the connection times out, or we timeout
 /// waiting to receive the data.

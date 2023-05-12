@@ -12,8 +12,13 @@ dependencies:
   convert: ^3.0.1
   crypto: ^3.0.1
   dio: ^4.0.0
-  dart_rss: ^2.0.1
-  meta: ^1.3.0
+  # dart_rss: ^2.0.1
+  # We need to get dart_rss from GitHub as the package is outdated.
+  dart_rss:
+    git:
+      url: https://github.com/amugofjava/dart-rss.git
+      ref: feature/pc20-person-tag
+  meta: ^1.8.0
 
 dev_dependencies:
   pedantic: ^1.9.0

@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
 import 'package:test/test.dart';
@@ -10,8 +10,9 @@ void main() {
 
     setUp(() {
       search = Search(
-        searchProvider:
-            PodcastIndexProvider(key: 'XXWQEGULBJABVHZUM8NF', secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
+        searchProvider: PodcastIndexProvider(
+            key: 'XXWQEGULBJABVHZUM8NF',
+            secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
       );
     });
 

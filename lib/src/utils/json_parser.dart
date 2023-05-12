@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2021, Ben Hills. Use of this source code is governed by a
-// MIT license that can be found in the LICENSE file.
+// Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
+// code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'dart:convert';
 
@@ -14,15 +14,17 @@ class JsonParser {
     var subtitles = <Subtitle>[];
     var index = 0;
 
-    for (var x in parsed.segments) {
-      var startTime = (x.startTime * 1000).toInt();
-      var endTime = (x.endTime * 1000).toInt();
-      var data = x.body;
+    for (var segment in parsed.segments) {
+      var startTime = (segment.startTime * 1000).toInt();
+      var endTime = (segment.endTime * 1000).toInt();
+      var data = segment.body;
+      var speaker = segment.speaker;
 
       subtitles.add(Subtitle(
         index: index++,
         start: Duration(milliseconds: startTime),
         end: Duration(milliseconds: endTime),
+        speaker: speaker,
         data: data,
       ));
     }
