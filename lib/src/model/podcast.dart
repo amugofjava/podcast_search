@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dart_rss/dart_rss.dart';
+import 'package:rss_dart/dart_rss.dart';
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/chapter.dart';
@@ -418,7 +418,7 @@ class Podcast {
         title: item.title ?? '',
         description: item.description ?? '',
         link: item.link,
-        publicationDate: Utils.parseRFC2822Date(item.pubDate!),
+        publicationDate: Utils.parseRFC2822Date(item.pubDate ?? ''),
         author: item.author ?? item.itunes!.author ?? item.dc?.creator,
         duration: item.itunes?.duration,
         contentUrl: item.enclosure?.url,
