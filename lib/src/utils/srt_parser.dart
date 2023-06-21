@@ -13,7 +13,7 @@ class SrtParser {
   );
 
   final _newlineMatcher = RegExp(
-    r'[\r\n ]{2,}',
+    r'[\r\n]+',
     caseSensitive: false,
     multiLine: true,
   );
@@ -38,6 +38,11 @@ class SrtParser {
       final endTimeSeconds = int.parse(regExpMatch.group(10) ?? '0');
       final endTimeMilliseconds = int.parse(regExpMatch.group(11) ?? '0');
       final text = regExpMatch.group(12)?.replaceAll(_newlineMatcher, ' ').trim();
+
+      // print(regExpMatch.group(12)?.replaceAll('\n', 'N'));
+      // print(regExpMatch.group(12)?.replaceAll('\r', 'R'));
+
+      print(text);
 
       final startTime = Duration(
         hours: startTimeHours,
