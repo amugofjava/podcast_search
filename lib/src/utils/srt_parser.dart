@@ -7,7 +7,7 @@ import 'package:podcast_search/src/model/transcript.dart';
 /// found [here](https://github.com/Podcastindex-org/podcast-namespace/blob/main/transcripts/transcripts.md#srt)
 class SrtParser {
   final _srtMatcher = RegExp(
-    r'(\d+)\s((\d{2}):(\d{2}):(\d{2})[,|.](\d{3})) +--> +((\d{2}):(\d{2}):(\d{2})[,|.](\d{3})).*[\r\n]+\s*((?:(?!\r?\n\r?).)*(\r\n|\r|\n)(?:.*))',
+    r'(\d*)\s?((\d{2}):(\d{2}):(\d{2})[,|.](\d{3})) +--> +((\d{2}):(\d{2}):(\d{2})[,|.](\d{3})).*[\r\n]+\s*((?:(?!\r?\n\r?).)*(\r\n|\r|\n)(?:.*))',
     caseSensitive: false,
     multiLine: true,
   );
@@ -21,9 +21,13 @@ class SrtParser {
   Transcript parse(String srt) {
     final matches = _srtMatcher.allMatches(srt).toList();
     final subtitles = <Subtitle>[];
+    var i = 0;
 
     for (final regExpMatch in matches) {
-      final index = int.parse(regExpMatch.group(1) ?? '0');
+      i++;
+
+      // The index may, or may not, be specified.
+      final index = int.tryParse(regExpMatch.group(1) ?? '0') ?? i;
       final startTimeHours = int.parse(regExpMatch.group(3) ?? '0');
       final startTimeMinutes = int.parse(regExpMatch.group(4) ?? '0');
       final startTimeSeconds = int.parse(regExpMatch.group(5) ?? '0');

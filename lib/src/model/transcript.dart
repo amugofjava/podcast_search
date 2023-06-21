@@ -64,4 +64,9 @@ class Subtitle {
     required this.data,
     this.speaker = '',
   });
+
+  @override
+  String toString() {
+    return 'Subtitle{index: $index, start: $start, end: $end, data: $data, speaker: $speaker}';
+  }
 }
