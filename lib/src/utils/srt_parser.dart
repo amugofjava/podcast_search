@@ -13,7 +13,7 @@ class SrtParser {
   );
 
   final _newlineMatcher = RegExp(
-    r'[\r\n]',
+    r'[\r\n ]{2,}',
     caseSensitive: false,
     multiLine: true,
   );
@@ -37,7 +37,7 @@ class SrtParser {
       final endTimeMinutes = int.parse(regExpMatch.group(9) ?? '0');
       final endTimeSeconds = int.parse(regExpMatch.group(10) ?? '0');
       final endTimeMilliseconds = int.parse(regExpMatch.group(11) ?? '0');
-      final text = regExpMatch.group(12)?.replaceAll(_newlineMatcher, ' ');
+      final text = regExpMatch.group(12)?.replaceAll(_newlineMatcher, ' ').trim();
 
       final startTime = Duration(
         hours: startTimeHours,
@@ -53,8 +53,7 @@ class SrtParser {
         milliseconds: endTimeMilliseconds,
       );
 
-      var subtitle = Subtitle(
-          index: index, start: startTime, end: endTime, data: text ?? '');
+      var subtitle = Subtitle(index: index, start: startTime, end: endTime, data: text ?? '');
 
       subtitles.add(subtitle);
     }
