@@ -10,7 +10,7 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// This class handles the searching. Taking the base URL we build any parameters
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
-class ITunesSearch extends BaseSearch {
+final class ITunesSearch extends BaseSearch {
   static String feedApiEndpoint = 'https://itunes.apple.com';
   static String searchApiEndpoint = 'https://itunes.apple.com/search';
 
@@ -78,8 +78,8 @@ class ITunesSearch extends BaseSearch {
             receiveTimeout: timeout,
             headers: {
               'User-Agent': userAgent == null || userAgent.isEmpty
-                  ? '$podcastSearchAgent'
-                  : '$userAgent',
+                  ? podcastSearchAgent
+                  : userAgent,
             },
           ),
         );
@@ -170,8 +170,7 @@ class ITunesSearch extends BaseSearch {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response =
-              await _client.get(feedApiEndpoint + '/lookup?id=$id');
+          final response = await _client.get('$feedApiEndpoint/lookup?id=$id');
           final results = json.decode(response.data);
 
           if (results['results'] != null) {
@@ -240,30 +239,30 @@ class ITunesSearch extends BaseSearch {
 
   String _termParam() {
     return term != null && term!.isNotEmpty
-        ? '?term=' + Uri.encodeComponent(term!)
+        ? '?term=${Uri.encodeComponent(term!)}'
         : '';
   }
 
   String _countryParam() {
-    return _country != Country.none ? '&country=' + _country.code : '';
+    return _country != Country.none ? '&country=${_country.code}' : '';
   }
 
   String _attributeParam() {
     return _attribute != Attribute.none
-        ? '&attribute=' + Uri.encodeComponent(_attribute!.attribute)
+        ? '&attribute=${Uri.encodeComponent(_attribute!.attribute)}'
         : '';
   }
 
   String _limitParam() {
-    return _limit != 0 ? '&limit=' + _limit.toString() : '';
+    return _limit != 0 ? '&limit=$_limit' : '';
   }
 
   String _languageParam() {
-    return _language != Language.none ? '&language=' + _language.code : '';
+    return _language != Language.none ? '&language=${_language.code}' : '';
   }
 
   String _versionParam() {
-    return _version != 0 ? '@version=' + _version.toString() : '';
+    return _version != 0 ? '@version=$_version' : '';
   }
 
   String _explicitParam() {

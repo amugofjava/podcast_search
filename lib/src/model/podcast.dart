@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dart_rss/dart_rss.dart';
+import 'package:rss_dart/dart_rss.dart';
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/chapter.dart';
@@ -50,7 +50,7 @@ class Podcast {
   final List<Person> persons;
 
   /// A list of current episodes.
-  final List<Episode>? episodes;
+  final List<Episode> episodes;
 
   Podcast._({
     this.url,
@@ -62,7 +62,7 @@ class Podcast {
     this.locked,
     this.funding = const <Funding>[],
     this.persons = const <Person>[],
-    this.episodes,
+    this.episodes = const <Episode>[],
   });
 
   /// This method takes a Url pointing to an RSS feed containing the Podcast details and episodes. You
@@ -78,8 +78,7 @@ class Podcast {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         headers: {
-          'User-Agent':
-              userAgent.isEmpty ? '$podcastSearchAgent' : '$userAgent',
+          'User-Agent': userAgent.isEmpty ? podcastSearchAgent : userAgent,
         },
       ),
     );
@@ -394,7 +393,7 @@ class Podcast {
   }
 
   static void _loadEpisodes(RssFeed rssFeed, List<Episode> episodes) {
-    rssFeed.items.forEach((item) {
+    for (var item in rssFeed.items) {
       var transcripts = <TranscriptUrl>[];
       var persons = <Person>[];
 
@@ -463,6 +462,6 @@ class Podcast {
         transcripts: transcripts,
         persons: persons,
       ));
-    });
+    }
   }
 }

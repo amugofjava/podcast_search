@@ -1,3 +1,9 @@
+## 0.6.0
+
+- Breaking change: Requires Dart 3.0.
+- Add support for PC2.0 transcripts.
+- Add support for PC2.0 persons.
+
 ## 0.5.5
 
 - Improve PC2.0 chapter support.

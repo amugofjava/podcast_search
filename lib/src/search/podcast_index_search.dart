@@ -12,7 +12,7 @@ import 'package:podcast_search/src/search/base_search.dart';
 /// This class handles the searching. Taking the base URL we build any parameters
 /// that have been added before making a call to iTunes. The results are unpacked
 /// and stored as Item instances and wrapped in a SearchResult.
-class PodcastIndexSearch extends BaseSearch {
+final class PodcastIndexSearch extends BaseSearch {
   static String searchApiEndpoint =
       'https://api.podcastindex.org/api/1.0/search';
   static String trendingApiEndpoint =
@@ -190,8 +190,8 @@ class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
           'User-Agent': userAgent == null || userAgent!.isEmpty
-              ? '$podcastSearchAgent'
-              : '$userAgent',
+              ? podcastSearchAgent
+              : userAgent,
         },
       ),
     );
@@ -281,11 +281,11 @@ class PodcastIndexSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term!.isNotEmpty ? '/byterm?q=' + Uri.encodeComponent(term!) : '';
+    return term!.isNotEmpty ? '/byterm?q=${Uri.encodeComponent(term!)}' : '';
   }
 
   String _limitParam() {
-    return _limit != 0 ? '&max=' + _limit.toString() : '';
+    return _limit != 0 ? '&max=$_limit' : '';
   }
 
   String _explicitParam() {

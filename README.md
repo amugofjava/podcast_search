@@ -15,25 +15,26 @@ main() async {
   var results = await search.search('widgets', country: Country.unitedKingdom, limit: 10);
 
   /// List the name of each podcast found.
-  results.items.forEach((result) {
+  for (var result in results.items) {
     print('Found podcast: ${result.trackName}');
-  });
+  }
 
   /// Parse the first podcast.
   var podcast = await Podcast.loadFeed(url: results.items[0].feedUrl!);
 
   /// Display episode titles.
-  podcast.episodes?.forEach((episode) {
+  ///
+  for (var episode in podcast.episodes) {
     print('Episode title: ${episode.title}');
-  });
+  }
 
   /// Find the top 10 podcasts in the UK.
   var charts = await search.charts(limit: 10, country: Country.unitedKingdom);
 
   /// List the name of each podcast found.
-  charts.items.forEach((result) {
+  for (var result in charts.items) {
     print('Episode title: ${result.trackName}');
-  });
+  }
 }
 ```
 
