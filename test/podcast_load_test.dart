@@ -25,13 +25,20 @@ void main() {
       expect(podcast.title, 'Podcast Load Test 1');
       expect(podcast.description, 'Unit test podcast test 1');
       expect(podcast.link, 'https://nowhere.com/podcastsearchtest1');
-      expect(podcast.episodes.length, 1);
+      expect(podcast.episodes.length, 2);
 
-      var episode = podcast.episodes[0];
+      var episode1 = podcast.episodes[0];
 
-      expect(episode.title, 'Episode 001');
-      expect(episode.link, 'https://nowhere.com/podcastsearchtest1/podcast1');
-      expect(episode.description, '<div>Test of episode 001</div>');
+      expect(episode1.title, 'Episode 001');
+      expect(episode1.link, 'https://nowhere.com/podcastsearchtest1/podcast1');
+      expect(episode1.description, '<div>Test of episode 001</div>');
+
+      var episode2 = podcast.episodes[1];
+
+      expect(episode2.title, 'Episode 002');
+      expect(episode2.link, 'https://nowhere.com/podcastsearchtest1/podcast2');
+      expect(episode2.description, '<div>Test of episode 002</div>');
+      expect(episode2.publicationDate, null);
     });
   });
 }

@@ -42,5 +42,22 @@
   <media:keywords>Podcast, NowPlaying, Listen, Test</media:keywords>
   <media:rights status="userCreated" />
 </item>
+
+<item>
+  <title>Episode 002</title>
+  <link>https://nowhere.com/podcastsearchtest1/podcast2</link>
+  <enclosure url="https://nowhere.com/podcastsearchtest1/podcast1/episode002.mp3" length="0" type="audio/mpeg" />
+  <itunes:duration>1200</itunes:duration>
+  <itunes:explicit>no</itunes:explicit>
+  <itunes:episodeType>full</itunes:episodeType>
+  <description><![CDATA[<div>Test of episode 002</div>]]></description>
+  <itunes:summary>Episode summary 002</itunes:summary>
+  <guid isPermaLink="true"></guid>
+  <itunes:author>Ben Hills</itunes:author>
+  <dc:creator>Ben Hills</dc:creator>
+  <itunes:keywords>Podcast, NowPlaying, Listen, Test</itunes:keywords>
+  <media:keywords>Podcast, NowPlaying, Listen, Test</media:keywords>
+  <media:rights status="userCreated" />
+</item>
 </channel>
 </rss>

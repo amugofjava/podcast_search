@@ -450,7 +450,7 @@ class Podcast {
         title: item.title ?? '',
         description: item.description ?? '',
         link: item.link,
-        publicationDate: Utils.parseRFC2822Date(item.pubDate!),
+        publicationDate: item.pubDate == null ? null : Utils.parseRFC2822Date(item.pubDate!),
         author: item.author ?? item.itunes!.author ?? item.dc?.creator,
         duration: item.itunes?.duration,
         contentUrl: item.enclosure?.url,
