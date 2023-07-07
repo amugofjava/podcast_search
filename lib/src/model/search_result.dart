@@ -8,7 +8,9 @@ enum ErrorType {
   cancelled,
   failed,
   connection,
+  certificate,
   timeout,
+  unknown,
 }
 
 enum ResultType {

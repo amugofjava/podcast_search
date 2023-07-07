@@ -11,10 +11,10 @@ dependencies:
   archive: ^3.1.2
   convert: ^3.0.1
   crypto: ^3.0.1
-  dio: ^4.0.0
+  dio: ^5.2.1+1
   rss_dart: ^1.0.3
   meta: ^1.8.0
 
 dev_dependencies:
   flutter_lints: ^2.0.1
-  test: ^1.9.4
+  test: ^1.24.4

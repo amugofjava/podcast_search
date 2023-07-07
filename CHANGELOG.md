@@ -1,3 +1,9 @@
+## 0.6.1
+
+- Publication date is now optional.
+- Additional exceptions for certificate & general errors.
+- Move to Dio 5.x.
+
 ## 0.6.0
 
 - Breaking change: Requires Dart 3.0.

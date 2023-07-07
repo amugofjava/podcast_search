@@ -22,3 +22,17 @@ class PodcastFailedException implements Exception {
 
   PodcastFailedException(this.message);
 }
+
+/// Thrown if we get a certificate error.
+class PodcastCertificateException implements Exception {
+  final String message;
+
+  PodcastCertificateException(this.message);
+}
+
+/// Thrown if we get an unknown error.
+class PodcastUnknownException implements Exception {
+  final String message;
+
+  PodcastUnknownException(this.message);
+}

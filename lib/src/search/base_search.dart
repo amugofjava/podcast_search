@@ -36,22 +36,30 @@ abstract class BaseSearch {
   /// determine the error and set two variables which can then be included
   /// in the results. The client can then use these variables to determine
   /// if there was an issue or not.
-  void setLastError(DioError e) {
+  void setLastError(DioException e) {
     switch (e.type) {
-      case DioErrorType.connectTimeout:
-      case DioErrorType.sendTimeout:
-      case DioErrorType.receiveTimeout:
-      case DioErrorType.other:
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
         lastErrorType = ErrorType.connection;
         lastError = 'Connection timeout';
         break;
-      case DioErrorType.response:
+      case DioExceptionType.badCertificate:
+        lastErrorType = ErrorType.certificate;
+        lastError = 'Certificate error';
+        break;
+      case DioExceptionType.connectionError:
+      case DioExceptionType.badResponse:
         lastErrorType = ErrorType.failed;
         lastError = 'Server returned response error ${e.response?.statusCode}';
         break;
-      case DioErrorType.cancel:
+      case DioExceptionType.cancel:
         lastErrorType = ErrorType.cancelled;
         lastError = 'Request was cancelled';
+        break;
+      case DioExceptionType.unknown:
+        lastErrorType = ErrorType.unknown;
+        lastError = 'Unknown error';
         break;
     }
   }

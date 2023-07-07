@@ -70,7 +70,7 @@ class Podcast {
   /// be used in HTTP/HTTPS communications with the feed source.
   static Future<Podcast> loadFeed({
     required String url,
-    int timeout = 20000,
+    final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
     final client = Dio(
@@ -90,17 +90,21 @@ class Podcast {
 
       // Parse the episodes
       return _loadFeed(rssFeed, url);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       switch (e.type) {
-        case DioErrorType.connectTimeout:
-        case DioErrorType.sendTimeout:
-        case DioErrorType.receiveTimeout:
-        case DioErrorType.other:
-          throw PodcastTimeoutException(e.message);
-        case DioErrorType.response:
-          throw PodcastFailedException(e.message);
-        case DioErrorType.cancel:
-          throw PodcastCancelledException(e.message);
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw PodcastTimeoutException(e.message ?? '');
+        case DioExceptionType.connectionError:
+        case DioExceptionType.badResponse:
+          throw PodcastFailedException(e.message ?? '');
+        case DioExceptionType.badCertificate:
+          throw PodcastCertificateException(e.message ?? '');
+        case DioExceptionType.cancel:
+          throw PodcastCancelledException(e.message ?? '');
+        case DioExceptionType.unknown:
+          throw PodcastUnknownException(e.message ?? '');
       }
     }
   }
@@ -204,7 +208,7 @@ class Podcast {
   static Future<Episode> loadEpisodeChapters({
     required Episode episode,
     bool forceReload = false,
-    int timeout = 20000,
+    final timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
       BaseOptions(
@@ -223,17 +227,21 @@ class Podcast {
             response.data is Map<String, dynamic>) {
           _loadChapters(response, episode.chapters!);
         }
-      } on DioError catch (e) {
+      } on DioException catch (e) {
         switch (e.type) {
-          case DioErrorType.connectTimeout:
-          case DioErrorType.sendTimeout:
-          case DioErrorType.receiveTimeout:
-          case DioErrorType.other:
-            throw PodcastTimeoutException(e.message);
-          case DioErrorType.response:
-            throw PodcastFailedException(e.message);
-          case DioErrorType.cancel:
-            throw PodcastCancelledException(e.message);
+          case DioExceptionType.connectionTimeout:
+          case DioExceptionType.sendTimeout:
+          case DioExceptionType.receiveTimeout:
+            throw PodcastTimeoutException(e.message ?? '');
+          case DioExceptionType.connectionError:
+          case DioExceptionType.badResponse:
+            throw PodcastFailedException(e.message ?? '');
+          case DioExceptionType.badCertificate:
+            throw PodcastCertificateException(e.message ?? '');
+          case DioExceptionType.cancel:
+            throw PodcastCancelledException(e.message ?? '');
+          case DioExceptionType.unknown:
+            throw PodcastUnknownException(e.message ?? '');
         }
       }
     }
@@ -246,7 +254,7 @@ class Podcast {
   /// [JsonParser] or [SrtParser] is used.
   static Future<Transcript> loadTranscriptByUrl({
     required TranscriptUrl transcriptUrl,
-    int timeout = 20000,
+    final timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
       BaseOptions(
@@ -275,17 +283,21 @@ class Podcast {
       } else {
         throw Exception('Sorry, not got around to supporting that format yet');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       switch (e.type) {
-        case DioErrorType.connectTimeout:
-        case DioErrorType.sendTimeout:
-        case DioErrorType.receiveTimeout:
-        case DioErrorType.other:
-          throw PodcastTimeoutException(e.message);
-        case DioErrorType.response:
-          throw PodcastFailedException(e.message);
-        case DioErrorType.cancel:
-          throw PodcastCancelledException(e.message);
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw PodcastTimeoutException(e.message ?? '');
+        case DioExceptionType.connectionError:
+        case DioExceptionType.badResponse:
+          throw PodcastFailedException(e.message ?? '');
+        case DioExceptionType.badCertificate:
+          throw PodcastCertificateException(e.message ?? '');
+        case DioExceptionType.cancel:
+          throw PodcastCancelledException(e.message ?? '');
+        case DioExceptionType.unknown:
+          throw PodcastUnknownException(e.message ?? '');
       }
     }
 
@@ -297,7 +309,7 @@ class Podcast {
   /// and loads the chapters, return a populated Chapters object.
   static Future<Chapters> loadChaptersByUrl({
     required String url,
-    int timeout = 20000,
+    final timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
       BaseOptions(
@@ -316,17 +328,21 @@ class Podcast {
       } else {
         throw PodcastFailedException('Failed to download chapters file');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       switch (e.type) {
-        case DioErrorType.connectTimeout:
-        case DioErrorType.sendTimeout:
-        case DioErrorType.receiveTimeout:
-        case DioErrorType.other:
-          throw PodcastTimeoutException(e.message);
-        case DioErrorType.response:
-          throw PodcastFailedException(e.message);
-        case DioErrorType.cancel:
-          throw PodcastCancelledException(e.message);
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw PodcastTimeoutException(e.message ?? '');
+        case DioExceptionType.connectionError:
+        case DioExceptionType.badResponse:
+          throw PodcastFailedException(e.message ?? '');
+        case DioExceptionType.badCertificate:
+          throw PodcastCertificateException(e.message ?? '');
+        case DioExceptionType.cancel:
+          throw PodcastCancelledException(e.message ?? '');
+        case DioExceptionType.unknown:
+          throw PodcastUnknownException(e.message ?? '');
       }
     }
 

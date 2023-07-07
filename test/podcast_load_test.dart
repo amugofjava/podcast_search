@@ -14,7 +14,7 @@ void main() {
 
     test('Load invalid podcast - timeout', () async {
       await expectLater(() => Podcast.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
-          throwsA(const TypeMatcher<PodcastTimeoutException>()));
+          throwsA(const TypeMatcher<PodcastUnknownException>()));
     });
   });
 

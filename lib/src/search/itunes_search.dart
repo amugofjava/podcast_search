@@ -74,8 +74,8 @@ final class ITunesSearch extends BaseSearch {
   }) : _client = Dio(
           BaseOptions(
             responseType: ResponseType.plain,
-            connectTimeout: timeout,
-            receiveTimeout: timeout,
+            connectTimeout: Duration(milliseconds: timeout),
+            receiveTimeout: Duration(milliseconds: timeout),
             headers: {
               'User-Agent': userAgent == null || userAgent.isEmpty
                   ? podcastSearchAgent
@@ -112,7 +112,7 @@ final class ITunesSearch extends BaseSearch {
       final results = json.decode(response.data);
 
       return SearchResult.fromJson(json: results);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       setLastError(e);
     }
 
@@ -149,7 +149,7 @@ final class ITunesSearch extends BaseSearch {
       final results = json.decode(response.data);
 
       return await _chartsToResults(results);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       setLastError(e);
     }
 
@@ -182,7 +182,7 @@ final class ITunesSearch extends BaseSearch {
       }
 
       return SearchResult(resultCount: items.length, items: items);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       setLastError(e);
     }
 

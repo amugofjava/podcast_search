@@ -182,8 +182,8 @@ final class PodcastIndexSearch extends BaseSearch {
 
     _client = Dio(
       BaseOptions(
-        connectTimeout: timeout,
-        receiveTimeout: timeout,
+        connectTimeout: Duration(milliseconds: timeout),
+        receiveTimeout: Duration(milliseconds: timeout),
         responseType: ResponseType.json,
         headers: {
           'X-Auth-Date': newUnixTime,
@@ -220,7 +220,7 @@ final class PodcastIndexSearch extends BaseSearch {
 
       return SearchResult.fromJson(
           json: response.data, type: ResultType.podcastIndex);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       setLastError(e);
     }
 
@@ -254,7 +254,7 @@ final class PodcastIndexSearch extends BaseSearch {
 
       return SearchResult.fromJson(
           json: response.data, type: ResultType.podcastIndex);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       setLastError(e);
     }
 
