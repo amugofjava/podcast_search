@@ -1,3 +1,7 @@
+## 0.6.2
+
+- Add support for Podcasting 2.0 GUID tag.
+
 ## 0.6.1
 
 - Publication date is now optional.

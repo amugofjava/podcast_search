@@ -21,6 +21,10 @@ import 'package:podcast_search/src/utils/utils.dart';
 /// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
 /// then parsed and the episode list generated.
 class Podcast {
+  /// The Podcasting 2.0 GUID value (optional).
+  /// https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#guid
+  final String? guid;
+
   /// The URL of the podcast. Contained within the enclosure RSS tag.
   final String? url;
 
@@ -53,6 +57,7 @@ class Podcast {
   final List<Episode> episodes;
 
   Podcast._({
+    this.guid,
     this.url,
     this.link,
     this.title,
@@ -161,6 +166,8 @@ class Podcast {
     var funding = <Funding>[];
     var persons = <Person>[];
 
+    var guid = rssFeed.podcastIndex?.guid;
+
     if (rssFeed.podcastIndex != null) {
       if (rssFeed.podcastIndex!.funding != null) {
         for (var f in rssFeed.podcastIndex!.funding!) {
@@ -186,6 +193,7 @@ class Podcast {
     _loadEpisodes(rssFeed, episodes);
 
     return Podcast._(
+      guid: guid,
       url: url,
       link: rssFeed.link,
       title: rssFeed.title,
