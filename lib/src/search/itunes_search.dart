@@ -180,7 +180,8 @@ final class ITunesSearch extends BaseSearch {
 
           if (count == 0) {
             // ignore: avoid_print
-            print('Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
+            print(
+                'Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
           }
 
           if (count > 0 && results['results'] != null) {
