@@ -1,3 +1,7 @@
+## 0.6.3
+
+- Bug fix: Handle lookup failures when fetching iTunes charts.
+
 ## 0.6.2
 
 - Add support for Podcasting 2.0 GUID tag.
