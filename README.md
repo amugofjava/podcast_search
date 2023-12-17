@@ -37,4 +37,32 @@ main() async {
   }
 }
 ```
+## Supported Namespace Tags
+
+### Podcasting 2.0
+
+- [x] Chapters
+- [x] Funding
+- [x] GUID
+- [x] Locked
+- [x] Person
+- [x] Transcripts
+- [ ] Alternate enclosure
+- [ ] Block
+- [ ] Episode
+- [ ] Images
+- [ ] Licence
+- [ ] Live item
+- [ ] Location
+- [ ] Medium
+- [ ] Podping
+- [ ] Podroll
+- [ ] Remote item
+- [ ] Season
+- [ ] Social interact
+- [ ] Soundbite
+- [ ] Trailer
+- [ ] Update frequency
+- [ ] Value
+- [ ] Value time split
 
