@@ -12,9 +12,14 @@ void main() {
       expect(podcast.title, 'Forest 404');
     });
 
-    test('Load invalid podcast - timeout', () async {
+    test('Load invalid podcast - unknown host', () async {
       await expectLater(() => Podcast.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
-          throwsA(const TypeMatcher<PodcastUnknownException>()));
+          throwsA(const TypeMatcher<PodcastFailedException>()));
+    });
+
+    test('Load invalid podcast - invalid RSS call 404', () async {
+      await expectLater(() => Podcast.loadFeed(url: 'https://bbc.co.uk/abcdp06tqsg3.rss'),
+          throwsA(const TypeMatcher<PodcastFailedException>()));
     });
   });
 
