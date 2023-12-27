@@ -1,6 +1,7 @@
 // Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
 // code is governed by a MIT license that can be found in the LICENSE file.
 
+/// An enum that contains the country code for each country.
 enum Country {
   none(code: ''),
   afghanistan(code: 'af'),

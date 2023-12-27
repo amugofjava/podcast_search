@@ -8,7 +8,8 @@ enum TranscriptFormat {
   unsupported,
 }
 
-/// This class represents a PC2.0 transcript URL contained within an RSS feed.
+/// This class represents a PC2.0 [transcript](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript)
+/// URL contained within an RSS feed.
 class TranscriptUrl {
   /// The URL for the transcript.
   final String url;
@@ -30,7 +31,7 @@ class TranscriptUrl {
   });
 }
 
-/// This class represents the transcript.
+/// This class represents a [transcript](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript).
 class Transcript {
   /// The transcript lines
   List<Subtitle> subtitles;

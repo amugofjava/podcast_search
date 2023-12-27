@@ -8,6 +8,8 @@ export 'src/model/chapters.dart';
 export 'src/model/country.dart';
 export 'src/model/episode.dart';
 export 'src/model/genre.dart';
+export 'src/model/value.dart';
+export 'src/model/funding.dart';
 export 'src/model/item.dart';
 export 'src/model/language.dart';
 export 'src/model/podcast.dart';

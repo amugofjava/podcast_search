@@ -24,6 +24,10 @@
 </itunes:owner>
 <itunes:new-feed-url>podcast1.rss</itunes:new-feed-url>
 <itunes:type>episodic</itunes:type>
+<podcast:value type="lightning" method="keysend" suggested="0.00000005000">
+    <podcast:valueRecipient name="channel recipient1" type="node" address="03ae9f91a0cb8ff43840e3c322c55341a19d8c1c3cea15a25cfc425ac60a34e14a" split="80"/>
+    <podcast:valueRecipient name="channel recipient2" type="node" address="03ae9f91a0cb8ff43840e3c322c55341a19d8c1c3cea15a25cfc425ac60a34e14b" split="20"/>
+</podcast:value>
 
 <item>
   <title>Episode 001</title>

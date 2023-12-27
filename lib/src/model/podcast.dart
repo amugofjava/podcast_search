@@ -5,6 +5,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:podcast_search/src/model/value.dart';
+import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:rss_dart/dart_rss.dart';
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -51,7 +53,11 @@ class Podcast {
   /// contains the Url and optional description.
   final List<Funding> funding;
 
+  /// A list of [Person]. Can be at the podcast and item level.
   final List<Person> persons;
+
+  /// A list of [Value], each can contain 0 or more [ValueRecipient]
+  final List<Value> value;
 
   /// A list of current episodes.
   final List<Episode> episodes;
@@ -67,6 +73,7 @@ class Podcast {
     this.locked,
     this.funding = const <Funding>[],
     this.persons = const <Person>[],
+    this.value = const <Value>[],
     this.episodes = const <Episode>[],
   });
 
@@ -165,6 +172,7 @@ class Podcast {
 
     var funding = <Funding>[];
     var persons = <Person>[];
+    var value = <Value>[];
 
     var guid = rssFeed.podcastIndex?.guid;
 
@@ -188,6 +196,37 @@ class Podcast {
           ));
         }
       }
+
+      if (rssFeed.podcastIndex!.value != null) {
+        for (var v in rssFeed.podcastIndex!.value!) {
+          var recipients = <ValueRecipient>[];
+
+          if (v?.recipients != null) {
+            for (var r in v!.recipients!) {
+              if (r != null) {
+                recipients.add(
+                    ValueRecipient(
+                      name: r.name,
+                      customKey: r.customKey,
+                      type: r.type,
+                      address: r.address,
+                      split: r.split,
+                      customValue: r.customValue,
+                      fee: r.fee,
+                    )
+                );
+              }
+            }
+          }
+
+          value.add(Value(
+            method: v?.method,
+            type: v?.type,
+            suggested: v?.suggested,
+            recipients: recipients,
+          ));
+        }
+      }
     }
 
     _loadEpisodes(rssFeed, episodes);
@@ -203,6 +242,7 @@ class Podcast {
       locked: locked,
       funding: funding,
       persons: persons,
+      value: value,
       episodes: episodes,
     );
   }
@@ -420,6 +460,7 @@ class Podcast {
     for (var item in rssFeed.items) {
       var transcripts = <TranscriptUrl>[];
       var persons = <Person>[];
+      var value = <Value>[];
 
       var chapters = Chapters(
         url: item.podcastIndex!.chapters?.url ?? '',
@@ -469,6 +510,37 @@ class Podcast {
         }
       }
 
+      if (item.podcastIndex?.value != null) {
+        for (var v in item.podcastIndex!.value) {
+          var recipients = <ValueRecipient>[];
+
+          if (v?.recipients != null) {
+            for (var r in v!.recipients!) {
+              if (r != null) {
+                recipients.add(
+                    ValueRecipient(
+                      name: r.name,
+                      customKey: r.customKey,
+                      type: r.type,
+                      address: r.address,
+                      split: r.split,
+                      customValue: r.customValue,
+                      fee: r.fee,
+                    )
+                );
+              }
+            }
+          }
+
+          value.add(Value(
+            method: v?.method,
+            type: v?.type,
+            suggested: v?.suggested,
+            recipients: recipients,
+          ));
+        }
+      }
+
       episodes.add(Episode(
         guid: item.guid ?? '',
         title: item.title ?? '',
@@ -486,6 +558,7 @@ class Podcast {
         chapters: chapters,
         transcripts: transcripts,
         persons: persons,
+        value: value,
       ));
     }
   }

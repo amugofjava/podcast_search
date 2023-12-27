@@ -4,6 +4,7 @@
 import 'package:podcast_search/src/model/chapters.dart';
 import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/model/transcript.dart';
+import 'package:podcast_search/src/model/value.dart';
 
 /// A class representing an individual episode.
 class Episode {
@@ -47,9 +48,14 @@ class Episode {
   /// Episode chapters for feeds that support PodcastIndex
   final Chapters? chapters;
 
+  /// A list of URLs containing a transcript.
   final List<TranscriptUrl> transcripts;
 
+  /// A list of persons representing hosts, guests etc.
   final List<Person> persons;
+
+  /// A list of value blocks.
+  final List<Value> value;
 
   Episode({
     required this.guid,
@@ -67,5 +73,6 @@ class Episode {
     this.chapters,
     this.transcripts = const <TranscriptUrl>[],
     this.persons = const <Person>[],
+    this.value = const <Value>[],
   });
 }
