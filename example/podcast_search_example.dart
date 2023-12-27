@@ -8,7 +8,8 @@ void main() async {
   var search = Search();
 
   /// Search for podcasts with 'widgets' in the title.
-  var results = await search.search('widgets', country: Country.unitedKingdom, limit: 10);
+  var results =
+      await search.search('widgets', country: Country.unitedKingdom, limit: 10);
 
   /// List the name of each podcast found.
   for (var result in results.items) {

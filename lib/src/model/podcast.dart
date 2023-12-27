@@ -5,14 +5,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:podcast_search/src/model/value.dart';
 import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:rss_dart/dart_rss.dart';
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
-import 'package:podcast_search/src/model/funding.dart';
 import 'package:podcast_search/src/model/locked.dart';
 import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/search/base_search.dart';
@@ -204,17 +202,15 @@ class Podcast {
           if (v?.recipients != null) {
             for (var r in v!.recipients!) {
               if (r != null) {
-                recipients.add(
-                    ValueRecipient(
-                      name: r.name,
-                      customKey: r.customKey,
-                      type: r.type,
-                      address: r.address,
-                      split: r.split,
-                      customValue: r.customValue,
-                      fee: r.fee,
-                    )
-                );
+                recipients.add(ValueRecipient(
+                  name: r.name,
+                  customKey: r.customKey,
+                  type: r.type,
+                  address: r.address,
+                  split: r.split,
+                  customValue: r.customValue,
+                  fee: r.fee,
+                ));
               }
             }
           }
@@ -517,17 +513,15 @@ class Podcast {
           if (v?.recipients != null) {
             for (var r in v!.recipients!) {
               if (r != null) {
-                recipients.add(
-                    ValueRecipient(
-                      name: r.name,
-                      customKey: r.customKey,
-                      type: r.type,
-                      address: r.address,
-                      split: r.split,
-                      customValue: r.customValue,
-                      fee: r.fee,
-                    )
-                );
+                recipients.add(ValueRecipient(
+                  name: r.name,
+                  customKey: r.customKey,
+                  type: r.type,
+                  address: r.address,
+                  split: r.split,
+                  customValue: r.customValue,
+                  fee: r.fee,
+                ));
               }
             }
           }

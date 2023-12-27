@@ -1,3 +1,7 @@
+## 0.6.4
+
+- Add support for PC2.0 `<podcast:value>` tag.
+
 ## 0.6.3
 
 - Bug fix: Handle lookup failures when fetching iTunes charts.
