@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/" xmlns:georss="http://www.georss.org/georss" xmlns:audioboom="https://audioboom.com/rss/1.0" version="2.0" xml:base="https://audioboom.com/">
 <channel>
-<title>Podcast Load Test 1</title>
+<title>Podcast Load Test 2</title>
 <description>Unit test podcast test 1</description>
 <link>https://nowhere.com/podcastsearchtest1</link>
 <pubDate>Thu, 24 Jun 2021 18:00:20 +0000</pubDate>
@@ -24,9 +24,6 @@
 </itunes:owner>
 <itunes:new-feed-url>podcast1.rss</itunes:new-feed-url>
 <itunes:type>episodic</itunes:type>
-<podcast:block>yes</podcast:block>
-<podcast:block id="google">no</podcast:block>
-<podcast:block id="amazon">yes</podcast:block>
 <podcast:value type="lightning" method="keysend" suggested="0.00000005000">
     <podcast:valueRecipient name="channel recipient1" type="node" address="03ae9f91a0cb8ff43840e3c322c55341a19d8c1c3cea15a25cfc425ac60a34e14a" split="80"/>
     <podcast:valueRecipient name="channel recipient2" type="node" address="03ae9f91a0cb8ff43840e3c322c55341a19d8c1c3cea15a25cfc425ac60a34e14b" split="20"/>

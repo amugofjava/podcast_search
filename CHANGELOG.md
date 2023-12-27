@@ -1,3 +1,7 @@
+## 0.6.5
+
+- Add support for PC2.0 `<podcast:block>` tag.
+
 ## 0.6.4
 
 - Add support for PC2.0 `<podcast:value>` tag.

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:podcast_search/src/model/block.dart';
 import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:rss_dart/dart_rss.dart';
 import 'package:dio/dio.dart';
@@ -57,6 +58,9 @@ class Podcast {
   /// A list of [Value], each can contain 0 or more [ValueRecipient]
   final List<Value> value;
 
+  /// A list of [Block] tags.
+  final List<Block> block;
+
   /// A list of current episodes.
   final List<Episode> episodes;
 
@@ -72,6 +76,7 @@ class Podcast {
     this.funding = const <Funding>[],
     this.persons = const <Person>[],
     this.value = const <Value>[],
+    this.block = const <Block>[],
     this.episodes = const <Episode>[],
   });
 
@@ -170,6 +175,7 @@ class Podcast {
 
     var funding = <Funding>[];
     var persons = <Person>[];
+    var block = <Block>[];
     var value = <Value>[];
 
     var guid = rssFeed.podcastIndex?.guid;
@@ -192,6 +198,14 @@ class Podcast {
             image: p?.image,
             link: p?.link,
           ));
+        }
+      }
+
+      if (rssFeed.podcastIndex!.block != null) {
+        for (var b in rssFeed.podcastIndex!.block!) {
+          block.add(
+            Block(block: b?.block ?? false, id: b?.id)
+          );
         }
       }
 
@@ -238,6 +252,7 @@ class Podcast {
       locked: locked,
       funding: funding,
       persons: persons,
+      block: block,
       value: value,
       episodes: episodes,
     );

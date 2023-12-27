@@ -51,4 +51,28 @@ void main() {
       expect(episode2.publicationDate, null);
     });
   });
+
+  group('Block tag test', () {
+    test('Load podcast with block tags', () async {
+      var podcast =
+          await Podcast.loadFeedFile(file: 'test_resources/podcast1.rss');
+
+      expect(podcast.block.length, 3);
+      expect(podcast.block[0].block, true);
+      expect(podcast.block[0].id, null);
+
+      expect(podcast.block[1].block, false);
+      expect(podcast.block[1].id, 'google');
+
+      expect(podcast.block[2].block, true);
+      expect(podcast.block[2].id, 'amazon');
+    });
+
+    test('Load podcast with no block tags', () async {
+      var podcast =
+          await Podcast.loadFeedFile(file: 'test_resources/podcast-no-block.rss');
+
+      expect(podcast.block.length, 0);
+    });
+  });
 }
