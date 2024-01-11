@@ -37,8 +37,22 @@ class SrtParser {
       final endTimeMinutes = int.parse(regExpMatch.group(9) ?? '0');
       final endTimeSeconds = int.parse(regExpMatch.group(10) ?? '0');
       final endTimeMilliseconds = int.parse(regExpMatch.group(11) ?? '0');
-      final text =
-          regExpMatch.group(12)?.replaceAll(_newlineMatcher, ' ').trim();
+      final textLines = regExpMatch.group(12)?.split(_newlineMatcher);
+
+      var text = "";
+
+      // Some SRT can contains trailing and leading spaces; some do not!
+      if (textLines != null) {
+        for (var line in textLines) {
+            if (text == "") {
+              text = line;
+            } else if (text.endsWith(' ') || line.startsWith(' ')) {
+              text += line;
+            } else {
+              text += ' $line';
+            }
+        }
+      }
 
       final startTime = Duration(
         hours: startTimeHours,
@@ -55,7 +69,7 @@ class SrtParser {
       );
 
       var subtitle = Subtitle(
-          index: index, start: startTime, end: endTime, data: text ?? '');
+          index: index, start: startTime, end: endTime, data: text);
 
       subtitles.add(subtitle);
     }
