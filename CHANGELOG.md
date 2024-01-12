@@ -1,3 +1,7 @@
+## 0.6.6
+
+- Minor bug fixes to the SRT parser.
+
 ## 0.6.5
 
 - Add support for PC2.0 `<podcast:block>` tag.

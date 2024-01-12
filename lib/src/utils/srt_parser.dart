@@ -44,13 +44,13 @@ class SrtParser {
       // Some SRT can contains trailing and leading spaces; some do not!
       if (textLines != null) {
         for (var line in textLines) {
-            if (text == "") {
-              text = line;
-            } else if (text.endsWith(' ') || line.startsWith(' ')) {
-              text += line;
-            } else {
-              text += ' $line';
-            }
+          if (text.isEmpty) {
+            text = line;
+          } else if (text.endsWith(' ') || line.startsWith(' ')) {
+            text += line;
+          } else {
+            text += ' $line';
+          }
         }
       }
 
@@ -68,8 +68,8 @@ class SrtParser {
         milliseconds: endTimeMilliseconds,
       );
 
-      var subtitle = Subtitle(
-          index: index, start: startTime, end: endTime, data: text);
+      var subtitle =
+          Subtitle(index: index, start: startTime, end: endTime, data: text);
 
       subtitles.add(subtitle);
     }

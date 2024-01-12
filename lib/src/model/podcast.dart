@@ -203,9 +203,7 @@ class Podcast {
 
       if (rssFeed.podcastIndex!.block != null) {
         for (var b in rssFeed.podcastIndex!.block!) {
-          block.add(
-            Block(block: b?.block ?? false, id: b?.id)
-          );
+          block.add(Block(block: b?.block ?? false, id: b?.id));
         }
       }
 
