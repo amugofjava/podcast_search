@@ -17,12 +17,16 @@ void main() async {
   }
 
   /// Parse the first podcast.
-  var podcast = await Podcast.loadFeed(url: results.items[0].feedUrl!);
+  final feed = results.items[0].feedUrl;
 
-  /// Display episode titles.
-  ///
-  for (var episode in podcast.episodes) {
-    print('Episode title: ${episode.title}');
+  /// It is possible to get back a podcast with a missing feed URL, so check that.
+  if (feed != null) {
+    var podcast = await Podcast.loadFeed(url: feed);
+
+    /// Display episode titles.
+    for (var episode in podcast.episodes) {
+      print('Episode title: ${episode.title}');
+    }
   }
 
   /// Find the top 10 podcasts in the UK.

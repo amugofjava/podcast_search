@@ -8,11 +8,13 @@ examples limit to 10 results and are set for the United Kingdom:
 ```dart
 import 'package:podcast_search/podcast_search.dart';
 
-main() async {
+// ignore_for_file: avoid_print
+void main() async {
   var search = Search();
 
   /// Search for podcasts with 'widgets' in the title.
-  var results = await search.search('widgets', country: Country.unitedKingdom, limit: 10);
+  var results =
+  await search.search('widgets', country: Country.unitedKingdom, limit: 10);
 
   /// List the name of each podcast found.
   for (var result in results.items) {
@@ -20,12 +22,16 @@ main() async {
   }
 
   /// Parse the first podcast.
-  var podcast = await Podcast.loadFeed(url: results.items[0].feedUrl!);
+  final feed = results.items[0].feedUrl;
 
-  /// Display episode titles.
-  ///
-  for (var episode in podcast.episodes) {
-    print('Episode title: ${episode.title}');
+  /// It is possible to get back a podcast with a missing feed URL, so check that.
+  if (feed != null) {
+    var podcast = await Podcast.loadFeed(url: feed);
+
+    /// Display episode titles.
+    for (var episode in podcast.episodes) {
+      print('Episode title: ${episode.title}');
+    }
   }
 
   /// Find the top 10 podcasts in the UK.

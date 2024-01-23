@@ -1,3 +1,8 @@
+## 0.6.7
+
+- Update example to handle null feed.
+- Default podcast image to take iTunes version if available and fallback to channel version to be consistent with episode image handling.
+
 ## 0.6.6
 
 - Minor bug fixes to the SRT parser.
