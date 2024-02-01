@@ -55,7 +55,7 @@ final class ITunesSearch extends BaseSearch {
   int? _limit;
 
   /// If non-null, the results will be limited to the language specified.
-  late Language _language;
+  late String _language;
 
   /// Set to true to disable the explicit filter.
   bool? _explicit;
@@ -93,7 +93,7 @@ final class ITunesSearch extends BaseSearch {
       {String? term,
       Country country = Country.none,
       Attribute attribute = Attribute.none,
-      Language language = Language.none,
+      String language = '',
       int limit = 0,
       int version = 0,
       bool explicit = false,
@@ -269,7 +269,7 @@ final class ITunesSearch extends BaseSearch {
   }
 
   String _languageParam() {
-    return _language != Language.none ? '&language=${_language.code}' : '';
+    return _language.isNotEmpty && _language == 'ja' ? '&language=ja_jp' : '';
   }
 
   String _versionParam() {

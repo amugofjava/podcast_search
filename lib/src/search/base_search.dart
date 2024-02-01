@@ -19,7 +19,7 @@ abstract class BaseSearch {
     required String term,
     Country country = Country.none,
     Attribute attribute = Attribute.none,
-    Language language = Language.none,
+    String language = '',
     int limit = 0,
     int version = 0,
     bool explicit = false,

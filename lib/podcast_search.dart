@@ -11,7 +11,6 @@ export 'src/model/genre.dart';
 export 'src/model/value.dart';
 export 'src/model/funding.dart';
 export 'src/model/item.dart';
-export 'src/model/language.dart';
 export 'src/model/podcast.dart';
 export 'src/model/search_result.dart';
 export 'src/model/transcript.dart';

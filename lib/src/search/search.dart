@@ -26,7 +26,7 @@ class Search {
   int _limit = 0;
 
   /// If non-null, the results will be limited to the language specified.
-  Language _language = Language.none;
+  String _language = '';
 
   /// Set to true to disable the explicit filter.
   bool _explicit = false;
@@ -54,7 +54,7 @@ class Search {
     String term, {
     Country country = Country.none,
     Attribute attribute = Attribute.none,
-    Language language = Language.none,
+    String language = '',
     int limit = 0,
     int version = 0,
     bool explicit = false,
@@ -101,12 +101,14 @@ class Search {
   /// cache the results.
   Future<SearchResult> charts({
     Country country = Country.none,
+    String language = '',
     int limit = 20,
     bool explicit = false,
     String genre = '',
     Map<String, dynamic> queryParams = const {},
   }) async {
     _country = country;
+    _language = language;
     _limit = limit;
     _explicit = explicit;
     _genre = genre;
@@ -118,6 +120,7 @@ class Search {
         podcastIndexProvider: searchProvider as PodcastIndexProvider,
       ).charts(
         country: _country,
+        language: _language,
         limit: _limit,
         explicit: _explicit,
         genre: _genre,

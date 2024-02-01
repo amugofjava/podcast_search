@@ -202,15 +202,16 @@ final class PodcastIndexSearch extends BaseSearch {
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
   @override
-  Future<SearchResult> search(
-      {String? term,
-      Country country = Country.none,
-      Attribute attribute = Attribute.none,
-      Language language = Language.none,
-      int limit = 0,
-      int version = 0,
-      bool explicit = false,
-      Map<String, dynamic>? queryParams = const {}}) async {
+  Future<SearchResult> search({
+    String? term,
+    Country country = Country.none,
+    Attribute attribute = Attribute.none,
+    String language = '',
+    int limit = 0,
+    int version = 0,
+    bool explicit = false,
+    Map<String, dynamic>? queryParams = const {},
+  }) async {
     _term = term;
     _limit = limit;
     _explicit = explicit;
@@ -238,19 +239,29 @@ final class PodcastIndexSearch extends BaseSearch {
   /// the infrequent update of the chart feed it is recommended that clients
   /// cache the results.
   @override
-  Future<SearchResult> charts(
-      {Country country = Country.none,
-      int limit = 20,
-      bool explicit = false,
-      String genre = '',
-      Map<String, dynamic> queryParams = const {}}) async {
+  Future<SearchResult> charts({
+    Country country = Country.none,
+    String language = '',
+    int limit = 20,
+    bool explicit = false,
+    String genre = '',
+    Map<String, dynamic> queryParams = const {},
+  }) async {
     try {
+      var queryParameters = <String, dynamic>{
+        'since': -1 * 3600 * 24 * 7,
+        'cat': genre,
+        'max': limit,
+      };
+
+      if (language.isNotEmpty) {
+        queryParameters.addAll({'lang': language});
+      }
+
+      queryParameters.addAll(queryParams);
+
       var response = await _client.get(trendingApiEndpoint,
-          queryParameters: {
-            'since': -1 * 3600 * 24 * 7,
-            'cat': genre,
-            'max': limit,
-          }..addAll(queryParams));
+          queryParameters: queryParameters);
 
       return SearchResult.fromJson(
           json: response.data, type: ResultType.podcastIndex);
