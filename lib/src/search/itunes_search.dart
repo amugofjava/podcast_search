@@ -77,9 +77,7 @@ final class ITunesSearch extends BaseSearch {
             connectTimeout: Duration(milliseconds: timeout),
             receiveTimeout: Duration(milliseconds: timeout),
             headers: {
-              'User-Agent': userAgent == null || userAgent.isEmpty
-                  ? podcastSearchAgent
-                  : userAgent,
+              'User-Agent': userAgent == null || userAgent.isEmpty ? podcastSearchAgent : userAgent,
             },
           ),
         );
@@ -116,8 +114,7 @@ final class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(
-        lastError: lastError ?? '', lastErrorType: lastErrorType);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   /// Fetches the list of top podcasts
@@ -153,8 +150,7 @@ final class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(
-        lastError: lastError ?? '', lastErrorType: lastErrorType);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   @override
@@ -180,8 +176,7 @@ final class ITunesSearch extends BaseSearch {
 
           if (count == 0) {
             // ignore: avoid_print
-            print(
-                'Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
+            print('Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
           }
 
           if (count > 0 && results['results'] != null) {
@@ -197,8 +192,7 @@ final class ITunesSearch extends BaseSearch {
       setLastError(e);
     }
 
-    return SearchResult.fromError(
-        lastError: lastError ?? '', lastErrorType: lastErrorType);
+    return SearchResult.fromError(lastError: lastError ?? '', lastErrorType: lastErrorType);
   }
 
   /// This internal method constructs a correctly encoded URL which is then
@@ -249,9 +243,7 @@ final class ITunesSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term!.isNotEmpty
-        ? '?term=${Uri.encodeComponent(term!)}'
-        : '';
+    return term != null && term!.isNotEmpty ? '?term=${Uri.encodeComponent(term!)}' : '';
   }
 
   String _countryParam() {
@@ -259,9 +251,7 @@ final class ITunesSearch extends BaseSearch {
   }
 
   String _attributeParam() {
-    return _attribute != Attribute.none
-        ? '&attribute=${Uri.encodeComponent(_attribute!.attribute)}'
-        : '';
+    return _attribute != Attribute.none ? '&attribute=${Uri.encodeComponent(_attribute!.attribute)}' : '';
   }
 
   String _limitParam() {

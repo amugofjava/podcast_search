@@ -1,3 +1,7 @@
+## 0.6.9
+
+- Bug fix: handle empty fields from iTunes and PodcastIndex API call results.
+
 ## 0.6.8
 
 - BREAKING CHANGE: Language is now a text parameter (2-3 letter code) rather than enum. This is because iTunes largely ignores language, but PodcastIndex can use it for trending podcasts.

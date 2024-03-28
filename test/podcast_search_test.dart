@@ -10,9 +10,8 @@ void main() {
 
     setUp(() {
       search = Search(
-        searchProvider: PodcastIndexProvider(
-            key: 'XXWQEGULBJABVHZUM8NF',
-            secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
+        searchProvider:
+            PodcastIndexProvider(key: 'XXWQEGULBJABVHZUM8NF', secret: 'KZ2uy4upvq4t3e\$m\$3r2TeFS2fEpFTAaF92xcNdX'),
       );
     });
 
@@ -26,6 +25,20 @@ void main() {
       final result = await search.search('Forest 404');
 
       expect(result.resultCount, 1);
+    });
+
+    test('Empty iTunes items result', () async {
+      final result = Item.fromJson(
+        json: {},
+      );
+
+      expect(result, isNotNull);
+    });
+
+    test('Empty PodcastIndex items result', () async {
+      final result = Item.fromJson(json: {}, type: ResultType.podcastIndex);
+
+      expect(result, isNotNull);
     });
   });
 }
