@@ -1,15 +1,21 @@
+## 0.7.0
+
+- Add support for PC2.0 `<podcast:remoteItem>` tag (at channel level).
+
 ## 0.6.9
 
 - Bug fix: handle empty fields from iTunes and PodcastIndex API call results.
 
 ## 0.6.8
 
-- BREAKING CHANGE: Language is now a text parameter (2-3 letter code) rather than enum. This is because iTunes largely ignores language, but PodcastIndex can use it for trending podcasts.
+- BREAKING CHANGE: Language is now a text parameter (2-3 letter code) rather than enum. This is because iTunes largely
+  ignores language, but PodcastIndex can use it for trending podcasts.
 
 ## 0.6.7
 
 - Update example to handle null feed.
-- Default podcast image to take iTunes version if available and fallback to channel version to be consistent with episode image handling.
+- Default podcast image to take iTunes version if available and fallback to channel version to be consistent with
+  episode image handling.
 
 ## 0.6.6
 
@@ -63,7 +69,8 @@
 
 ## 0.5.1
 
-- Breaking change: Search provider is now passed when instantiating a Search object, rather than passing one at search time.
+- Breaking change: Search provider is now passed when instantiating a Search object, rather than passing one at search
+  time.
 - Support for genres across iTunes & PodcastIndex.
 
 ## 0.5.0
@@ -128,15 +135,15 @@
 
 ## 0.3.1
 
-- Add support for returning podcast chart. 
+- Add support for returning podcast chart.
 
 ## 0.3.0
 
-- Fix formatting. 
+- Fix formatting.
 
 ## 0.2.9
 
-- Fix lints for newer version of Pedantic. 
+- Fix lints for newer version of Pedantic.
 
 ## 0.2.8
 

@@ -5,19 +5,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:podcast_search/src/model/block.dart';
-import 'package:podcast_search/src/model/value_recipient.dart';
-import 'package:rss_dart/dart_rss.dart';
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/model/block.dart';
 import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
 import 'package:podcast_search/src/model/locked.dart';
 import 'package:podcast_search/src/model/person.dart';
+import 'package:podcast_search/src/model/remote_item.dart';
+import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 import 'package:podcast_search/src/utils/json_parser.dart';
 import 'package:podcast_search/src/utils/srt_parser.dart';
 import 'package:podcast_search/src/utils/utils.dart';
+import 'package:rss_dart/dart_rss.dart';
 
 /// This class represents a podcast and its episodes. The Podcast is instantiated with a feed URL which is
 /// then parsed and the episode list generated.
@@ -64,6 +65,9 @@ class Podcast {
   /// A list of current episodes.
   final List<Episode> episodes;
 
+  /// A list of remote items at the channel level
+  final List<RemoteItem> remoteItems;
+
   Podcast._({
     this.guid,
     this.url,
@@ -78,6 +82,7 @@ class Podcast {
     this.value = const <Value>[],
     this.block = const <Block>[],
     this.episodes = const <Episode>[],
+    this.remoteItems = const <RemoteItem>[],
   });
 
   /// This method takes a Url pointing to an RSS feed containing the Podcast details and episodes. You
@@ -167,6 +172,7 @@ class Podcast {
   static Podcast _loadFeed(RssFeed rssFeed, String url) {
     // Parse the episodes
     var episodes = <Episode>[];
+    var remoteItems = <RemoteItem>[];
     var author = rssFeed.itunes!.author;
     var locked = Locked(
       locked: rssFeed.podcastIndex!.locked?.locked ?? false,
@@ -185,6 +191,19 @@ class Podcast {
         for (var f in rssFeed.podcastIndex!.funding!) {
           if (f != null && f.url != null && f.value != null) {
             funding.add(Funding(url: f.url, value: f.value));
+          }
+        }
+      }
+
+      if (rssFeed.podcastIndex!.remoteItem != null) {
+        for (var r in rssFeed.podcastIndex!.remoteItem!) {
+          if (r != null) {
+            remoteItems.add(RemoteItem(
+              feedGuid: r.feedGuid,
+              itemGuid: r.itemGuid,
+              feedUrl: r.feedUrl,
+              medium: r.medium,
+            ));
           }
         }
       }
@@ -253,6 +272,7 @@ class Podcast {
       block: block,
       value: value,
       episodes: episodes,
+      remoteItems: remoteItems,
     );
   }
 

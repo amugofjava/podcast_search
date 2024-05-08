@@ -69,10 +69,46 @@ void main() {
     });
 
     test('Load podcast with no block tags', () async {
-      var podcast =
-          await Podcast.loadFeedFile(file: 'test_resources/podcast-no-block.rss');
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-no-block.rss');
 
       expect(podcast.block.length, 0);
+    });
+  });
+
+  group('Remote item test', () {
+    test('No remote items', () async {
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-no-block.rss');
+
+      expect(podcast.remoteItems.length, 0);
+    });
+
+    test('Load podcast 3 remote items', () async {
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-remote-item.rss');
+
+      expect(podcast.remoteItems.length, 3);
+
+      var item1 = podcast.remoteItems[0];
+      var item2 = podcast.remoteItems[1];
+      var item3 = podcast.remoteItems[2];
+
+      expect(item1.feedGuid, '917393e3-1b1e-5cef-ace4-edaa54e1f810');
+      expect(item1.itemGuid, null);
+      expect(item1.feedUrl, null);
+      expect(item1.medium, null);
+
+      expect(item2.feedGuid, '917393e3-1b1e-5cef-ace4-edaa54e1f811');
+      expect(item2.itemGuid, 'asdf089j0-ep240-20230510');
+      expect(item2.feedUrl, null);
+      expect(item2.medium, null);
+
+      expect(item3.feedGuid, '917393e3-1b1e-5cef-ace4-edaa54e1f812');
+      expect(item3.itemGuid, 'asdf089j0-ep240-20230511');
+      expect(item3.feedUrl,
+          'https://feeds.example.org/917393e3-1b1e-5cef-ace4-edaa54e1f811/rss.xml');
+      expect(item3.medium, 'music');
     });
   });
 }
