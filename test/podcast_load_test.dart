@@ -2,6 +2,7 @@
 // code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/model/medium.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -109,6 +110,30 @@ void main() {
       expect(item3.feedUrl,
           'https://feeds.example.org/917393e3-1b1e-5cef-ace4-edaa54e1f811/rss.xml');
       expect(item3.medium, 'music');
+    });
+  });
+
+  group('Medium test', () {
+    test('No medium', () async {
+      var podcast =
+          await Podcast.loadFeedFile(file: 'test_resources/podcast1.rss');
+
+      expect(podcast.medium, Medium.podcast);
+    });
+
+    test('Audiobook medium', () async {
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-medium-audiobook.rss');
+
+      expect(podcast.medium, Medium.audiobook);
+    });
+
+    test('Music list medium', () async {
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-medium-music-list.rss');
+
+      expect(podcast.medium, Medium.musicL);
+      expect(podcast.remoteItems.length, 2);
     });
   });
 }

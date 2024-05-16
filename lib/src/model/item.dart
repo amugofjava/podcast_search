@@ -117,7 +117,9 @@ class Item {
     required Map<String, dynamic>? json,
     ResultType type = ResultType.itunes,
   }) {
-    return type == ResultType.itunes ? _fromItunes(json!) : _fromPodcastIndex(json!);
+    return type == ResultType.itunes
+        ? _fromItunes(json!)
+        : _fromPodcastIndex(json!);
   }
 
   static Item _fromItunes(Map<String, dynamic> json) {
@@ -144,7 +146,8 @@ class Item {
       artworkUrl600: json['artworkUrl600'] as String?,
       genre: json['genreIds'] == null
           ? <Genre>[]
-          : Item._loadGenres(json['genreIds'].cast<String>(), json['genres'].cast<String>()),
+          : Item._loadGenres(
+              json['genreIds'].cast<String>(), json['genres'].cast<String>()),
       releaseDate: DateTime.tryParse(json['releaseDate'] ?? ''),
       country: json['country'] as String?,
       primaryGenreName: json['primaryGenreName'] as String?,
@@ -153,14 +156,16 @@ class Item {
   }
 
   static Item _fromPodcastIndex(Map<String, dynamic> json) {
-    int pubDateSeconds = json['lastUpdateTime'] ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    int pubDateSeconds =
+        json['lastUpdateTime'] ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var pubDate = Duration(seconds: pubDateSeconds);
     var categories = json['categories'];
     var genres = <Genre>[];
 
     if (categories != null) {
-      categories.forEach((key, value) => genres.add(Genre(int.parse(key), value)));
+      categories
+          .forEach((key, value) => genres.add(Genre(int.parse(key), value)));
     }
 
     return Item(

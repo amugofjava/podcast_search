@@ -11,6 +11,7 @@ import 'package:podcast_search/src/model/block.dart';
 import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
 import 'package:podcast_search/src/model/locked.dart';
+import 'package:podcast_search/src/model/medium.dart';
 import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/model/remote_item.dart';
 import 'package:podcast_search/src/model/value_recipient.dart';
@@ -68,6 +69,8 @@ class Podcast {
   /// A list of remote items at the channel level
   final List<RemoteItem> remoteItems;
 
+  final Medium medium;
+
   Podcast._({
     this.guid,
     this.url,
@@ -77,6 +80,7 @@ class Podcast {
     this.image,
     this.copyright,
     this.locked,
+    this.medium = Medium.podcast,
     this.funding = const <Funding>[],
     this.persons = const <Person>[],
     this.value = const <Value>[],
@@ -183,6 +187,7 @@ class Podcast {
     var persons = <Person>[];
     var block = <Block>[];
     var value = <Value>[];
+    var medium = Medium.podcast;
 
     var guid = rssFeed.podcastIndex?.guid;
 
@@ -224,6 +229,25 @@ class Podcast {
         for (var b in rssFeed.podcastIndex!.block!) {
           block.add(Block(block: b?.block ?? false, id: b?.id));
         }
+      }
+
+      if (rssFeed.podcastIndex!.medium != null) {
+        medium = switch (rssFeed.podcastIndex!.medium) {
+          'podcastL' => Medium.podcastL,
+          'music' => Medium.music,
+          'musicL' => Medium.musicL,
+          'video' => Medium.video,
+          'videoL' => Medium.videoL,
+          'film' => Medium.film,
+          'filmL' => Medium.filmL,
+          'audiobook' => Medium.audiobook,
+          'audiobookL' => Medium.audiobookL,
+          'newsletter' => Medium.newsletter,
+          'newsletterL' => Medium.newsletterL,
+          'blog' => Medium.blog,
+          'blogL' => Medium.blogL,
+          _ => Medium.podcast
+        };
       }
 
       if (rssFeed.podcastIndex!.value != null) {
@@ -271,6 +295,7 @@ class Podcast {
       persons: persons,
       block: block,
       value: value,
+      medium: medium,
       episodes: episodes,
       remoteItems: remoteItems,
     );

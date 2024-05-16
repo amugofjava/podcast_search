@@ -1,3 +1,7 @@
+## 0.7.1
+
+- Add support for PC2.0 `<podcast:medium>` tag.
+
 ## 0.7.0
 
 - Add support for PC2.0 `<podcast:remoteItem>` tag (at channel level).
