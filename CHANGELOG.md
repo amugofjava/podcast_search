@@ -1,3 +1,7 @@
+## 0.7.2
+
+- Added retry to Apple charts API call to handle intermittent 503 errors.
+
 ## 0.7.1
 
 - Add support for PC2.0 `<podcast:medium>` tag.

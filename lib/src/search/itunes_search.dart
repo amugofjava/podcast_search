@@ -2,6 +2,7 @@
 // code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -165,7 +166,6 @@ final class ITunesSearch extends BaseSearch {
   /// details for each podcast.
   Future<SearchResult> _chartsToResults(dynamic jsonInput) async {
     var entries = jsonInput['feed']['entry'];
-
     var items = <Item>[];
 
     try {
@@ -173,21 +173,40 @@ final class ITunesSearch extends BaseSearch {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
           var title = entry['title']['label'];
+          var processed = false;
+          var tries = 2;
 
-          final response = await _client.get('$feedApiEndpoint/lookup?id=$id');
-          final results = json.decode(response.data);
-          final count = results['resultCount'] as int;
+          /// Apple's API can often fail/timeout/throw a 503. Here, if we fail to fetch an
+          /// item we will try a again before really giving up.
+          while (!processed && tries-- > 0) {
+            try {
+              final response =
+                  await _client.get('$feedApiEndpoint/lookup?id=$id');
 
-          if (count == 0) {
-            // ignore: avoid_print
-            print(
-                'Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
-          }
+              final results = json.decode(response.data);
+              final count = results['resultCount'] as int;
 
-          if (count > 0 && results['results'] != null) {
-            var item = Item.fromJson(json: results['results'][0]);
+              if (count == 0) {
+                // ignore: avoid_print
+                print(
+                    'Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
+              }
 
-            items.add(item);
+              if (count > 0 && results['results'] != null) {
+                var item = Item.fromJson(json: results['results'][0]);
+
+                items.add(item);
+              }
+              processed = true;
+            } on DioException {
+              /// Wait half a second and try again.
+              sleep(const Duration(milliseconds: 500));
+
+              // Exhausted, pass up error
+              if (tries == 0) {
+                rethrow;
+              }
+            }
           }
         }
       }
