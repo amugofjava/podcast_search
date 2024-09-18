@@ -128,6 +128,16 @@ class Podcast {
         case DioExceptionType.cancel:
           throw PodcastCancelledException(e.message ?? '');
         case DioExceptionType.unknown:
+
+          /// We may be able to determine the underlying error
+          if (e.error is HandshakeException) {
+            throw PodcastCertificateException(e.message ?? '');
+          }
+
+          if (e.error is CertificateException) {
+            throw PodcastCertificateException(e.message ?? '');
+          }
+
           throw PodcastUnknownException(e.message ?? '');
       }
     }

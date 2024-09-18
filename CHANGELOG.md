@@ -1,3 +1,8 @@
+## 0.7.3
+
+- Additional exception handler for certificate issues which then throws PodcastCertificateException.
+- Updated Dio dependency to 5.7.0.
+
 ## 0.7.2
 
 - Added retry to Apple charts API call to handle intermittent 503 errors.
