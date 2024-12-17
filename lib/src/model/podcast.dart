@@ -629,7 +629,7 @@ class Podcast {
             }
 
             alternateEnclosures.add(AlternateEnclosure(
-              mimeType: v.mimeType ?? '',
+              mimeType: v.mimeType,
               defaultMedia: v.defaultMedia,
               codecs: v.codecs,
               rel: v.rel,
