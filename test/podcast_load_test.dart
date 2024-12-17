@@ -136,4 +136,58 @@ void main() {
       expect(podcast.remoteItems.length, 2);
     });
   });
+
+  group('Alternate enclosures', () {
+    test('No alternate enclosures', () async {
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-alternate-enclosure.rss');
+
+      expect(podcast.episodes[0].alternateEnclosures.length, 0);
+    });
+
+    test('Load episode 2 alternate enclosures', () async {
+      var podcast = await Podcast.loadFeedFile(
+          file: 'test_resources/podcast-alternate-enclosure.rss');
+
+      var episode2 = podcast.episodes[1];
+
+      expect(episode2.alternateEnclosures.length, 3);
+
+      var enclosure1 = episode2.alternateEnclosures[0];
+      var enclosure2 = episode2.alternateEnclosures[1];
+      var enclosure3 = episode2.alternateEnclosures[2];
+
+      expect(enclosure1.sources.length, 0);
+      expect(enclosure2.sources.length, 2);
+      expect(enclosure3.sources.length, 2);
+
+      expect(enclosure1.title, 'Standard');
+      expect(enclosure1.mimeType, 'audio/mpeg');
+      expect(enclosure1.length, 43200000);
+      expect(enclosure1.bitRate, 128000);
+      expect(enclosure1.defaultMedia, true);
+      expect(enclosure1.integrity, null);
+
+      expect(enclosure2.title, 'High quality');
+      expect(enclosure2.mimeType, 'audio/opus');
+      expect(enclosure2.length, 32400000);
+      expect(enclosure2.bitRate, 96000);
+      expect(enclosure2.defaultMedia, false);
+      expect(enclosure2.integrity, null);
+
+      var source1 = enclosure2.sources[0];
+      var source2 = enclosure2.sources[1];
+      var integrity = enclosure3.integrity;
+
+      expect(source1.uri, 'https://example.com/file-high.opus');
+      expect(source1.contentType, null);
+
+      expect(source2.uri, 'ipfs://someRandomHighBitrateOpusFile');
+      expect(source2.contentType, 'audio/opus');
+
+      expect(integrity?.type, 'sri');
+      expect(integrity?.value, 'sha384-ExVqijgYHm15PqQqdXfW95x+Rs6C+d6E/ICxyQOeFevnxNLR/wtJNrNYTjIysUBo');
+    });
+  });
+
 }

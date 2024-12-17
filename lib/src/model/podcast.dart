@@ -7,13 +7,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/model/alternate_enclosure.dart';
 import 'package:podcast_search/src/model/block.dart';
 import 'package:podcast_search/src/model/chapter.dart';
 import 'package:podcast_search/src/model/chapter_headers.dart';
+import 'package:podcast_search/src/model/integrity.dart';
 import 'package:podcast_search/src/model/locked.dart';
 import 'package:podcast_search/src/model/medium.dart';
 import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/model/remote_item.dart';
+import 'package:podcast_search/src/model/source.dart';
 import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 import 'package:podcast_search/src/utils/json_parser.dart';
@@ -525,6 +528,7 @@ class Podcast {
       var transcripts = <TranscriptUrl>[];
       var persons = <Person>[];
       var value = <Value>[];
+      var alternateEnclosures = <AlternateEnclosure>[];
 
       var chapters = Chapters(
         url: item.podcastIndex!.chapters?.url ?? '',
@@ -603,6 +607,44 @@ class Podcast {
         }
       }
 
+      if (item.podcastIndex?.alternateEnclosure != null) {
+        for (var v in item.podcastIndex!.alternateEnclosure) {
+          if (v != null) {
+            var sources = <Source>[];
+            Integrity? integrity;
+
+            if (v.sources != null) {
+              for (var r in v.sources!) {
+                if (r != null && r.uri != null) {
+                  sources.add(Source(
+                    uri: r.uri!,
+                    contentType: r.contentType,
+                  ));
+                }
+              }
+            }
+
+            if (v.integrity != null && v.integrity?.type != null && v.integrity?.value != null) {
+              integrity = Integrity(type: v.integrity!.type!, value: v.integrity!.value!);
+            }
+
+            alternateEnclosures.add(AlternateEnclosure(
+              mimeType: v.mimeType ?? '',
+              defaultMedia: v.defaultMedia,
+              codecs: v.codecs,
+              rel: v.rel,
+              title: v.title,
+              lang: v.lang,
+              height: v.height,
+              bitRate: v.bitRate,
+              length: v.length,
+              integrity: integrity,
+              sources: sources,
+            ));
+          }
+        }
+      }
+
       episodes.add(Episode(
         guid: item.guid ?? '',
         title: item.title ?? '',
@@ -621,6 +663,7 @@ class Podcast {
         transcripts: transcripts,
         persons: persons,
         value: value,
+        alternateEnclosures: alternateEnclosures,
       ));
     }
   }

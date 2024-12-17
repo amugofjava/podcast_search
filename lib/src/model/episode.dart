@@ -1,6 +1,7 @@
 // Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
 // code is governed by a MIT license that can be found in the LICENSE file.
 
+import 'package:podcast_search/src/model/alternate_enclosure.dart';
 import 'package:podcast_search/src/model/chapters.dart';
 import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/model/transcript.dart';
@@ -57,6 +58,8 @@ class Episode {
   /// A list of value blocks.
   final List<Value> value;
 
+  final List<AlternateEnclosure> alternateEnclosures;
+  
   Episode({
     required this.guid,
     required this.title,
@@ -74,5 +77,6 @@ class Episode {
     this.transcripts = const <TranscriptUrl>[],
     this.persons = const <Person>[],
     this.value = const <Value>[],
+    this.alternateEnclosures = const <AlternateEnclosure>[],
   });
 }

@@ -1,3 +1,7 @@
+## 0.7.4
+
+- Add support for PC2.0 `<podcast:alternateEnclosure>` tag.
+
 ## 0.7.3
 
 - Additional exception handler for certificate issues which then throws PodcastCertificateException.
