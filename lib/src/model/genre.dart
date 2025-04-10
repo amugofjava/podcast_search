@@ -9,10 +9,7 @@ class Genre {
   /// Genre name.
   final String name;
 
-  const Genre(
-    this.id,
-    this.name,
-  );
+  const Genre(this.id, this.name);
 
   @override
   String toString() {

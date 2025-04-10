@@ -23,8 +23,5 @@ class Chapters {
   /// A list of individual chapters.
   var chapters = <Chapter>[];
 
-  Chapters({
-    this.url = '',
-    this.type = '',
-  });
+  Chapters({this.url = '', this.type = ''});
 }

@@ -26,9 +26,7 @@ abstract class BaseSearch {
     Map<String, dynamic>? queryParams,
   });
 
-  Future<SearchResult> charts({
-    String genre,
-  });
+  Future<SearchResult> charts({String genre});
 
   List<String> genres();
 

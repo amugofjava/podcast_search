@@ -7,11 +7,5 @@ class Person {
   String? image;
   String? link;
 
-  Person({
-    required this.name,
-    this.role,
-    this.group,
-    this.image,
-    this.link,
-  });
+  Person({required this.name, this.role, this.group, this.image, this.link});
 }

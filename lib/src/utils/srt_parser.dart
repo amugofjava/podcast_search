@@ -68,8 +68,12 @@ class SrtParser {
         milliseconds: endTimeMilliseconds,
       );
 
-      var subtitle =
-          Subtitle(index: index, start: startTime, end: endTime, data: text);
+      var subtitle = Subtitle(
+        index: index,
+        start: startTime,
+        end: endTime,
+        data: text,
+      );
 
       subtitles.add(subtitle);
     }

@@ -144,10 +144,13 @@ class Item {
       artworkUrl60: json['artworkUrl60'] as String?,
       artworkUrl100: json['artworkUrl100'] as String?,
       artworkUrl600: json['artworkUrl600'] as String?,
-      genre: json['genreIds'] == null
-          ? <Genre>[]
-          : Item._loadGenres(
-              json['genreIds'].cast<String>(), json['genres'].cast<String>()),
+      genre:
+          json['genreIds'] == null
+              ? <Genre>[]
+              : Item._loadGenres(
+                json['genreIds'].cast<String>(),
+                json['genres'].cast<String>(),
+              ),
       releaseDate: DateTime.tryParse(json['releaseDate'] ?? ''),
       country: json['country'] as String?,
       primaryGenreName: json['primaryGenreName'] as String?,
@@ -164,8 +167,9 @@ class Item {
     var genres = <Genre>[];
 
     if (categories != null) {
-      categories
-          .forEach((key, value) => genres.add(Genre(int.parse(key), value)));
+      categories.forEach(
+        (key, value) => genres.add(Genre(int.parse(key), value)),
+      );
     }
 
     return Item(

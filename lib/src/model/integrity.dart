@@ -10,8 +10,5 @@ class Integrity {
   /// The value of the sri string or base64 encoded pgp signature.
   final String value;
 
-  Integrity({
-    required this.type,
-    required this.value,
-  });
+  Integrity({required this.type, required this.value});
 }

@@ -20,13 +20,15 @@ class JsonParser {
       var data = segment.body;
       var speaker = segment.speaker;
 
-      subtitles.add(Subtitle(
-        index: index++,
-        start: Duration(milliseconds: startTime),
-        end: Duration(milliseconds: endTime),
-        speaker: speaker,
-        data: data,
-      ));
+      subtitles.add(
+        Subtitle(
+          index: index++,
+          start: Duration(milliseconds: startTime),
+          end: Duration(milliseconds: endTime),
+          speaker: speaker,
+          data: data,
+        ),
+      );
     }
 
     return Transcript(subtitles: subtitles);
@@ -37,10 +39,7 @@ class TranscriptFile {
   String version;
   List<TranscriptSegment> segments;
 
-  TranscriptFile({
-    required this.version,
-    required this.segments,
-  });
+  TranscriptFile({required this.version, required this.segments});
 
   static TranscriptFile fromMap(Map<String, dynamic> file) {
     var segments = <TranscriptSegment>[];

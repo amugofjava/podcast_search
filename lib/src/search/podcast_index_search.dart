@@ -189,9 +189,10 @@ final class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Date': newUnixTime,
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
-          'User-Agent': userAgent == null || userAgent!.isEmpty
-              ? podcastSearchAgent
-              : userAgent,
+          'User-Agent':
+              userAgent == null || userAgent!.isEmpty
+                  ? podcastSearchAgent
+                  : userAgent,
         },
       ),
     );
@@ -220,13 +221,17 @@ final class PodcastIndexSearch extends BaseSearch {
       var response = await _client.get(_buildSearchUrl(queryParams!));
 
       return SearchResult.fromJson(
-          json: response.data, type: ResultType.podcastIndex);
+        json: response.data,
+        type: ResultType.podcastIndex,
+      );
     } on DioException catch (e) {
       setLastError(e);
     }
 
     return SearchResult.fromError(
-        lastError: _lastError ?? '', lastErrorType: _lastErrorType);
+      lastError: _lastError ?? '',
+      lastErrorType: _lastErrorType,
+    );
   }
 
   /// Fetches the list of top podcasts
@@ -260,17 +265,23 @@ final class PodcastIndexSearch extends BaseSearch {
 
       queryParameters.addAll(queryParams);
 
-      var response = await _client.get(trendingApiEndpoint,
-          queryParameters: queryParameters);
+      var response = await _client.get(
+        trendingApiEndpoint,
+        queryParameters: queryParameters,
+      );
 
       return SearchResult.fromJson(
-          json: response.data, type: ResultType.podcastIndex);
+        json: response.data,
+        type: ResultType.podcastIndex,
+      );
     } on DioException catch (e) {
       setLastError(e);
     }
 
     return SearchResult.fromError(
-        lastError: _lastError ?? '', lastErrorType: _lastErrorType);
+      lastError: _lastError ?? '',
+      lastErrorType: _lastErrorType,
+    );
   }
 
   @override

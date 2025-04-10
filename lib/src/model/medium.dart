@@ -16,5 +16,5 @@ enum Medium {
   filmL,
   audiobookL,
   newsletterL,
-  blogL;
+  blogL,
 }

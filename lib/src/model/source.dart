@@ -10,8 +10,5 @@ class Source {
   /// The mime type of the media file.
   final String? contentType;
 
-  Source({
-    required this.uri,
-    this.contentType,
-  });
+  Source({required this.uri, this.contentType});
 }

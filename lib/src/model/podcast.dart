@@ -147,9 +147,7 @@ class Podcast {
     }
   }
 
-  static Future<Podcast> loadFeedFile({
-    required String file,
-  }) async {
+  static Future<Podcast> loadFeedFile({required String file}) async {
     var f = File(file);
 
     if (f.existsSync()) {
@@ -165,9 +163,7 @@ class Podcast {
   /// Load a PC2.0 [Transcript] from a file. Transcripts can be either JSON or
   /// SRT (SubRip) format. The file extension is used to determine if either the
   /// [JsonParser] or [SrtParser] is used.
-  static Future<Transcript> loadTranscriptFile({
-    required String file,
-  }) async {
+  static Future<Transcript> loadTranscriptFile({required String file}) async {
     var transcript = Transcript();
     var f = File(file);
 
@@ -222,25 +218,29 @@ class Podcast {
       if (rssFeed.podcastIndex!.remoteItem != null) {
         for (var r in rssFeed.podcastIndex!.remoteItem!) {
           if (r != null) {
-            remoteItems.add(RemoteItem(
-              feedGuid: r.feedGuid,
-              itemGuid: r.itemGuid,
-              feedUrl: r.feedUrl,
-              medium: r.medium,
-            ));
+            remoteItems.add(
+              RemoteItem(
+                feedGuid: r.feedGuid,
+                itemGuid: r.itemGuid,
+                feedUrl: r.feedUrl,
+                medium: r.medium,
+              ),
+            );
           }
         }
       }
 
       if (rssFeed.podcastIndex!.persons != null) {
         for (var p in rssFeed.podcastIndex!.persons!) {
-          persons.add(Person(
-            name: p?.name ?? '',
-            role: p?.role,
-            group: p?.group,
-            image: p?.image,
-            link: p?.link,
-          ));
+          persons.add(
+            Person(
+              name: p?.name ?? '',
+              role: p?.role,
+              group: p?.group,
+              image: p?.image,
+              link: p?.link,
+            ),
+          );
         }
       }
 
@@ -265,7 +265,7 @@ class Podcast {
           'newsletterL' => Medium.newsletterL,
           'blog' => Medium.blog,
           'blogL' => Medium.blogL,
-          _ => Medium.podcast
+          _ => Medium.podcast,
         };
       }
 
@@ -276,25 +276,29 @@ class Podcast {
           if (v?.recipients != null) {
             for (var r in v!.recipients!) {
               if (r != null) {
-                recipients.add(ValueRecipient(
-                  name: r.name,
-                  customKey: r.customKey,
-                  type: r.type,
-                  address: r.address,
-                  split: r.split,
-                  customValue: r.customValue,
-                  fee: r.fee,
-                ));
+                recipients.add(
+                  ValueRecipient(
+                    name: r.name,
+                    customKey: r.customKey,
+                    type: r.type,
+                    address: r.address,
+                    split: r.split,
+                    customValue: r.customValue,
+                    fee: r.fee,
+                  ),
+                );
               }
             }
           }
 
-          value.add(Value(
-            method: v?.method,
-            type: v?.type,
-            suggested: v?.suggested,
-            recipients: recipients,
-          ));
+          value.add(
+            Value(
+              method: v?.method,
+              type: v?.type,
+              suggested: v?.suggested,
+              recipients: recipients,
+            ),
+          );
         }
       }
     }
@@ -332,10 +336,7 @@ class Podcast {
     final timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
-      BaseOptions(
-        connectTimeout: timeout,
-        receiveTimeout: timeout,
-      ),
+      BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
     );
 
     if (episode.chapters!.chapters.isNotEmpty &&
@@ -378,17 +379,16 @@ class Podcast {
     final timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
-      BaseOptions(
-        connectTimeout: timeout,
-        receiveTimeout: timeout,
-      ),
+      BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
     );
 
     var transcript = Transcript();
 
     try {
-      final response = await client.get(transcriptUrl.url,
-          options: Options(responseType: ResponseType.plain));
+      final response = await client.get(
+        transcriptUrl.url,
+        options: Options(responseType: ResponseType.plain),
+      );
 
       /// What type of transcript are we loading here?
       if (transcriptUrl.type == TranscriptFormat.subrip) {
@@ -438,10 +438,7 @@ class Podcast {
     final timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
-      BaseOptions(
-        connectTimeout: timeout,
-        receiveTimeout: timeout,
-      ),
+      BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
     );
 
     var chapters = Chapters();
@@ -522,14 +519,16 @@ class Podcast {
 
       c.chapters.add(
         Chapter(
-            url: chapter['url'] ?? '',
-            imageUrl: chapter['img'] ?? '',
-            title: chapter['title'] ?? '',
-            startTime: startTime ?? 0.0,
-            endTime: endTime ?? 0.0,
-            toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false)
-                ? false
-                : true),
+          url: chapter['url'] ?? '',
+          imageUrl: chapter['img'] ?? '',
+          title: chapter['title'] ?? '',
+          startTime: startTime ?? 0.0,
+          endTime: endTime ?? 0.0,
+          toc:
+              (chapter['toc'] != null && (chapter['toc'] as bool?) == false)
+                  ? false
+                  : true,
+        ),
       );
     }
   }
@@ -571,25 +570,29 @@ class Podcast {
           }
 
           if (valid) {
-            transcripts.add(TranscriptUrl(
-              url: t?.url ?? '',
-              language: t?.language ?? '',
-              rel: t?.rel ?? '',
-              type: type,
-            ));
+            transcripts.add(
+              TranscriptUrl(
+                url: t?.url ?? '',
+                language: t?.language ?? '',
+                rel: t?.rel ?? '',
+                type: type,
+              ),
+            );
           }
         }
       }
 
       if (item.podcastIndex?.persons != null) {
         for (var p in item.podcastIndex!.persons) {
-          persons.add(Person(
-            name: p?.name ?? '',
-            role: p?.role ?? '',
-            group: p?.group ?? '',
-            image: p?.image ?? '',
-            link: p?.link ?? '',
-          ));
+          persons.add(
+            Person(
+              name: p?.name ?? '',
+              role: p?.role ?? '',
+              group: p?.group ?? '',
+              image: p?.image ?? '',
+              link: p?.link ?? '',
+            ),
+          );
         }
       }
 
@@ -600,25 +603,29 @@ class Podcast {
           if (v?.recipients != null) {
             for (var r in v!.recipients!) {
               if (r != null) {
-                recipients.add(ValueRecipient(
-                  name: r.name,
-                  customKey: r.customKey,
-                  type: r.type,
-                  address: r.address,
-                  split: r.split,
-                  customValue: r.customValue,
-                  fee: r.fee,
-                ));
+                recipients.add(
+                  ValueRecipient(
+                    name: r.name,
+                    customKey: r.customKey,
+                    type: r.type,
+                    address: r.address,
+                    split: r.split,
+                    customValue: r.customValue,
+                    fee: r.fee,
+                  ),
+                );
               }
             }
           }
 
-          value.add(Value(
-            method: v?.method,
-            type: v?.type,
-            suggested: v?.suggested,
-            recipients: recipients,
-          ));
+          value.add(
+            Value(
+              method: v?.method,
+              type: v?.type,
+              suggested: v?.suggested,
+              recipients: recipients,
+            ),
+          );
         }
       }
 
@@ -631,55 +638,63 @@ class Podcast {
             if (v.sources != null) {
               for (var r in v.sources!) {
                 if (r != null && r.uri != null) {
-                  sources.add(Source(
-                    uri: r.uri!,
-                    contentType: r.contentType,
-                  ));
+                  sources.add(Source(uri: r.uri!, contentType: r.contentType));
                 }
               }
             }
 
-            if (v.integrity != null && v.integrity?.type != null && v.integrity?.value != null) {
-              integrity = Integrity(type: v.integrity!.type!, value: v.integrity!.value!);
+            if (v.integrity != null &&
+                v.integrity?.type != null &&
+                v.integrity?.value != null) {
+              integrity = Integrity(
+                type: v.integrity!.type!,
+                value: v.integrity!.value!,
+              );
             }
 
-            alternateEnclosures.add(AlternateEnclosure(
-              mimeType: v.mimeType,
-              defaultMedia: v.defaultMedia,
-              codecs: v.codecs,
-              rel: v.rel,
-              title: v.title,
-              lang: v.lang,
-              height: v.height,
-              bitRate: v.bitRate,
-              length: v.length,
-              integrity: integrity,
-              sources: sources,
-            ));
+            alternateEnclosures.add(
+              AlternateEnclosure(
+                mimeType: v.mimeType,
+                defaultMedia: v.defaultMedia,
+                codecs: v.codecs,
+                rel: v.rel,
+                title: v.title,
+                lang: v.lang,
+                height: v.height,
+                bitRate: v.bitRate,
+                length: v.length,
+                integrity: integrity,
+                sources: sources,
+              ),
+            );
           }
         }
       }
 
-      episodes.add(Episode(
-        guid: item.guid ?? '',
-        title: item.title ?? '',
-        description: item.description ?? '',
-        link: item.link,
-        publicationDate:
-            item.pubDate == null ? null : Utils.parseRFC2822Date(item.pubDate!),
-        author: item.author ?? item.itunes!.author ?? item.dc?.creator,
-        duration: item.itunes?.duration,
-        contentUrl: item.enclosure?.url,
-        imageUrl: item.itunes?.image?.href,
-        season: item.itunes?.season,
-        episode: item.itunes?.episode,
-        content: item.content?.value,
-        chapters: chapters,
-        transcripts: transcripts,
-        persons: persons,
-        value: value,
-        alternateEnclosures: alternateEnclosures,
-      ));
+      episodes.add(
+        Episode(
+          guid: item.guid ?? '',
+          title: item.title ?? '',
+          description: item.description ?? '',
+          link: item.link,
+          publicationDate:
+              item.pubDate == null
+                  ? null
+                  : Utils.parseRFC2822Date(item.pubDate!),
+          author: item.author ?? item.itunes!.author ?? item.dc?.creator,
+          duration: item.itunes?.duration,
+          contentUrl: item.enclosure?.url,
+          imageUrl: item.itunes?.image?.href,
+          season: item.itunes?.season,
+          episode: item.itunes?.episode,
+          content: item.content?.value,
+          chapters: chapters,
+          transcripts: transcripts,
+          persons: persons,
+          value: value,
+          alternateEnclosures: alternateEnclosures,
+        ),
+      );
     }
   }
 }

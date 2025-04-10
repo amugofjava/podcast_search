@@ -59,7 +59,7 @@ class Episode {
   final List<Value> value;
 
   final List<AlternateEnclosure> alternateEnclosures;
-  
+
   Episode({
     required this.guid,
     required this.title,

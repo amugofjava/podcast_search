@@ -13,10 +13,7 @@ enum ErrorType {
   unknown,
 }
 
-enum ResultType {
-  itunes,
-  podcastIndex,
-}
+enum ResultType { itunes, podcastIndex }
 
 const startTagMap = {
   ResultType.itunes: 'results',
@@ -48,44 +45,48 @@ class SearchResult {
   /// Date & time of search
   final DateTime processedTime;
 
-  SearchResult({
-    this.resultCount = 0,
-    this.items = const <Item>[],
-  })  : successful = true,
-        lastError = '',
-        lastErrorType = ErrorType.none,
-        processedTime = DateTime.now();
+  SearchResult({this.resultCount = 0, this.items = const <Item>[]})
+    : successful = true,
+      lastError = '',
+      lastErrorType = ErrorType.none,
+      processedTime = DateTime.now();
 
   SearchResult.fromError({
     this.lastError = '',
     this.lastErrorType = ErrorType.none,
-  })  : successful = false,
-        resultCount = 0,
-        processedTime = DateTime.now(),
-        items = [];
+  }) : successful = false,
+       resultCount = 0,
+       processedTime = DateTime.now(),
+       items = [];
 
-  factory SearchResult.fromJson(
-      {required dynamic json, ResultType type = ResultType.itunes}) {
+  factory SearchResult.fromJson({
+    required dynamic json,
+    ResultType type = ResultType.itunes,
+  }) {
     /// Did we get an error message?
     if (json['errorMessage'] != null) {
       return SearchResult.fromError(
-          lastError: json['errorMessage'] ?? '',
-          lastErrorType: ErrorType.failed);
+        lastError: json['errorMessage'] ?? '',
+        lastErrorType: ErrorType.failed,
+      );
     }
 
     var dataStart = startTagMap[type];
     var dataCount = countTagMap[type];
 
     /// Fetch the results from the JSON data.
-    final items = json[dataStart] == null
-        ? null
-        : (json[dataStart] as List)
-            .cast<Map<String, dynamic>>()
-            .map((Map<String, dynamic> item) {
-            return Item.fromJson(json: item, type: type);
-          }).toList();
+    final items =
+        json[dataStart] == null
+            ? null
+            : (json[dataStart] as List).cast<Map<String, dynamic>>().map((
+              Map<String, dynamic> item,
+            ) {
+              return Item.fromJson(json: item, type: type);
+            }).toList();
 
     return SearchResult(
-        resultCount: json[dataCount] ?? 0, items: items ?? <Item>[]);
+      resultCount: json[dataCount] ?? 0,
+      items: items ?? <Item>[],
+    );
   }
 }

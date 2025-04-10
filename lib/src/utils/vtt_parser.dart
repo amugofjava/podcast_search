@@ -42,12 +42,16 @@ class VttParser {
       final startTimeHours = int.parse(regExpMatch.namedGroup('shour') ?? '0');
       final startTimeMinutes = int.parse(regExpMatch.namedGroup('smin') ?? '0');
       final startTimeSeconds = int.parse(regExpMatch.namedGroup('ssec') ?? '0');
-      final startTimeMilliseconds = int.parse(regExpMatch.namedGroup('smili') ?? '0');
+      final startTimeMilliseconds = int.parse(
+        regExpMatch.namedGroup('smili') ?? '0',
+      );
 
       final endTimeHours = int.parse(regExpMatch.namedGroup('ehour') ?? '0');
       final endTimeMinutes = int.parse(regExpMatch.namedGroup('emin') ?? '0');
       final endTimeSeconds = int.parse(regExpMatch.namedGroup('esec') ?? '0');
-      final endTimeMilliseconds = int.parse(regExpMatch.namedGroup('emili') ?? '0');
+      final endTimeMilliseconds = int.parse(
+        regExpMatch.namedGroup('emili') ?? '0',
+      );
       final textLines = regExpMatch.namedGroup('lines')?.split(_newlineMatcher);
 
       var text = '';
@@ -96,8 +100,13 @@ class VttParser {
         milliseconds: endTimeMilliseconds,
       );
 
-      var subtitle =
-          Subtitle(index: i, start: startTime, end: endTime, speaker: speaker, data: text.trim(),);
+      var subtitle = Subtitle(
+        index: i,
+        start: startTime,
+        end: endTime,
+        speaker: speaker,
+        data: text.trim(),
+      );
 
       subtitles.add(subtitle);
     }

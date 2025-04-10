@@ -254,9 +254,7 @@ enum Country {
   zambia(code: 'zm'),
   zimbabwe(code: 'zw');
 
-  const Country({
-    required this.code,
-  });
+  const Country({required this.code});
 
   final String code;
 }

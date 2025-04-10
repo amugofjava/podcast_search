@@ -41,10 +41,7 @@ class Search {
 
   final SearchProvider searchProvider;
 
-  Search({
-    this.searchProvider = const ITunesProvider(),
-    this.userAgent = '',
-  });
+  Search({this.searchProvider = const ITunesProvider(), this.userAgent = ''});
 
   /// Search iTunes using the term [term]. You can limit the results to
   /// podcasts available in a specific country by supplying a [Country] option.
@@ -68,26 +65,25 @@ class Search {
     _version = version;
     _explicit = explicit;
 
-    var s = (searchProvider is ITunesProvider)
-        ? ITunesSearch(
-            userAgent: userAgent,
-            timeout: timeout,
-          )
-        : PodcastIndexSearch(
-            userAgent: userAgent,
-            timeout: timeout,
-            podcastIndexProvider: searchProvider as PodcastIndexProvider,
-          );
+    var s =
+        (searchProvider is ITunesProvider)
+            ? ITunesSearch(userAgent: userAgent, timeout: timeout)
+            : PodcastIndexSearch(
+              userAgent: userAgent,
+              timeout: timeout,
+              podcastIndexProvider: searchProvider as PodcastIndexProvider,
+            );
 
     return s.search(
-        term: term,
-        country: _country,
-        attribute: _attribute,
-        language: _language,
-        limit: _limit,
-        version: _version,
-        explicit: _explicit,
-        queryParams: queryParams);
+      term: term,
+      country: _country,
+      attribute: _attribute,
+      language: _language,
+      limit: _limit,
+      version: _version,
+      explicit: _explicit,
+      queryParams: queryParams,
+    );
   }
 
   /// Fetches the list of top podcasts
@@ -127,10 +123,7 @@ class Search {
         queryParams: queryParams,
       );
     }
-    return ITunesSearch(
-      userAgent: userAgent,
-      timeout: timeout,
-    ).charts(
+    return ITunesSearch(userAgent: userAgent, timeout: timeout).charts(
       country: _country,
       limit: _limit,
       explicit: _explicit,
@@ -146,10 +139,7 @@ class Search {
         podcastIndexProvider: searchProvider as PodcastIndexProvider,
       ).genres();
     } else {
-      return ITunesSearch(
-        userAgent: userAgent,
-        timeout: timeout,
-      ).genres();
+      return ITunesSearch(userAgent: userAgent, timeout: timeout).genres();
     }
   }
 

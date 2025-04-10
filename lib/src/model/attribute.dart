@@ -13,9 +13,7 @@ enum Attribute {
   keywords(attribute: 'keywordsTerm'),
   description(attribute: 'descriptionTerm');
 
-  const Attribute({
-    required this.attribute,
-  });
+  const Attribute({required this.attribute});
 
   final String attribute;
 }

@@ -69,36 +69,36 @@ final class ITunesSearch extends BaseSearch {
   /// If this property is non-null, it will be prepended to the User Agent header.
   String? userAgent;
 
-  ITunesSearch({
-    this.timeout = 20000,
-    this.userAgent,
-  }) : _client = Dio(
-          BaseOptions(
-            responseType: ResponseType.plain,
-            connectTimeout: Duration(milliseconds: timeout),
-            receiveTimeout: Duration(milliseconds: timeout),
-            headers: {
-              'User-Agent': userAgent == null || userAgent.isEmpty
-                  ? podcastSearchAgent
-                  : userAgent,
-            },
-          ),
-        );
+  ITunesSearch({this.timeout = 20000, this.userAgent})
+    : _client = Dio(
+        BaseOptions(
+          responseType: ResponseType.plain,
+          connectTimeout: Duration(milliseconds: timeout),
+          receiveTimeout: Duration(milliseconds: timeout),
+          headers: {
+            'User-Agent':
+                userAgent == null || userAgent.isEmpty
+                    ? podcastSearchAgent
+                    : userAgent,
+          },
+        ),
+      );
 
   /// Search iTunes using the term [term]. You can limit the results to
   /// podcasts available in a specific country by supplying a [Country] option.
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
   @override
-  Future<SearchResult> search(
-      {String? term,
-      Country country = Country.none,
-      Attribute attribute = Attribute.none,
-      String language = '',
-      int limit = 0,
-      int version = 0,
-      bool explicit = false,
-      Map<String, dynamic>? queryParams = const {}}) async {
+  Future<SearchResult> search({
+    String? term,
+    Country country = Country.none,
+    Attribute attribute = Attribute.none,
+    String language = '',
+    int limit = 0,
+    int version = 0,
+    bool explicit = false,
+    Map<String, dynamic>? queryParams = const {},
+  }) async {
     _term = term;
     _country = country;
     _attribute = attribute;
@@ -118,7 +118,9 @@ final class ITunesSearch extends BaseSearch {
     }
 
     return SearchResult.fromError(
-        lastError: lastError ?? '', lastErrorType: lastErrorType);
+      lastError: lastError ?? '',
+      lastErrorType: lastErrorType,
+    );
   }
 
   /// Fetches the list of top podcasts
@@ -143,9 +145,7 @@ final class ITunesSearch extends BaseSearch {
     _genre = genre;
 
     try {
-      final response = await _client.get(
-        _buildChartsUrl(),
-      );
+      final response = await _client.get(_buildChartsUrl());
 
       final results = json.decode(response.data);
 
@@ -155,7 +155,9 @@ final class ITunesSearch extends BaseSearch {
     }
 
     return SearchResult.fromError(
-        lastError: lastError ?? '', lastErrorType: lastErrorType);
+      lastError: lastError ?? '',
+      lastErrorType: lastErrorType,
+    );
   }
 
   @override
@@ -180,8 +182,9 @@ final class ITunesSearch extends BaseSearch {
           /// item we will try a again before really giving up.
           while (!processed && tries-- > 0) {
             try {
-              final response =
-                  await _client.get('$feedApiEndpoint/lookup?id=$id');
+              final response = await _client.get(
+                '$feedApiEndpoint/lookup?id=$id',
+              );
 
               final results = json.decode(response.data);
               final count = results['resultCount'] as int;
@@ -189,7 +192,8 @@ final class ITunesSearch extends BaseSearch {
               if (count == 0) {
                 // ignore: avoid_print
                 print(
-                    'Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped');
+                  'Warning: Could not find $title via lookup id: $feedApiEndpoint/lookup?id=$id - skipped',
+                );
               }
 
               if (count > 0 && results['results'] != null) {
@@ -217,7 +221,9 @@ final class ITunesSearch extends BaseSearch {
     }
 
     return SearchResult.fromError(
-        lastError: lastError ?? '', lastErrorType: lastErrorType);
+      lastError: lastError ?? '',
+      lastErrorType: lastErrorType,
+    );
   }
 
   /// This internal method constructs a correctly encoded URL which is then

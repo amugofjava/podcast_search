@@ -6,8 +6,5 @@ class Block {
   final bool block;
   String? id;
 
-  Block({
-    required this.block,
-    this.id,
-  });
+  Block({required this.block, this.id});
 }

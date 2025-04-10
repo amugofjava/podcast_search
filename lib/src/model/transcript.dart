@@ -2,12 +2,7 @@
 // code is governed by a MIT license that can be found in the LICENSE file.
 
 /// podcast_search currently supports PC2.0 Json format and standard subrip/srt format.
-enum TranscriptFormat {
-  json,
-  subrip,
-  vtt,
-  unsupported,
-}
+enum TranscriptFormat { json, subrip, vtt, unsupported }
 
 /// This class represents a PC2.0 [transcript](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript)
 /// URL contained within an RSS feed.
@@ -37,9 +32,7 @@ class Transcript {
   /// The transcript lines
   List<Subtitle> subtitles;
 
-  Transcript({
-    this.subtitles = const <Subtitle>[],
-  });
+  Transcript({this.subtitles = const <Subtitle>[]});
 }
 
 /// This class represents one line within a transcript.
