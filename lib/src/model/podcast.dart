@@ -21,6 +21,7 @@ import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 import 'package:podcast_search/src/utils/json_parser.dart';
 import 'package:podcast_search/src/utils/srt_parser.dart';
+import 'package:podcast_search/src/utils/vtt_parser.dart';
 import 'package:podcast_search/src/utils/utils.dart';
 import 'package:rss_dart/dart_rss.dart';
 
@@ -168,17 +169,22 @@ class Podcast {
     required String file,
   }) async {
     var transcript = Transcript();
-    final srtParser = SrtParser();
-    final jsonParser = JsonParser();
-
     var f = File(file);
 
     if (f.existsSync()) {
       var input = f.readAsStringSync();
 
       if (file.endsWith('.json')) {
+        final jsonParser = JsonParser();
+
         transcript = jsonParser.parse(input);
+      } else if (file.endsWith('.vtt')) {
+        final vttParser = VttParser();
+
+        transcript = vttParser.parse(input);
       } else if (file.endsWith('.srt')) {
+        final srtParser = SrtParser();
+
         transcript = srtParser.parse(input);
       }
     }
@@ -379,8 +385,6 @@ class Podcast {
     );
 
     var transcript = Transcript();
-    final srtParser = SrtParser();
-    final jsonParser = JsonParser();
 
     try {
       final response = await client.get(transcriptUrl.url,
@@ -389,10 +393,17 @@ class Podcast {
       /// What type of transcript are we loading here?
       if (transcriptUrl.type == TranscriptFormat.subrip) {
         if (response.statusCode == 200 && response.data is String) {
+          final srtParser = SrtParser();
           transcript = srtParser.parse(response.data);
+        }
+      } else if (transcriptUrl.type == TranscriptFormat.vtt) {
+        if (response.statusCode == 200 && response.data is String) {
+          final vttParser = VttParser();
+          transcript = vttParser.parse(response.data.toString());
         }
       } else if (transcriptUrl.type == TranscriptFormat.json) {
         if (response.statusCode == 200 && response.data is String) {
+          final jsonParser = JsonParser();
           transcript = jsonParser.parse(response.data.toString());
         }
       } else {
@@ -548,6 +559,10 @@ class Podcast {
             case 'application/x-subrip':
             case 'application/srt':
               type = TranscriptFormat.subrip;
+              valid = true;
+              break;
+            case 'text/vtt':
+              type = TranscriptFormat.vtt;
               valid = true;
               break;
             default:

@@ -1,3 +1,7 @@
+## 0.7.5
+
+- Add support for VTT format transcripts.
+
 ## 0.7.4
 
 - Add support for PC2.0 `<podcast:alternateEnclosure>` tag.

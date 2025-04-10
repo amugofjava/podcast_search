@@ -1,0 +1,22 @@
+WEBVTT
+
+00:00.000 --> 00:01.000
+Text line 1
+
+00:02.000 --> 00:03.000
+<v Speaker1>Text line 2
+
+00:03.000 --> 00:04.000
+<v Speaker2>Text line 3</v>
+
+NOTE This line should be ignored
+
+01:05.000 --> 01:06.000
+<v.loud Speaker3>Text line 4</v>
+
+01:07.000 --> 01:08.000 align:left size:50%
+<c.yellow.bg_blue.magenta.bg_black>Text line 5</c>
+
+01:02:09.001 --> 01:02:10.001 align:left size:50%
+<c.yellow.bg_blue.magenta.bg_black>Multi Line 1</c>
+<c.yellow.bg_blue.magenta.bg_black>Multi Line 2</c>

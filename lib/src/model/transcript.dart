@@ -5,6 +5,7 @@
 enum TranscriptFormat {
   json,
   subrip,
+  vtt,
   unsupported,
 }
 
