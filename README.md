@@ -55,6 +55,7 @@ void main() async {
 - Person
 - Transcripts
 - Value
+- Alternate Enclosure
 
 ### iTunes
 
