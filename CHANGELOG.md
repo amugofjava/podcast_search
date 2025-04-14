@@ -1,3 +1,7 @@
+## 0.7.6
+
+- Bug fix: correct the Music genre id for the Apple index.
+
 ## 0.7.5
 
 - Add support for VTT format transcripts.

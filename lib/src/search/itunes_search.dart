@@ -27,7 +27,7 @@ final class ITunesSearch extends BaseSearch {
     'History': 1487,
     'Kids & Family': 1305,
     'Leisure': 1502,
-    'Music': 1301,
+    'Music': 1310,
     'News': 1489,
     'Religion & Spirituality': 1314,
     'Science': 1533,
