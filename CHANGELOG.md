@@ -1,3 +1,7 @@
+## 0.7.7
+
+- Lower the Dart version requirement to 3.6+.
+
 ## 0.7.6
 
 - Bug fix: correct the Music genre id for the Apple index.

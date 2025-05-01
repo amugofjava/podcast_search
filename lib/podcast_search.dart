@@ -1,6 +1,6 @@
 // Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
 // code is governed by a MIT license that can be found in the LICENSE file.
-library podcast_search;
+library;
 
 export 'src/exceptions/search_exceptions.dart';
 export 'src/model/attribute.dart';
