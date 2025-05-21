@@ -3,6 +3,7 @@
 library;
 
 export 'src/exceptions/search_exceptions.dart';
+export 'src/feed/feed.dart';
 export 'src/model/attribute.dart';
 export 'src/model/chapters.dart';
 export 'src/model/country.dart';

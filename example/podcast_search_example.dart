@@ -21,7 +21,7 @@ void main() async {
 
   /// It is possible to get back a podcast with a missing feed URL, so check that.
   if (feed != null) {
-    var podcast = await Podcast.loadFeed(url: feed);
+    var podcast = await Feed.loadFeed(url: feed);
 
     /// Display episode titles.
     for (var episode in podcast.episodes) {

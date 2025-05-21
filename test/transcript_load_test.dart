@@ -1,13 +1,13 @@
 // Copyright (c) 2019 Ben Hills and the project contributors. Use of this source
 // code is governed by a MIT license that can be found in the LICENSE file.
 
-import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/feed/feed.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('SRT transcript test', () {
     test('Load SRT file', () async {
-      var transcript = await Podcast.loadTranscriptFile(
+      var transcript = await Feed.loadTranscriptFile(
           file: 'test_resources/test_transcript.srt');
       var secondLine = transcript.subtitles[1];
 
@@ -20,7 +20,7 @@ void main() {
 
   group('VTT transcript test', () {
     test('Load VTT file', () async {
-      var transcript = await Podcast.loadTranscriptFile(
+      var transcript = await Feed.loadTranscriptFile(
           file: 'test_resources/test_transcript.vtt');
 
       final subtitles = transcript.subtitles;
@@ -61,7 +61,7 @@ void main() {
 
   group('JSON transcript test', () {
     test('Load Json file', () async {
-      var transcript = await Podcast.loadTranscriptFile(
+      var transcript = await Feed.loadTranscriptFile(
           file: 'test_resources/test_transcript.json');
       var secondLine = transcript.subtitles[1];
 
@@ -72,7 +72,7 @@ void main() {
     });
 
     test('Load Json file', () async {
-      var transcript = await Podcast.loadTranscriptFile(
+      var transcript = await Feed.loadTranscriptFile(
           file: 'test_resources/test_transcript_speaker_no_end.json');
       var secondLine = transcript.subtitles[1];
 

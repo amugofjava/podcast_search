@@ -1,4 +1,4 @@
-A library for searching for podcasts, parsing podcast RSS feeds and obtaining episodes details. Supports searching via iTunes and PodcastIndex (preview).
+A library for searching for podcasts, parsing podcast RSS feeds and obtaining episodes details. Supports searching via iTunes and PodcastIndex.
 
 ## Usage
 
@@ -26,7 +26,7 @@ void main() async {
 
   /// It is possible to get back a podcast with a missing feed URL, so check that.
   if (feed != null) {
-    var podcast = await Podcast.loadFeed(url: feed);
+    var podcast = await Feed.loadFeed(url: feed);
 
     /// Display episode titles.
     for (var episode in podcast.episodes) {
@@ -53,7 +53,7 @@ void main() async {
 - GUID
 - Locked
 - Person
-- Transcripts
+- Transcripts (VTT, SRT & JSON formats)
 - Value
 - Alternate Enclosure
 

@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/const/constants.dart';
 import 'package:podcast_search/src/search/base_search.dart';
 
 /// This class handles the searching. Taking the base URL we build any parameters

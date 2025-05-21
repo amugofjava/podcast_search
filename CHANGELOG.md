@@ -1,3 +1,8 @@
+## 0.7.8
+
+- Breaking change: Feed processing moved into Feed class. For example Podcast.loadFeed() is now Feed.loadFeed().
+- New feedLastUpdated() method to return the date the RSS was last updated (if available).
+
 ## 0.7.7
 
 - Lower the Dart version requirement to 3.6+.

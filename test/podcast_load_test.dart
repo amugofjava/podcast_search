@@ -2,13 +2,14 @@
 // code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/src/feed/feed.dart';
 import 'package:podcast_search/src/model/medium.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Podcast load test', () {
     test('Load podcast', () async {
-      var podcast = await Podcast.loadFeed(
+      var podcast = await Feed.loadFeed(
           url: 'https://podcasts.files.bbci.co.uk/p06tqsg3.rss');
 
       expect(podcast.title, 'Forest 404');
@@ -17,13 +18,13 @@ void main() {
     test('Load invalid podcast - unknown host', () async {
       await expectLater(
           () =>
-              Podcast.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
+              Feed.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
           throwsA(const TypeMatcher<PodcastFailedException>()));
     });
 
     test('Load invalid podcast - invalid RSS call 404', () async {
       await expectLater(
-          () => Podcast.loadFeed(url: 'https://bbc.co.uk/abcdp06tqsg3.rss'),
+          () => Feed.loadFeed(url: 'https://bbc.co.uk/abcdp06tqsg3.rss'),
           throwsA(const TypeMatcher<PodcastFailedException>()));
     });
   });
@@ -31,7 +32,7 @@ void main() {
   group('Podcast local file load test', () {
     test('Load podcast', () async {
       var podcast =
-          await Podcast.loadFeedFile(file: 'test_resources/podcast1.rss');
+          await Feed.loadFeedFile(file: 'test_resources/podcast1.rss');
 
       expect(podcast.title, 'Podcast Load Test 1');
       expect(podcast.description, 'Unit test podcast test 1');
@@ -56,7 +57,7 @@ void main() {
   group('Block tag test', () {
     test('Load podcast with block tags', () async {
       var podcast =
-          await Podcast.loadFeedFile(file: 'test_resources/podcast1.rss');
+          await Feed.loadFeedFile(file: 'test_resources/podcast1.rss');
 
       expect(podcast.block.length, 3);
       expect(podcast.block[0].block, true);
@@ -70,7 +71,7 @@ void main() {
     });
 
     test('Load podcast with no block tags', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-no-block.rss');
 
       expect(podcast.block.length, 0);
@@ -79,14 +80,14 @@ void main() {
 
   group('Remote item test', () {
     test('No remote items', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-no-block.rss');
 
       expect(podcast.remoteItems.length, 0);
     });
 
     test('Load podcast 3 remote items', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-remote-item.rss');
 
       expect(podcast.remoteItems.length, 3);
@@ -116,20 +117,20 @@ void main() {
   group('Medium test', () {
     test('No medium', () async {
       var podcast =
-          await Podcast.loadFeedFile(file: 'test_resources/podcast1.rss');
+          await Feed.loadFeedFile(file: 'test_resources/podcast1.rss');
 
       expect(podcast.medium, Medium.podcast);
     });
 
     test('Audiobook medium', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-medium-audiobook.rss');
 
       expect(podcast.medium, Medium.audiobook);
     });
 
     test('Music list medium', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-medium-music-list.rss');
 
       expect(podcast.medium, Medium.musicL);
@@ -139,14 +140,14 @@ void main() {
 
   group('Alternate enclosures', () {
     test('No alternate enclosures', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-alternate-enclosure.rss');
 
       expect(podcast.episodes[0].alternateEnclosures.length, 0);
     });
 
     test('Load episode 2 alternate enclosures', () async {
-      var podcast = await Podcast.loadFeedFile(
+      var podcast = await Feed.loadFeedFile(
           file: 'test_resources/podcast-alternate-enclosure.rss');
 
       var episode2 = podcast.episodes[1];
