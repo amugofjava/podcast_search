@@ -18,13 +18,13 @@ import 'package:podcast_search/src/model/medium.dart';
 import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/model/remote_item.dart';
 import 'package:podcast_search/src/model/source.dart';
+import 'package:podcast_search/src/model/value_recipient.dart';
 import 'package:podcast_search/src/utils/json_parser.dart';
 import 'package:podcast_search/src/utils/srt_parser.dart';
 import 'package:podcast_search/src/utils/utils.dart';
 import 'package:podcast_search/src/utils/vtt_parser.dart';
 import 'package:rss_dart/domain/rss_feed.dart';
 
-import '../model/value_recipient.dart';
 
 class Feed {
   /// Fetches the last-modified date from the response header. This
