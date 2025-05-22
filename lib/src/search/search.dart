@@ -65,14 +65,13 @@ class Search {
     _version = version;
     _explicit = explicit;
 
-    var s =
-        (searchProvider is ITunesProvider)
-            ? ITunesSearch(userAgent: userAgent, timeout: timeout)
-            : PodcastIndexSearch(
-              userAgent: userAgent,
-              timeout: timeout,
-              podcastIndexProvider: searchProvider as PodcastIndexProvider,
-            );
+    var s = (searchProvider is ITunesProvider)
+        ? ITunesSearch(userAgent: userAgent, timeout: timeout)
+        : PodcastIndexSearch(
+            userAgent: userAgent,
+            timeout: timeout,
+            podcastIndexProvider: searchProvider as PodcastIndexProvider,
+          );
 
     return s.search(
       term: term,

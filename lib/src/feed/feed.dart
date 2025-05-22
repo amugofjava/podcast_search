@@ -25,7 +25,6 @@ import 'package:podcast_search/src/utils/utils.dart';
 import 'package:podcast_search/src/utils/vtt_parser.dart';
 import 'package:rss_dart/domain/rss_feed.dart';
 
-
 class Feed {
   /// Fetches the last-modified date from the response header. This
   /// is an option field, so a null will be returned if no value exists.

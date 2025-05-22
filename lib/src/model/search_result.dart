@@ -46,18 +46,18 @@ class SearchResult {
   final DateTime processedTime;
 
   SearchResult({this.resultCount = 0, this.items = const <Item>[]})
-    : successful = true,
-      lastError = '',
-      lastErrorType = ErrorType.none,
-      processedTime = DateTime.now();
+      : successful = true,
+        lastError = '',
+        lastErrorType = ErrorType.none,
+        processedTime = DateTime.now();
 
   SearchResult.fromError({
     this.lastError = '',
     this.lastErrorType = ErrorType.none,
-  }) : successful = false,
-       resultCount = 0,
-       processedTime = DateTime.now(),
-       items = [];
+  })  : successful = false,
+        resultCount = 0,
+        processedTime = DateTime.now(),
+        items = [];
 
   factory SearchResult.fromJson({
     required dynamic json,
@@ -75,14 +75,13 @@ class SearchResult {
     var dataCount = countTagMap[type];
 
     /// Fetch the results from the JSON data.
-    final items =
-        json[dataStart] == null
-            ? null
-            : (json[dataStart] as List).cast<Map<String, dynamic>>().map((
-              Map<String, dynamic> item,
-            ) {
-              return Item.fromJson(json: item, type: type);
-            }).toList();
+    final items = json[dataStart] == null
+        ? null
+        : (json[dataStart] as List).cast<Map<String, dynamic>>().map((
+            Map<String, dynamic> item,
+          ) {
+            return Item.fromJson(json: item, type: type);
+          }).toList();
 
     return SearchResult(
       resultCount: json[dataCount] ?? 0,

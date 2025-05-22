@@ -190,10 +190,9 @@ final class PodcastIndexSearch extends BaseSearch {
           'X-Auth-Date': newUnixTime,
           'X-Auth-Key': podcastIndexProvider.key,
           'Authorization': digest.toString(),
-          'User-Agent':
-              userAgent == null || userAgent!.isEmpty
-                  ? podcastSearchAgent
-                  : userAgent,
+          'User-Agent': userAgent == null || userAgent!.isEmpty
+              ? podcastSearchAgent
+              : userAgent,
         },
       ),
     );
