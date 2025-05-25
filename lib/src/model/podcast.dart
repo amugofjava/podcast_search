@@ -59,6 +59,9 @@ class Podcast {
   /// A list of remote items at the channel level
   final List<RemoteItem> remoteItems;
 
+  /// Maps to the date-modified HTTP header (when available)
+  DateTime? dateTimeModified;
+
   final Medium medium;
 
   Podcast({
@@ -77,5 +80,6 @@ class Podcast {
     this.block = const <Block>[],
     this.episodes = const <Episode>[],
     this.remoteItems = const <RemoteItem>[],
+    this.dateTimeModified,
   });
 }

@@ -33,59 +33,14 @@ class Feed {
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
-    final client = Dio(
-      BaseOptions(
-        connectTimeout: timeout,
-        receiveTimeout: timeout,
-        headers: {
-          'User-Agent': userAgent.isEmpty ? podcastSearchAgent : userAgent,
-        },
-      ),
+    final podcast = await _loadFeedInternal(
+      url: url,
+      headOnly: true,
+      timeout: timeout,
+      userAgent: userAgent,
     );
 
-    try {
-      final response = await client.head(url);
-      DateTime? lastUpdated;
-
-      final lastModifiedFormat = DateFormat('E, d MMM y H:m:s ');
-
-      if (response.statusCode == 200) {
-        final lastModified = response.headers.value('last-modified');
-
-        if (lastModified != null) {
-          lastUpdated =
-              lastModifiedFormat.parse(lastModified.replaceAll('GMT', ''));
-        }
-      }
-
-      return lastUpdated;
-    } on DioException catch (e) {
-      switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          throw PodcastTimeoutException(e.message ?? '');
-        case DioExceptionType.connectionError:
-        case DioExceptionType.badResponse:
-          throw PodcastFailedException(e.message ?? '');
-        case DioExceptionType.badCertificate:
-          throw PodcastCertificateException(e.message ?? '');
-        case DioExceptionType.cancel:
-          throw PodcastCancelledException(e.message ?? '');
-        case DioExceptionType.unknown:
-
-          /// We may be able to determine the underlying error
-          if (e.error is HandshakeException) {
-            throw PodcastCertificateException(e.message ?? '');
-          }
-
-          if (e.error is CertificateException) {
-            throw PodcastCertificateException(e.message ?? '');
-          }
-
-          throw PodcastUnknownException(e.message ?? '');
-      }
-    }
+    return podcast.dateTimeModified;
   }
 
   /// This method takes a Url pointing to an RSS feed containing the Podcast details and episodes. You
@@ -96,50 +51,11 @@ class Feed {
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
-    final client = Dio(
-      BaseOptions(
-        connectTimeout: timeout,
-        receiveTimeout: timeout,
-        headers: {
-          'User-Agent': userAgent.isEmpty ? podcastSearchAgent : userAgent,
-        },
-      ),
+    return _loadFeedInternal(
+      url: url,
+      timeout: timeout,
+      userAgent: userAgent,
     );
-
-    try {
-      final response = await client.get(url);
-
-      var rssFeed = RssFeed.parse(response.data);
-
-      // Parse the episodes
-      return _loadFeed(rssFeed, url);
-    } on DioException catch (e) {
-      switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          throw PodcastTimeoutException(e.message ?? '');
-        case DioExceptionType.connectionError:
-        case DioExceptionType.badResponse:
-          throw PodcastFailedException(e.message ?? '');
-        case DioExceptionType.badCertificate:
-          throw PodcastCertificateException(e.message ?? '');
-        case DioExceptionType.cancel:
-          throw PodcastCancelledException(e.message ?? '');
-        case DioExceptionType.unknown:
-
-          /// We may be able to determine the underlying error
-          if (e.error is HandshakeException) {
-            throw PodcastCertificateException(e.message ?? '');
-          }
-
-          if (e.error is CertificateException) {
-            throw PodcastCertificateException(e.message ?? '');
-          }
-
-          throw PodcastUnknownException(e.message ?? '');
-      }
-    }
   }
 
   static Future<Podcast> loadFeedFile({required String file}) async {
@@ -149,7 +65,7 @@ class Feed {
       var input = f.readAsStringSync();
       var rssFeed = RssFeed.parse(input);
 
-      return _loadFeed(rssFeed, file);
+      return _loadFeed(rssFeed, file, null);
     }
 
     return Podcast(url: file);
@@ -181,142 +97,6 @@ class Feed {
     }
 
     return Future.value(transcript);
-  }
-
-  static Podcast _loadFeed(RssFeed rssFeed, String url) {
-    // Parse the episodes
-    var episodes = <Episode>[];
-    var remoteItems = <RemoteItem>[];
-    var author = rssFeed.itunes!.author;
-    var locked = Locked(
-      locked: rssFeed.podcastIndex!.locked?.locked ?? false,
-      owner: rssFeed.podcastIndex!.locked?.owner ?? '',
-    );
-
-    var funding = <Funding>[];
-    var persons = <Person>[];
-    var block = <Block>[];
-    var value = <Value>[];
-    var medium = Medium.podcast;
-
-    var guid = rssFeed.podcastIndex?.guid;
-
-    if (rssFeed.podcastIndex != null) {
-      if (rssFeed.podcastIndex!.funding != null) {
-        for (var f in rssFeed.podcastIndex!.funding!) {
-          if (f != null && f.url != null && f.value != null) {
-            funding.add(Funding(url: f.url, value: f.value));
-          }
-        }
-      }
-
-      if (rssFeed.podcastIndex!.remoteItem != null) {
-        for (var r in rssFeed.podcastIndex!.remoteItem!) {
-          if (r != null) {
-            remoteItems.add(
-              RemoteItem(
-                feedGuid: r.feedGuid,
-                itemGuid: r.itemGuid,
-                feedUrl: r.feedUrl,
-                medium: r.medium,
-              ),
-            );
-          }
-        }
-      }
-
-      if (rssFeed.podcastIndex!.persons != null) {
-        for (var p in rssFeed.podcastIndex!.persons!) {
-          persons.add(
-            Person(
-              name: p?.name ?? '',
-              role: p?.role,
-              group: p?.group,
-              image: p?.image,
-              link: p?.link,
-            ),
-          );
-        }
-      }
-
-      if (rssFeed.podcastIndex!.block != null) {
-        for (var b in rssFeed.podcastIndex!.block!) {
-          block.add(Block(block: b?.block ?? false, id: b?.id));
-        }
-      }
-
-      if (rssFeed.podcastIndex!.medium != null) {
-        medium = switch (rssFeed.podcastIndex!.medium) {
-          'podcastL' => Medium.podcastL,
-          'music' => Medium.music,
-          'musicL' => Medium.musicL,
-          'video' => Medium.video,
-          'videoL' => Medium.videoL,
-          'film' => Medium.film,
-          'filmL' => Medium.filmL,
-          'audiobook' => Medium.audiobook,
-          'audiobookL' => Medium.audiobookL,
-          'newsletter' => Medium.newsletter,
-          'newsletterL' => Medium.newsletterL,
-          'blog' => Medium.blog,
-          'blogL' => Medium.blogL,
-          _ => Medium.podcast,
-        };
-      }
-
-      if (rssFeed.podcastIndex!.value != null) {
-        for (var v in rssFeed.podcastIndex!.value!) {
-          var recipients = <ValueRecipient>[];
-
-          if (v?.recipients != null) {
-            for (var r in v!.recipients!) {
-              if (r != null) {
-                recipients.add(
-                  ValueRecipient(
-                    name: r.name,
-                    customKey: r.customKey,
-                    type: r.type,
-                    address: r.address,
-                    split: r.split,
-                    customValue: r.customValue,
-                    fee: r.fee,
-                  ),
-                );
-              }
-            }
-          }
-
-          value.add(
-            Value(
-              method: v?.method,
-              type: v?.type,
-              suggested: v?.suggested,
-              recipients: recipients,
-            ),
-          );
-        }
-      }
-    }
-
-    _loadEpisodes(rssFeed, episodes);
-
-    return Podcast(
-      guid: guid,
-      url: url,
-      link: rssFeed.link,
-      title: rssFeed.title,
-      description: rssFeed.description,
-      image: rssFeed.itunes?.image?.href ?? rssFeed.image?.url,
-      copyright: author,
-      locked: locked,
-      funding: funding,
-      persons: persons,
-      block: block,
-      value: value,
-      medium: medium,
-      episodes: episodes,
-      remoteItems: remoteItems,
-    );
   }
 
   /// Podcasts that support the newer podcast namespace can include chapter markers. Typically this
@@ -465,6 +245,213 @@ class Feed {
     }
 
     return chapters;
+  }
+
+  static Future<Podcast> _loadFeedInternal({
+    required String url,
+    final timeout = const Duration(seconds: 20),
+    String userAgent = '',
+    bool headOnly = false,
+  }) async {
+    final client = Dio(
+      BaseOptions(
+        connectTimeout: timeout,
+        receiveTimeout: timeout,
+        headers: {
+          'User-Agent': userAgent.isEmpty ? podcastSearchAgent : userAgent,
+        },
+      ),
+    );
+
+    try {
+      final response =
+          headOnly ? await client.head(url) : await client.get(url);
+
+      DateTime? lastUpdated;
+
+      final lastModifiedFormat = DateFormat('E, d MMM y H:m:s ');
+
+      if (response.statusCode == 200) {
+        final lastModified = response.headers.value('last-modified');
+
+        if (lastModified != null) {
+          lastUpdated =
+              lastModifiedFormat.parse(lastModified.replaceAll('GMT', ''));
+        }
+      }
+
+      if (headOnly) {
+        return Podcast(dateTimeModified: lastUpdated);
+      } else {
+        var rssFeed = RssFeed.parse(response.data);
+
+        // Parse the episodes
+        return _loadFeed(rssFeed, url, lastUpdated);
+      }
+    } on DioException catch (e) {
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw PodcastTimeoutException(e.message ?? '');
+        case DioExceptionType.connectionError:
+        case DioExceptionType.badResponse:
+          throw PodcastFailedException(e.message ?? '');
+        case DioExceptionType.badCertificate:
+          throw PodcastCertificateException(e.message ?? '');
+        case DioExceptionType.cancel:
+          throw PodcastCancelledException(e.message ?? '');
+        case DioExceptionType.unknown:
+
+          /// We may be able to determine the underlying error
+          if (e.error is HandshakeException) {
+            throw PodcastCertificateException(e.message ?? '');
+          }
+
+          if (e.error is CertificateException) {
+            throw PodcastCertificateException(e.message ?? '');
+          }
+
+          throw PodcastUnknownException(e.message ?? '');
+      }
+    }
+  }
+
+  static Podcast _loadFeed(RssFeed rssFeed, String url, DateTime? lastUpdtaed) {
+    // Parse the episodes
+    var episodes = <Episode>[];
+    var remoteItems = <RemoteItem>[];
+    var author = rssFeed.itunes!.author;
+    var locked = Locked(
+      locked: rssFeed.podcastIndex!.locked?.locked ?? false,
+      owner: rssFeed.podcastIndex!.locked?.owner ?? '',
+    );
+
+    var funding = <Funding>[];
+    var persons = <Person>[];
+    var block = <Block>[];
+    var value = <Value>[];
+    var medium = Medium.podcast;
+
+    var guid = rssFeed.podcastIndex?.guid;
+
+    if (rssFeed.podcastIndex != null) {
+      if (rssFeed.podcastIndex!.funding != null) {
+        for (var f in rssFeed.podcastIndex!.funding!) {
+          if (f != null && f.url != null && f.value != null) {
+            funding.add(Funding(url: f.url, value: f.value));
+          }
+        }
+      }
+
+      if (rssFeed.podcastIndex!.remoteItem != null) {
+        for (var r in rssFeed.podcastIndex!.remoteItem!) {
+          if (r != null) {
+            remoteItems.add(
+              RemoteItem(
+                feedGuid: r.feedGuid,
+                itemGuid: r.itemGuid,
+                feedUrl: r.feedUrl,
+                medium: r.medium,
+              ),
+            );
+          }
+        }
+      }
+
+      if (rssFeed.podcastIndex!.persons != null) {
+        for (var p in rssFeed.podcastIndex!.persons!) {
+          persons.add(
+            Person(
+              name: p?.name ?? '',
+              role: p?.role,
+              group: p?.group,
+              image: p?.image,
+              link: p?.link,
+            ),
+          );
+        }
+      }
+
+      if (rssFeed.podcastIndex!.block != null) {
+        for (var b in rssFeed.podcastIndex!.block!) {
+          block.add(Block(block: b?.block ?? false, id: b?.id));
+        }
+      }
+
+      if (rssFeed.podcastIndex!.medium != null) {
+        medium = switch (rssFeed.podcastIndex!.medium) {
+          'podcastL' => Medium.podcastL,
+          'music' => Medium.music,
+          'musicL' => Medium.musicL,
+          'video' => Medium.video,
+          'videoL' => Medium.videoL,
+          'film' => Medium.film,
+          'filmL' => Medium.filmL,
+          'audiobook' => Medium.audiobook,
+          'audiobookL' => Medium.audiobookL,
+          'newsletter' => Medium.newsletter,
+          'newsletterL' => Medium.newsletterL,
+          'blog' => Medium.blog,
+          'blogL' => Medium.blogL,
+          _ => Medium.podcast,
+        };
+      }
+
+      if (rssFeed.podcastIndex!.value != null) {
+        for (var v in rssFeed.podcastIndex!.value!) {
+          var recipients = <ValueRecipient>[];
+
+          if (v?.recipients != null) {
+            for (var r in v!.recipients!) {
+              if (r != null) {
+                recipients.add(
+                  ValueRecipient(
+                    name: r.name,
+                    customKey: r.customKey,
+                    type: r.type,
+                    address: r.address,
+                    split: r.split,
+                    customValue: r.customValue,
+                    fee: r.fee,
+                  ),
+                );
+              }
+            }
+          }
+
+          value.add(
+            Value(
+              method: v?.method,
+              type: v?.type,
+              suggested: v?.suggested,
+              recipients: recipients,
+            ),
+          );
+        }
+      }
+    }
+
+    _loadEpisodes(rssFeed, episodes);
+
+    return Podcast(
+      guid: guid,
+      url: url,
+      link: rssFeed.link,
+      title: rssFeed.title,
+      description: rssFeed.description,
+      image: rssFeed.itunes?.image?.href ?? rssFeed.image?.url,
+      copyright: author,
+      locked: locked,
+      funding: funding,
+      persons: persons,
+      block: block,
+      value: value,
+      medium: medium,
+      episodes: episodes,
+      remoteItems: remoteItems,
+      dateTimeModified: lastUpdtaed,
+    );
   }
 
   static void _loadChapters(Response response, Chapters c) {

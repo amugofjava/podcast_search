@@ -1,6 +1,11 @@
+## 0.7.9
+
+- Add RSS date last modified (where available) to Podcast model and include on fetch.
+
 ## 0.7.8
 
-- BREAKING CHANGE: Feed processing has moved into Feed class. For example, Podcast.loadFeed() is now Feed.loadFeed().
+- BREAKING CHANGE: Feed processing has moved into Feed class. For example, Podcast.loadFeed() is now
+  Feed.loadFeed().
 - New feedLastUpdated() method to return the date & time the RSS was last updated (if available).
 
 ## 0.7.7
@@ -42,13 +47,15 @@
 
 ## 0.6.8
 
-- BREAKING CHANGE: Language is now a text parameter (2-3 letter code) rather than enum. This is because iTunes largely
+- BREAKING CHANGE: Language is now a text parameter (2-3 letter code) rather than enum. This is
+  because iTunes largely
   ignores language, but PodcastIndex can use it for trending podcasts.
 
 ## 0.6.7
 
 - Update example to handle null feed.
-- Default podcast image to take iTunes version if available and fallback to channel version to be consistent with
+- Default podcast image to take iTunes version if available and fallback to channel version to be
+  consistent with
   episode image handling.
 
 ## 0.6.6
@@ -103,7 +110,8 @@
 
 ## 0.5.1
 
-- Breaking change: Search provider is now passed when instantiating a Search object, rather than passing one at search
+- Breaking change: Search provider is now passed when instantiating a Search object, rather than
+  passing one at search
   time.
 - Support for genres across iTunes & PodcastIndex.
 
