@@ -1,3 +1,8 @@
+## 0.7.10
+
+- Update intl and rss_dart dependencies to support Flutter v3.32.x.
+- Update dependencies and minimum Dart version to 3.8.x.
+
 ## 0.7.9
 
 - Add RSS date last modified (where available) to Podcast model and include on fetch.
