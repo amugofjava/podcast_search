@@ -51,11 +51,7 @@ class Feed {
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
-    return _loadFeedInternal(
-      url: url,
-      timeout: timeout,
-      userAgent: userAgent,
-    );
+    return _loadFeedInternal(url: url, timeout: timeout, userAgent: userAgent);
   }
 
   static Future<Podcast> loadFeedFile({required String file}) async {
@@ -264,8 +260,9 @@ class Feed {
     );
 
     try {
-      final response =
-          headOnly ? await client.head(url) : await client.get(url);
+      final response = headOnly
+          ? await client.head(url)
+          : await client.get(url);
 
       DateTime? lastUpdated;
 
@@ -275,8 +272,9 @@ class Feed {
         final lastModified = response.headers.value('last-modified');
 
         if (lastModified != null) {
-          lastUpdated =
-              lastModifiedFormat.parse(lastModified.replaceAll('GMT', ''));
+          lastUpdated = lastModifiedFormat.parse(
+            lastModified.replaceAll('GMT', ''),
+          );
         }
       }
 

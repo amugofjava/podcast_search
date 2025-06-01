@@ -46,18 +46,18 @@ class SearchResult {
   final DateTime processedTime;
 
   SearchResult({this.resultCount = 0, this.items = const <Item>[]})
-      : successful = true,
-        lastError = '',
-        lastErrorType = ErrorType.none,
-        processedTime = DateTime.now();
+    : successful = true,
+      lastError = '',
+      lastErrorType = ErrorType.none,
+      processedTime = DateTime.now();
 
   SearchResult.fromError({
     this.lastError = '',
     this.lastErrorType = ErrorType.none,
-  })  : successful = false,
-        resultCount = 0,
-        processedTime = DateTime.now(),
-        items = [];
+  }) : successful = false,
+       resultCount = 0,
+       processedTime = DateTime.now(),
+       items = [];
 
   factory SearchResult.fromJson({
     required dynamic json,
