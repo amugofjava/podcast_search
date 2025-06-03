@@ -269,12 +269,15 @@ class Feed {
       final lastModifiedFormat = DateFormat('E, d MMM y H:m:s ');
 
       if (response.statusCode == 200) {
-        final lastModified = response.headers.value('last-modified');
-
-        if (lastModified != null) {
-          lastUpdated = lastModifiedFormat.parse(
-            lastModified.replaceAll('GMT', ''),
-          );
+        if (response.statusCode == 200) {
+          
+          final lastModified = response.headers.value('last-modified');
+          if (lastModified != null) {
+            lastUpdated = lastModifiedFormat.tryParse(
+              lastModified.replaceAll('GMT', ''),
+            );
+          }
+      
         }
       }
 
