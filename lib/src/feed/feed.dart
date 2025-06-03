@@ -270,17 +270,14 @@ class Feed {
 
       if (response.statusCode == 200) {
         if (response.statusCode == 200) {
-          try {
-            final lastModified = response.headers.value('last-modified');
-  
-            if (lastModified != null) {
-              lastUpdated = lastModifiedFormat.parse(
-                lastModified.replaceAll('GMT', ''),
-              );
-            }
-          } catch (e) {
-            lastUpdated = null;
+          
+          final lastModified = response.headers.value('last-modified');
+          if (lastModified != null) {
+            lastUpdated = lastModifiedFormat.tryParse(
+              lastModified.replaceAll('GMT', ''),
+            );
           }
+      
         }
       }
 
