@@ -35,7 +35,7 @@
 <item>
   <title>Episode 001</title>
   <link>https://nowhere.com/podcastsearchtest1/podcast1</link>
-  <enclosure url="https://nowhere.com/podcastsearchtest1/podcast1/episode001.mp3" length="0" type="audio/mpeg" />
+  <enclosure url="https://nowhere.com/podcastsearchtest1/podcast1/episode001.mp3" length="1024000" type="audio/mpeg" />
   <itunes:duration>1200</itunes:duration>
   <itunes:explicit>yes</itunes:explicit>
   <itunes:episodeType>full</itunes:episodeType>

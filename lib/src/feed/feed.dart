@@ -270,14 +270,12 @@ class Feed {
 
       if (response.statusCode == 200) {
         if (response.statusCode == 200) {
-          
           final lastModified = response.headers.value('last-modified');
           if (lastModified != null) {
             lastUpdated = lastModifiedFormat.tryParse(
               lastModified.replaceAll('GMT', ''),
             );
           }
-      
         }
       }
 
@@ -666,6 +664,8 @@ class Feed {
           duration: item.itunes?.duration,
           contentUrl: item.enclosure?.url,
           imageUrl: item.itunes?.image?.href,
+          length: item.enclosure?.length ?? 0,
+          mimeType: item.enclosure?.type,
           season: item.itunes?.season,
           episode: item.itunes?.episode,
           content: item.content?.value,

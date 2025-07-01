@@ -2,7 +2,6 @@
 // code is governed by a MIT license that can be found in the LICENSE file.
 
 import 'package:podcast_search/podcast_search.dart';
-import 'package:podcast_search/src/feed/feed.dart';
 import 'package:podcast_search/src/model/medium.dart';
 import 'package:test/test.dart';
 
@@ -10,29 +9,32 @@ void main() {
   group('Podcast load test', () {
     test('Load podcast', () async {
       var podcast = await Feed.loadFeed(
-          url: 'https://podcasts.files.bbci.co.uk/p06tqsg3.rss');
+        url: 'https://podcasts.files.bbci.co.uk/p06tqsg3.rss',
+      );
 
       expect(podcast.title, 'Forest 404');
     });
 
     test('Load invalid podcast - unknown host', () async {
       await expectLater(
-          () =>
-              Feed.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
-          throwsA(const TypeMatcher<PodcastFailedException>()));
+        () => Feed.loadFeed(url: 'https://pc.files.bbci.co.uk/p06tqsg3.rss'),
+        throwsA(const TypeMatcher<PodcastFailedException>()),
+      );
     });
 
     test('Load invalid podcast - invalid RSS call 404', () async {
       await expectLater(
-          () => Feed.loadFeed(url: 'https://bbc.co.uk/abcdp06tqsg3.rss'),
-          throwsA(const TypeMatcher<PodcastFailedException>()));
+        () => Feed.loadFeed(url: 'https://bbc.co.uk/abcdp06tqsg3.rss'),
+        throwsA(const TypeMatcher<PodcastFailedException>()),
+      );
     });
   });
 
   group('Podcast local file load test', () {
     test('Load podcast', () async {
-      var podcast =
-          await Feed.loadFeedFile(file: 'test_resources/podcast1.rss');
+      var podcast = await Feed.loadFeedFile(
+        file: 'test_resources/podcast1.rss',
+      );
 
       expect(podcast.title, 'Podcast Load Test 1');
       expect(podcast.description, 'Unit test podcast test 1');
@@ -56,8 +58,9 @@ void main() {
 
   group('Block tag test', () {
     test('Load podcast with block tags', () async {
-      var podcast =
-          await Feed.loadFeedFile(file: 'test_resources/podcast1.rss');
+      var podcast = await Feed.loadFeedFile(
+        file: 'test_resources/podcast1.rss',
+      );
 
       expect(podcast.block.length, 3);
       expect(podcast.block[0].block, true);
@@ -72,23 +75,41 @@ void main() {
 
     test('Load podcast with no block tags', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-no-block.rss');
+        file: 'test_resources/podcast-no-block.rss',
+      );
 
       expect(podcast.block.length, 0);
+    });
+  });
+
+  group('Basic item test', () {
+    test('Load podcast item', () async {
+      var podcast = await Feed.loadFeedFile(
+        file: 'test_resources/podcast1.rss',
+      );
+
+      expect(podcast.episodes[0].length, 1024000);
+      expect(podcast.episodes[0].mimeType, 'audio/mpeg');
+      expect(
+        podcast.episodes[0].contentUrl,
+        'https://nowhere.com/podcastsearchtest1/podcast1/episode001.mp3',
+      );
     });
   });
 
   group('Remote item test', () {
     test('No remote items', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-no-block.rss');
+        file: 'test_resources/podcast-no-block.rss',
+      );
 
       expect(podcast.remoteItems.length, 0);
     });
 
     test('Load podcast 3 remote items', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-remote-item.rss');
+        file: 'test_resources/podcast-remote-item.rss',
+      );
 
       expect(podcast.remoteItems.length, 3);
 
@@ -108,30 +129,35 @@ void main() {
 
       expect(item3.feedGuid, '917393e3-1b1e-5cef-ace4-edaa54e1f812');
       expect(item3.itemGuid, 'asdf089j0-ep240-20230511');
-      expect(item3.feedUrl,
-          'https://feeds.example.org/917393e3-1b1e-5cef-ace4-edaa54e1f811/rss.xml');
+      expect(
+        item3.feedUrl,
+        'https://feeds.example.org/917393e3-1b1e-5cef-ace4-edaa54e1f811/rss.xml',
+      );
       expect(item3.medium, 'music');
     });
   });
 
   group('Medium test', () {
     test('No medium', () async {
-      var podcast =
-          await Feed.loadFeedFile(file: 'test_resources/podcast1.rss');
+      var podcast = await Feed.loadFeedFile(
+        file: 'test_resources/podcast1.rss',
+      );
 
       expect(podcast.medium, Medium.podcast);
     });
 
     test('Audiobook medium', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-medium-audiobook.rss');
+        file: 'test_resources/podcast-medium-audiobook.rss',
+      );
 
       expect(podcast.medium, Medium.audiobook);
     });
 
     test('Music list medium', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-medium-music-list.rss');
+        file: 'test_resources/podcast-medium-music-list.rss',
+      );
 
       expect(podcast.medium, Medium.musicL);
       expect(podcast.remoteItems.length, 2);
@@ -141,14 +167,16 @@ void main() {
   group('Alternate enclosures', () {
     test('No alternate enclosures', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-alternate-enclosure.rss');
+        file: 'test_resources/podcast-alternate-enclosure.rss',
+      );
 
       expect(podcast.episodes[0].alternateEnclosures.length, 0);
     });
 
     test('Load episode 2 alternate enclosures', () async {
       var podcast = await Feed.loadFeedFile(
-          file: 'test_resources/podcast-alternate-enclosure.rss');
+        file: 'test_resources/podcast-alternate-enclosure.rss',
+      );
 
       var episode2 = podcast.episodes[1];
 
@@ -187,8 +215,10 @@ void main() {
       expect(source2.contentType, 'audio/opus');
 
       expect(integrity?.type, 'sri');
-      expect(integrity?.value, 'sha384-ExVqijgYHm15PqQqdXfW95x+Rs6C+d6E/ICxyQOeFevnxNLR/wtJNrNYTjIysUBo');
+      expect(
+        integrity?.value,
+        'sha384-ExVqijgYHm15PqQqdXfW95x+Rs6C+d6E/ICxyQOeFevnxNLR/wtJNrNYTjIysUBo',
+      );
     });
   });
-
 }

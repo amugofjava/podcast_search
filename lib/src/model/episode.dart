@@ -34,6 +34,11 @@ class Episode {
   /// Episode author.
   String? author;
 
+  /// File length in bytes
+  int length;
+
+  String? mimeType;
+
   /// Season
   int? season;
 
@@ -64,12 +69,14 @@ class Episode {
     required this.guid,
     required this.title,
     required this.description,
+    required this.length,
     this.link = '',
     this.publicationDate,
     this.author = '',
     this.duration,
     this.contentUrl,
     this.imageUrl,
+    this.mimeType,
     this.season,
     this.episode,
     this.content,

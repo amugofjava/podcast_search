@@ -1,3 +1,7 @@
+## 0.7.11
+
+- Add missing enclosure length and type fields.
+
 ## 0.7.10
 
 - Update intl and rss_dart dependencies to support Flutter v3.32.x.
