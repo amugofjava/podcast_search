@@ -1,6 +1,7 @@
 ## 0.7.12
 
 - Add support for HTTP ETAGs.
+- Update intl dependency to `'>=0.19.0 <0.21.0'` so it uses SDK pinned version.
 
 ## 0.7.11
 
