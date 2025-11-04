@@ -71,18 +71,18 @@ final class ITunesSearch extends BaseSearch {
   String? userAgent;
 
   ITunesSearch({this.timeout = 20000, this.userAgent})
-    : _client = Dio(
-        BaseOptions(
-          responseType: ResponseType.plain,
-          connectTimeout: Duration(milliseconds: timeout),
-          receiveTimeout: Duration(milliseconds: timeout),
-          headers: {
-            'User-Agent': userAgent == null || userAgent.isEmpty
-                ? podcastSearchAgent
-                : userAgent,
-          },
-        ),
-      );
+      : _client = Dio(
+          BaseOptions(
+            responseType: ResponseType.plain,
+            connectTimeout: Duration(milliseconds: timeout),
+            receiveTimeout: Duration(milliseconds: timeout),
+            headers: {
+              'User-Agent': userAgent == null || userAgent.isEmpty
+                  ? podcastSearchAgent
+                  : userAgent,
+            },
+          ),
+        );
 
   /// Search iTunes using the term [term]. You can limit the results to
   /// podcasts available in a specific country by supplying a [Country] option.

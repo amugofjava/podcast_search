@@ -52,7 +52,8 @@ class Feed {
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
-    return _loadFeedInternal(url: url, etag: etag, timeout: timeout, userAgent: userAgent);
+    return _loadFeedInternal(
+        url: url, etag: etag, timeout: timeout, userAgent: userAgent);
   }
 
   static Future<Podcast> loadFeedFile({required String file}) async {
@@ -199,11 +200,11 @@ class Feed {
         case DioExceptionType.connectionError:
           throw PodcastFailedException(statusCode, e.message ?? '');
         case DioExceptionType.badResponse:
-        if (statusCode == 304) {
-          throw PodcastNotChangedException(statusCode, e.message ?? '');
-        } else {
-          throw PodcastFailedException(statusCode, e.message ?? '');
-        }
+          if (statusCode == 304) {
+            throw PodcastNotChangedException(statusCode, e.message ?? '');
+          } else {
+            throw PodcastFailedException(statusCode, e.message ?? '');
+          }
         case DioExceptionType.badCertificate:
           throw PodcastCertificateException(statusCode, e.message ?? '');
         case DioExceptionType.cancel:
@@ -235,7 +236,8 @@ class Feed {
       if (response.statusCode == 200) {
         _loadChapters(response, chapters);
       } else {
-        throw PodcastFailedException(response.statusCode ?? 0, 'Failed to download chapters file');
+        throw PodcastFailedException(
+            response.statusCode ?? 0, 'Failed to download chapters file');
       }
     } on DioException catch (e) {
       int statusCode = e.response?.statusCode ?? 0;
@@ -284,9 +286,8 @@ class Feed {
     );
 
     try {
-      final response = headOnly
-          ? await client.head(url)
-          : await client.get(url);
+      final response =
+          headOnly ? await client.head(url) : await client.get(url);
 
       DateTime? lastUpdated;
       String etag = '';
@@ -352,7 +353,8 @@ class Feed {
     }
   }
 
-  static Podcast _loadFeed(RssFeed rssFeed, String url, String etag, DateTime? lastUpdtaed) {
+  static Podcast _loadFeed(
+      RssFeed rssFeed, String url, String etag, DateTime? lastUpdtaed) {
     // Parse the episodes
     var episodes = <Episode>[];
     var remoteItems = <RemoteItem>[];
