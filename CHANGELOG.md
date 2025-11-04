@@ -1,3 +1,7 @@
+## 0.7.12
+
+- Add support for HTTP ETAGs.
+
 ## 0.7.11
 
 - Add missing enclosure length and type fields.

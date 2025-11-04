@@ -48,10 +48,11 @@ class Feed {
   /// be used in HTTP/HTTPS communications with the feed source.
   static Future<Podcast> loadFeed({
     required String url,
+    String etag = '',
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
-    return _loadFeedInternal(url: url, timeout: timeout, userAgent: userAgent);
+    return _loadFeedInternal(url: url, etag: etag, timeout: timeout, userAgent: userAgent);
   }
 
   static Future<Podcast> loadFeedFile({required String file}) async {
@@ -61,7 +62,7 @@ class Feed {
       var input = f.readAsStringSync();
       var rssFeed = RssFeed.parse(input);
 
-      return _loadFeed(rssFeed, file, null);
+      return _loadFeed(rssFeed, file, '', null);
     }
 
     return Podcast(url: file);
@@ -121,20 +122,27 @@ class Feed {
           _loadChapters(response, episode.chapters!);
         }
       } on DioException catch (e) {
+        int statusCode = e.response?.statusCode ?? 0;
+
         switch (e.type) {
           case DioExceptionType.connectionTimeout:
           case DioExceptionType.sendTimeout:
           case DioExceptionType.receiveTimeout:
-            throw PodcastTimeoutException(e.message ?? '');
+            throw PodcastTimeoutException(statusCode, e.message ?? '');
           case DioExceptionType.connectionError:
+            throw PodcastFailedException(statusCode, e.message ?? '');
           case DioExceptionType.badResponse:
-            throw PodcastFailedException(e.message ?? '');
+            if (statusCode == 304) {
+              throw PodcastNotChangedException(statusCode, e.message ?? '');
+            } else {
+              throw PodcastFailedException(statusCode, e.message ?? '');
+            }
           case DioExceptionType.badCertificate:
-            throw PodcastCertificateException(e.message ?? '');
+            throw PodcastCertificateException(statusCode, e.message ?? '');
           case DioExceptionType.cancel:
-            throw PodcastCancelledException(e.message ?? '');
+            throw PodcastCancelledException(statusCode, e.message ?? '');
           case DioExceptionType.unknown:
-            throw PodcastUnknownException(e.message ?? '');
+            throw PodcastUnknownException(statusCode, e.message ?? '');
         }
       }
     }
@@ -181,20 +189,27 @@ class Feed {
         throw Exception('Sorry, not got around to supporting that format yet');
       }
     } on DioException catch (e) {
+      int statusCode = e.response?.statusCode ?? 0;
+
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          throw PodcastTimeoutException(e.message ?? '');
+          throw PodcastTimeoutException(statusCode, e.message ?? '');
         case DioExceptionType.connectionError:
+          throw PodcastFailedException(statusCode, e.message ?? '');
         case DioExceptionType.badResponse:
-          throw PodcastFailedException(e.message ?? '');
+        if (statusCode == 304) {
+          throw PodcastNotChangedException(statusCode, e.message ?? '');
+        } else {
+          throw PodcastFailedException(statusCode, e.message ?? '');
+        }
         case DioExceptionType.badCertificate:
-          throw PodcastCertificateException(e.message ?? '');
+          throw PodcastCertificateException(statusCode, e.message ?? '');
         case DioExceptionType.cancel:
-          throw PodcastCancelledException(e.message ?? '');
+          throw PodcastCancelledException(statusCode, e.message ?? '');
         case DioExceptionType.unknown:
-          throw PodcastUnknownException(e.message ?? '');
+          throw PodcastUnknownException(statusCode, e.message ?? '');
       }
     }
 
@@ -220,23 +235,30 @@ class Feed {
       if (response.statusCode == 200) {
         _loadChapters(response, chapters);
       } else {
-        throw PodcastFailedException('Failed to download chapters file');
+        throw PodcastFailedException(response.statusCode ?? 0, 'Failed to download chapters file');
       }
     } on DioException catch (e) {
+      int statusCode = e.response?.statusCode ?? 0;
+
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          throw PodcastTimeoutException(e.message ?? '');
+          throw PodcastTimeoutException(statusCode, e.message ?? '');
         case DioExceptionType.connectionError:
+          throw PodcastFailedException(statusCode, e.message ?? '');
         case DioExceptionType.badResponse:
-          throw PodcastFailedException(e.message ?? '');
+          if (statusCode == 304) {
+            throw PodcastNotChangedException(statusCode, e.message ?? '');
+          } else {
+            throw PodcastFailedException(statusCode, e.message ?? '');
+          }
         case DioExceptionType.badCertificate:
-          throw PodcastCertificateException(e.message ?? '');
+          throw PodcastCertificateException(statusCode, e.message ?? '');
         case DioExceptionType.cancel:
-          throw PodcastCancelledException(e.message ?? '');
+          throw PodcastCancelledException(statusCode, e.message ?? '');
         case DioExceptionType.unknown:
-          throw PodcastUnknownException(e.message ?? '');
+          throw PodcastUnknownException(statusCode, e.message ?? '');
       }
     }
 
@@ -245,6 +267,7 @@ class Feed {
 
   static Future<Podcast> _loadFeedInternal({
     required String url,
+    String etag = '',
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
     bool headOnly = false,
@@ -255,6 +278,7 @@ class Feed {
         receiveTimeout: timeout,
         headers: {
           'User-Agent': userAgent.isEmpty ? podcastSearchAgent : userAgent,
+          if (etag.isNotEmpty) 'If-None-Match': etag,
         },
       ),
     );
@@ -265,58 +289,70 @@ class Feed {
           : await client.get(url);
 
       DateTime? lastUpdated;
+      String etag = '';
 
       final lastModifiedFormat = DateFormat('E, d MMM y H:m:s ');
 
       if (response.statusCode == 200) {
-        if (response.statusCode == 200) {
-          final lastModified = response.headers.value('last-modified');
-          if (lastModified != null) {
-            lastUpdated = lastModifiedFormat.tryParse(
-              lastModified.replaceAll('GMT', ''),
-            );
-          }
+        final lastModified = response.headers.value('last-modified');
+        final etagHeader = response.headers.value('etag');
+
+        if (lastModified != null) {
+          lastUpdated = lastModifiedFormat.tryParse(
+            lastModified.replaceAll('GMT', ''),
+          );
+        }
+
+        if (etagHeader != null) {
+          etag = etagHeader;
         }
       }
 
       if (headOnly) {
-        return Podcast(dateTimeModified: lastUpdated);
+        return Podcast(dateTimeModified: lastUpdated, etag: etag);
       } else {
         var rssFeed = RssFeed.parse(response.data);
 
         // Parse the episodes
-        return _loadFeed(rssFeed, url, lastUpdated);
+        return _loadFeed(rssFeed, url, etag, lastUpdated);
       }
     } on DioException catch (e) {
+      int statusCode = e.response?.statusCode ?? 0;
+
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          throw PodcastTimeoutException(e.message ?? '');
+          throw PodcastTimeoutException(statusCode, e.message ?? '');
         case DioExceptionType.connectionError:
+          throw PodcastFailedException(statusCode, e.message ?? '');
         case DioExceptionType.badResponse:
-          throw PodcastFailedException(e.message ?? '');
+          if (statusCode == 304) {
+            throw PodcastNotChangedException(statusCode, e.message ?? '');
+          } else {
+            throw PodcastFailedException(statusCode, e.message ?? '');
+          }
         case DioExceptionType.badCertificate:
-          throw PodcastCertificateException(e.message ?? '');
+          throw PodcastCertificateException(statusCode, e.message ?? '');
         case DioExceptionType.cancel:
-          throw PodcastCancelledException(e.message ?? '');
+          throw PodcastCancelledException(statusCode, e.message ?? '');
         case DioExceptionType.unknown:
 
           /// We may be able to determine the underlying error
           if (e.error is HandshakeException) {
-            throw PodcastCertificateException(e.message ?? '');
+            throw PodcastCertificateException(statusCode, e.message ?? '');
           }
 
           if (e.error is CertificateException) {
-            throw PodcastCertificateException(e.message ?? '');
+            throw PodcastCertificateException(statusCode, e.message ?? '');
           }
 
-          throw PodcastUnknownException(e.message ?? '');
+          throw PodcastUnknownException(statusCode, e.message ?? '');
       }
     }
   }
 
-  static Podcast _loadFeed(RssFeed rssFeed, String url, DateTime? lastUpdtaed) {
+  static Podcast _loadFeed(RssFeed rssFeed, String url, String etag, DateTime? lastUpdtaed) {
     // Parse the episodes
     var episodes = <Episode>[];
     var remoteItems = <RemoteItem>[];
@@ -450,6 +486,7 @@ class Feed {
       episodes: episodes,
       remoteItems: remoteItems,
       dateTimeModified: lastUpdtaed,
+      etag: etag,
     );
   }
 

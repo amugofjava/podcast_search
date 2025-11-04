@@ -59,6 +59,9 @@ class Podcast {
   /// A list of remote items at the channel level
   final List<RemoteItem> remoteItems;
 
+  /// ETAG value from header, if supported by the podcast.
+  final String etag;
+
   /// Maps to the date-modified HTTP header (when available)
   DateTime? dateTimeModified;
 
@@ -80,6 +83,7 @@ class Podcast {
     this.block = const <Block>[],
     this.episodes = const <Episode>[],
     this.remoteItems = const <RemoteItem>[],
+    this.etag = '',
     this.dateTimeModified,
   });
 }
