@@ -280,6 +280,7 @@ class Feed {
         receiveTimeout: timeout,
         headers: {
           'User-Agent': userAgent.isEmpty ? podcastSearchAgent : userAgent,
+          'Accept-Encoding': 'gzip',
           if (etag.isNotEmpty) 'If-None-Match': etag,
         },
       ),
