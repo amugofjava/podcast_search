@@ -1,3 +1,8 @@
+## 0.7.13
+
+- Fix date parser bug, where times with no leading zero may fail.
+- Add gzip header to feed loader.
+
 ## 0.7.12
 
 - Add support for HTTP ETAGs.
