@@ -10,7 +10,8 @@ void main() {
     var d2 = 'Mon, 03 Jun 2019 10:00:00 +02:00';
     var d3 = 'Mon, 03 Jun 2019 10:00:00 -02:00';
     var d4 = 'Mon, 03 Jun 2019 10:00:00 +0000';
-    var d5 = 'Mon, 03 Jun 2019 10:00:00 -0000';
+    var d5 = 'Mon, 03 Jun 2019 08:00:00 -0000';
+    var d5b = 'Mon, 03 Jun 2019 8:00:00 -0000';
     var d6 = 'Mon, 03 June 2019 10:00:00 GMT';
     var d7 = 'Tue, 01 January 2019 10:00:00 GMT';
     var d8 = 'Tue, 1 January 2019 10:00:00 GMT';
@@ -43,7 +44,13 @@ void main() {
     test('Date format zone -offset 2b', () async {
       var result = Utils.parseRFC2822Date(d5)!.toIso8601String();
 
-      expect(result, '2019-06-03T10:00:00.000Z');
+      expect(result, '2019-06-03T08:00:00.000Z');
+    });
+
+    test('Date format zone -offset 2b2, single time digit#', () async {
+      var result = Utils.parseRFC2822Date(d5b)!.toIso8601String();
+
+      expect(result, '2019-06-03T08:00:00.000Z');
     });
 
     test('Date format zone -offset 2c', () async {

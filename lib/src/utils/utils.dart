@@ -196,15 +196,15 @@ class Utils {
 
   static const _allowablePatterns = {
     // Mon, 03 Jun 2019 10:00:00 PDT (type 1)
-    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([A-Za-z]{3})':
+    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9]{1,2}:[0-9][0-9]:[0-9][0-9]) ([A-Za-z]{3})':
         1,
 
     // Mon, 03 Jun 2019 10:00:00 +02:30 (type 2)
-    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([+|-][0-9][0-9]:[0-9][0-9])':
+    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9]{1,2}:[0-9][0-9]:[0-9][0-9]) ([+|-][0-9][0-9]:[0-9][0-9])':
         2,
 
     // Mon, 03 Jun 2019 10:00:00 +0230 (type 3)
-    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9][0-9]:[0-9][0-9]:[0-9][0-9]) ([+|-][0-9][0-9][0-9][0-9])':
+    '([A-Za-z]{3}), ([0-9]{1,2}) ([A-Za-z]*) ([0-9]{4}) ([0-9]{1,2}:[0-9][0-9]:[0-9][0-9]) ([+|-][0-9][0-9][0-9][0-9])':
         2,
   };
 
@@ -246,8 +246,8 @@ class Utils {
         var month = _months[match.group(3)!.toLowerCase().substring(0, 3)];
         var offset = v == 1 ? _timezones[match.group(6)!] : match.group(6);
         var day = match.group(2)!.padLeft(2, '0');
-
-        var iso = '${match.group(4)}-$month-${day}T${match.group(5)}$offset';
+        var time = match.group(5)!.padLeft(8, '0');
+        var iso = '${match.group(4)}-$month-${day}T$time$offset';
 
         result = DateTime.parse(iso);
       }
