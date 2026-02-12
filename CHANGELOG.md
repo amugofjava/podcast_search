@@ -1,3 +1,7 @@
+## 0.7.14
+
+- Throw new `PodcastMovedException` when a 410 HTTP status code is received.
+
 ## 0.7.13
 
 - Fix date parser bug, where times with no leading zero may fail.

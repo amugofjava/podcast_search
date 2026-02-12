@@ -52,8 +52,7 @@ class Feed {
     final timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
-    return _loadFeedInternal(
-        url: url, etag: etag, timeout: timeout, userAgent: userAgent);
+    return _loadFeedInternal(url: url, etag: etag, timeout: timeout, userAgent: userAgent);
   }
 
   static Future<Podcast> loadFeedFile({required String file}) async {
@@ -112,14 +111,11 @@ class Feed {
       BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
     );
 
-    if (episode.chapters!.chapters.isNotEmpty &&
-        !episode.chapters!.loaded &&
-        !forceReload) {
+    if (episode.chapters!.chapters.isNotEmpty && !episode.chapters!.loaded && !forceReload) {
       try {
         final response = await client.get(episode.chapters!.url);
 
-        if (response.statusCode == 200 &&
-            response.data is Map<String, dynamic>) {
+        if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
           _loadChapters(response, episode.chapters!);
         }
       } on DioException catch (e) {
@@ -236,8 +232,7 @@ class Feed {
       if (response.statusCode == 200) {
         _loadChapters(response, chapters);
       } else {
-        throw PodcastFailedException(
-            response.statusCode ?? 0, 'Failed to download chapters file');
+        throw PodcastFailedException(response.statusCode ?? 0, 'Failed to download chapters file');
       }
     } on DioException catch (e) {
       int statusCode = e.response?.statusCode ?? 0;
@@ -287,8 +282,7 @@ class Feed {
     );
 
     try {
-      final response =
-          headOnly ? await client.head(url) : await client.get(url);
+      final response = headOnly ? await client.head(url) : await client.get(url);
 
       DateTime? lastUpdated;
       String etag = '';
@@ -331,6 +325,8 @@ class Feed {
         case DioExceptionType.badResponse:
           if (statusCode == 304) {
             throw PodcastNotChangedException(statusCode, e.message ?? '');
+          } else if (statusCode == 410) {
+            throw PodcastGoneException(statusCode, e.message ?? '');
           } else {
             throw PodcastFailedException(statusCode, e.message ?? '');
           }
@@ -354,8 +350,7 @@ class Feed {
     }
   }
 
-  static Podcast _loadFeed(
-      RssFeed rssFeed, String url, String etag, DateTime? lastUpdtaed) {
+  static Podcast _loadFeed(RssFeed rssFeed, String url, String etag, DateTime? lastUpdtaed) {
     // Parse the episodes
     var episodes = <Episode>[];
     var remoteItems = <RemoteItem>[];
@@ -545,9 +540,7 @@ class Feed {
           title: chapter['title'] ?? '',
           startTime: startTime ?? 0.0,
           endTime: endTime ?? 0.0,
-          toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false)
-              ? false
-              : true,
+          toc: (chapter['toc'] != null && (chapter['toc'] as bool?) == false) ? false : true,
         ),
       );
     }
@@ -663,9 +656,7 @@ class Feed {
               }
             }
 
-            if (v.integrity != null &&
-                v.integrity?.type != null &&
-                v.integrity?.value != null) {
+            if (v.integrity != null && v.integrity?.type != null && v.integrity?.value != null) {
               integrity = Integrity(
                 type: v.integrity!.type!,
                 value: v.integrity!.value!,
@@ -697,9 +688,7 @@ class Feed {
           title: item.title ?? '',
           description: item.description ?? '',
           link: item.link,
-          publicationDate: item.pubDate == null
-              ? null
-              : Utils.parseRFC2822Date(item.pubDate!),
+          publicationDate: item.pubDate == null ? null : Utils.parseRFC2822Date(item.pubDate!),
           author: item.author ?? item.itunes!.author ?? item.dc?.creator,
           duration: item.itunes?.duration,
           contentUrl: item.enclosure?.url,

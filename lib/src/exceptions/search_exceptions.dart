@@ -42,6 +42,14 @@ class PodcastNotChangedException implements Exception {
   PodcastNotChangedException(this.statusCode, this.message);
 }
 
+/// Thrown if the requested podcast has been deleted.
+class PodcastGoneException implements Exception {
+  final int statusCode;
+  final String message;
+
+  PodcastGoneException(this.statusCode, this.message);
+}
+
 /// Thrown if we get an unknown error.
 class PodcastUnknownException implements Exception {
   final int statusCode;
