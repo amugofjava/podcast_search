@@ -19,6 +19,7 @@ import 'package:podcast_search/src/model/person.dart';
 import 'package:podcast_search/src/model/remote_item.dart';
 import 'package:podcast_search/src/model/source.dart';
 import 'package:podcast_search/src/model/value_recipient.dart';
+import 'package:podcast_search/src/net/default_http_overrides.dart';
 import 'package:podcast_search/src/utils/json_parser.dart';
 import 'package:podcast_search/src/utils/srt_parser.dart';
 import 'package:podcast_search/src/utils/utils.dart';
@@ -269,6 +270,8 @@ class Feed {
     String userAgent = '',
     bool headOnly = false,
   }) async {
+    HttpOverrides.global = DefaultHttpOverrides(userAgent);
+
     final client = Dio(
       BaseOptions(
         connectTimeout: timeout,

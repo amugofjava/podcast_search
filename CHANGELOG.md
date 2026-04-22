@@ -1,3 +1,7 @@
+## 0.7.15
+
+- Ensure user agent is preserved after a 301 redirect.
+
 ## 0.7.14
 
 - Throw new `PodcastMovedException` when a 410 HTTP status code is received.
