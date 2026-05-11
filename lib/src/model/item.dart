@@ -83,6 +83,9 @@ class Item {
   /// Full list of genres for the podcast.
   final List<Genre>? genre;
 
+  // Channel level description.
+  final String? description;
+
   Item({
     this.artistId,
     this.collectionId,
@@ -110,6 +113,7 @@ class Item {
     this.primaryGenreName,
     this.contentAdvisoryRating,
     this.genre,
+    this.description,
   });
 
   /// Takes our json map and builds a Podcast instance from it.
@@ -179,6 +183,7 @@ class Item {
       artworkUrl: json['image'] as String?,
       genre: genres,
       releaseDate: DateTime.fromMillisecondsSinceEpoch(pubDate.inMilliseconds),
+      description: json['description'] as String?,
     );
   }
 
