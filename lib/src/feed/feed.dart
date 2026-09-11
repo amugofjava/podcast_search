@@ -126,6 +126,7 @@ class Feed {
           case DioExceptionType.connectionTimeout:
           case DioExceptionType.sendTimeout:
           case DioExceptionType.receiveTimeout:
+          case DioExceptionType.transformTimeout:
             throw PodcastTimeoutException(statusCode, e.message ?? '');
           case DioExceptionType.connectionError:
             throw PodcastFailedException(statusCode, e.message ?? '');
@@ -193,6 +194,7 @@ class Feed {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
+        case DioExceptionType.transformTimeout:
           throw PodcastTimeoutException(statusCode, e.message ?? '');
         case DioExceptionType.connectionError:
           throw PodcastFailedException(statusCode, e.message ?? '');
@@ -242,6 +244,7 @@ class Feed {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
+        case DioExceptionType.transformTimeout:
           throw PodcastTimeoutException(statusCode, e.message ?? '');
         case DioExceptionType.connectionError:
           throw PodcastFailedException(statusCode, e.message ?? '');
@@ -322,6 +325,7 @@ class Feed {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
+        case DioExceptionType.transformTimeout:
           throw PodcastTimeoutException(statusCode, e.message ?? '');
         case DioExceptionType.connectionError:
           throw PodcastFailedException(statusCode, e.message ?? '');

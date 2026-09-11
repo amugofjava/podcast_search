@@ -36,6 +36,7 @@ abstract class BaseSearch {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
         lastErrorType = ErrorType.connection;
         lastError = 'Connection timeout';
         break;
