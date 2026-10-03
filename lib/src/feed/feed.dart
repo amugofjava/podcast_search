@@ -31,7 +31,7 @@ class Feed {
   /// is an option field, so a null will be returned if no value exists.
   static Future<DateTime?> feedLastUpdated({
     required String url,
-    final timeout = const Duration(seconds: 20),
+    timeout = const Duration(seconds: 20),
     String userAgent = '',
   }) async {
     final podcast = await _loadFeedInternal(
@@ -106,7 +106,7 @@ class Feed {
   static Future<Episode> loadEpisodeChapters({
     required Episode episode,
     bool forceReload = false,
-    final timeout = const Duration(seconds: 20),
+    timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
       BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
@@ -154,7 +154,7 @@ class Feed {
   /// [JsonParser] or [SrtParser] is used.
   static Future<Transcript> loadTranscriptByUrl({
     required TranscriptUrl transcriptUrl,
-    final timeout = const Duration(seconds: 20),
+    timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
       BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
@@ -221,7 +221,7 @@ class Feed {
   /// and loads the chapters, return a populated Chapters object.
   static Future<Chapters> loadChaptersByUrl({
     required String url,
-    final timeout = const Duration(seconds: 20),
+    timeout = const Duration(seconds: 20),
   }) async {
     final client = Dio(
       BaseOptions(connectTimeout: timeout, receiveTimeout: timeout),
@@ -269,7 +269,7 @@ class Feed {
   static Future<Podcast> _loadFeedInternal({
     required String url,
     String etag = '',
-    final timeout = const Duration(seconds: 20),
+    timeout = const Duration(seconds: 20),
     String userAgent = '',
     bool headOnly = false,
   }) async {
