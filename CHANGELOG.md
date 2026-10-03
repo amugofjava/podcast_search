@@ -1,3 +1,9 @@
+## 0.7.16
+
+- Add missing transformTimeout Dio exception handler (BerkayOez).
+- Update Dio package dependency.
+- Update min SDK requirement to 3.6.0.
+
 ## 0.7.15
 
 - Ensure user agent is preserved after a 301 redirect.
